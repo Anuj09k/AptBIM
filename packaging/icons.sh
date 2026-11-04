@@ -8,7 +8,7 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 DIR="$ROOT/assets/app-icon"
 SRC="$DIR/aptbim-1024.png"
-ID="io.github.ipedrax.aptbim"
+ID="io.github.anuj09k.aptbim"
 command -v magick >/dev/null || { echo "error: magick (ImageMagick 7) not found" >&2; exit 1; }
 
 # -strip leaves out the time and the tool, so the same source writes the same bytes.

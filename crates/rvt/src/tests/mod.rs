@@ -84,7 +84,7 @@ fn every_package_says_apache_and_ships_the_notice_that_a_build_with_the_reader_o
     for (file, wants) in [
         ("packaging/linux/nfpm.yaml", "license: Apache-2.0"),
         ("packaging/linux/arch-package.sh", "license=('Apache-2.0')"),
-        ("packaging/linux/io.github.ipedrax.aptbim.metainfo.xml.in", "<project_license>Apache-2.0</project_license>"),
+        ("packaging/linux/io.github.anuj09k.aptbim.metainfo.xml.in", "<project_license>Apache-2.0</project_license>"),
         ("packaging/macos/Info.plist.in", "AptBIM contributors. Apache-2.0."),
     ] {
         assert!(read(file).contains(wants), "{file} says what the default build is under: `{wants}`");

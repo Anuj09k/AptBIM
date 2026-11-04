@@ -22,7 +22,7 @@ set -euo pipefail
 # shellcheck source=../env.sh
 . "$(dirname "${BASH_SOURCE[0]}")/../env.sh"
 HERE="$ROOT/packaging/linux"
-APP_ID=io.github.ipedrax.aptbim
+APP_ID=io.github.anuj09k.aptbim
 
 SKIP_BUILD=0
 FORMATS="appimage deb rpm tar"

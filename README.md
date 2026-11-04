@@ -12,7 +12,7 @@
   Model a building the way Revit does: levels, walls, doors and windows, floors and ceilings, rooms, columns, stairs,
   ramps and railings, roofs and shafts that know about each other. Draw plans, sections, elevations and a 3D view from them, lay them out on sheets, and read and
   write IFC. Every action is a command, so agents can drive it as well as you can.<br>
-  <i>By IPedrax.</i>
+  <i>By Aptimizer.</i>
 </p>
 
 <p align="center">
@@ -667,7 +667,7 @@ apps/aptbim          the desktop app
 apps/aptbim-cli      run, info, convert, commands, and the MCP server
 ```
 
-The rules come from CADCraft. Everything is a command, and the desktop, the CLI, scripts and MCP all reach the same ones.
+Everything is a command, and the desktop, the CLI, scripts and MCP all reach the same ones.
 Production code never panics: `unwrap`, `expect` and `panic!` are lint errors, `unsafe` is forbidden, every parameter is
 treated as hostile, and a command that fails or panics leaves the model as it was. The core knows nothing of a UI; the egui
 front end only reads the model and runs commands, so another front end can replace it. The canvas draws the same display list
@@ -853,7 +853,8 @@ its own makes the check fail, quietly, and a corporate root isn't consulted. Sig
 ## License and credits
 
 AptBIM is dual-licensed under [MIT](LICENSE-MIT) or [Apache-2.0](LICENSE-APACHE), at your option.
-Copyright (c) 2026 IPedrax and the AptBIM contributors.
+Copyright (c) 2026 Anuj N (Aptimizer). Required notices, including those of the open-source code
+AptBIM builds on, are in [NOTICE](NOTICE).
 
 The one exception is the Revit file reader, [`crates/rvt`](crates/rvt), which holds code ported from
 [rvt-rs](https://github.com/DrunkOnJava/rvt-rs) (Copyright 2026 Griffin Long) and is Apache-2.0 only: see its
@@ -865,13 +866,11 @@ feature, `rvt`, which is on by default, so **a build that includes it is distrib
 AptBIM's logo, its icons, its stroke lettering and its sample house are original work, drawn or built in code. The desktop's
 interface is lettered in [IBM Plex](https://github.com/IBM/plex) Sans (its file says Copyright 2019 IBM Corp.) and Mono (Copyright
 2017 IBM Corp.), under the SIL Open Font License 1.1, with Reserved Font Name "Plex": the licence is in [assets/fonts](assets/fonts)
-and [NOTICE](NOTICE), and every package carries both. Its
-architecture, its rules and its MCP design follow [CADCraft](https://github.com/storytold/cadcraft) (MIT OR Apache-2.0) by
-the ArtCraft team, as its logo follows CADCraft's style.
+and [NOTICE](NOTICE), and every package carries both.
 
 <sub>Autodesk and Revit are trademarks or registered trademarks of Autodesk, Inc. in the United States and/or other countries. AptBIM is an independent, open-source project and is not affiliated with, sponsored by or endorsed by Autodesk, Inc.; these names are used only to describe the workflow it follows. IFC is an open standard of buildingSMART International, published as ISO 16739.</sub>
 
 <p align="center">
   <img alt="" src="assets/app-icon/aptbim-64.png" width="28"><br>
-  <sub>Made by IPedrax, in pure Rust.</sub>
+  <sub>Made by Aptimizer, in pure Rust.</sub>
 </p>

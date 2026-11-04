@@ -25,9 +25,9 @@ use crate::{BimApp, Status};
 /// Reads a Revit project into a model, or says why not. It runs on a thread of its own, and may take minutes on a big file.
 pub type Importer = Arc<dyn Fn(&Path) -> Result<Imported, String> + Send + Sync>;
 
-/// The extensions File > Open offers: `.revcraft` is a project saved before the name changed, and `.rvt` is there only with a reader.
+/// The extensions File > Open offers: `.rvt` is there only with a reader.
 pub fn open_extensions(revit: bool) -> Vec<&'static str> {
-    let mut extensions = vec!["aptbim", "revcraft", "ifc"];
+    let mut extensions = vec!["aptbim", "ifc"];
     if revit {
         extensions.push("rvt");
     }

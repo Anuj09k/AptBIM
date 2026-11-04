@@ -1,5 +1,12 @@
 AptBIM's Revit file reader (aptbim-rvt)
-Copyright (c) 2026 IPedrax and the AptBIM contributors
+Copyright (c) 2026 Anuj N (Aptimizer)
+
+AptBIM is derived from open-source software licensed under the MIT License or the Apache
+License, Version 2.0, which requires this notice to be kept:
+
+    Copyright (c) 2026 IPedrax and the RevCraft contributors.
+
+The files have been modified for AptBIM.
 
 Licensed under the Apache License, Version 2.0 (see LICENSE).
 

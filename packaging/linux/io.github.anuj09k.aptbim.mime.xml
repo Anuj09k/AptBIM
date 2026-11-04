@@ -5,7 +5,7 @@
   <mime-type type="application/x-aptbim">
     <comment>AptBIM project</comment>
     <sub-class-of type="application/json"/>
-    <generic-icon name="io.github.ipedrax.aptbim"/>
+    <generic-icon name="io.github.anuj09k.aptbim"/>
     <glob pattern="*.aptbim"/>
   </mime-type>
   <mime-type type="application/x-ifc">

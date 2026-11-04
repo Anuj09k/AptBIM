@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- AppStream metadata, for software centres. package.sh substitutes @VERSION@ and @DATE@. -->
 <component type="desktop-application">
-  <id>io.github.ipedrax.aptbim</id>
+  <id>io.github.anuj09k.aptbim</id>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>Apache-2.0</project_license>
   <name>AptBIM</name>
   <summary>Model buildings and draw them</summary>
-  <developer id="io.github.ipedrax">
-    <name>IPedrax</name>
+  <developer id="io.github.anuj09k">
+    <name>Aptimizer</name>
   </developer>
   <description>
     <p>
@@ -20,8 +20,8 @@
       by AI agents through its command line and MCP server.
     </p>
   </description>
-  <launchable type="desktop-id">io.github.ipedrax.aptbim.desktop</launchable>
-  <icon type="stock">io.github.ipedrax.aptbim</icon>
+  <launchable type="desktop-id">io.github.anuj09k.aptbim.desktop</launchable>
+  <icon type="stock">io.github.anuj09k.aptbim</icon>
   <!-- Only url types appstream 0.15 knows (Ubuntu 22.04, where CI validates): no vcs-browser. -->
   <url type="homepage">https://github.com/Anuj09k/AptBIM-</url>
   <url type="bugtracker">https://github.com/Anuj09k/AptBIM-/issues</url>

@@ -1649,12 +1649,12 @@ fn a_bundle_is_ours_when_its_identifier_says_so() {
             "<?xml version=\"1.0\"?>\n<plist><dict>\n  <key>CFBundleName</key>\n  <string>AptBIM</string>\n  <key>CFBundleIdentifier</key>\n  <string>{id}</string>\n</dict></plist>"
         )
     };
-    assert!(detect::names_bundle(&plist("io.github.ipedrax.aptbim")));
-    for other in ["io.github.ipedrax.aptbim.project", "io.github.ipedrax.aptbim2", "com.example.aptbim", "", " io.github.ipedrax.aptbim"] {
+    assert!(detect::names_bundle(&plist("io.github.anuj09k.aptbim")));
+    for other in ["io.github.anuj09k.aptbim.project", "io.github.anuj09k.aptbim2", "com.example.aptbim", "", " io.github.anuj09k.aptbim"] {
         assert!(!detect::names_bundle(&plist(other)), "{other:?}");
     }
     // The name of our identifier somewhere else in the file, under another key, is not the bundle's identifier.
-    let elsewhere = "<plist><dict><key>CFBundleName</key><string>io.github.ipedrax.aptbim</string><key>CFBundleIdentifier</key><string>x</string></dict></plist>";
+    let elsewhere = "<plist><dict><key>CFBundleName</key><string>io.github.anuj09k.aptbim</string><key>CFBundleIdentifier</key><string>x</string></dict></plist>";
     assert!(!detect::names_bundle(elsewhere));
     for junk in ["", "<key>CFBundleIdentifier</key>", "<key>CFBundleIdentifier</key><string>", "bplist00\u{0}\u{1}", "\u{0}"] {
         assert!(!detect::names_bundle(junk), "{junk:?}");
@@ -1663,7 +1663,7 @@ fn a_bundle_is_ours_when_its_identifier_says_so() {
 
 #[test]
 fn a_flatpak_has_no_network_so_it_is_known_to_leave_it_alone() {
-    assert!(detect::in_flatpak(Some(OsString::from("io.github.ipedrax.aptbim")), false), "by its variable");
+    assert!(detect::in_flatpak(Some(OsString::from("io.github.anuj09k.aptbim")), false), "by its variable");
     assert!(detect::in_flatpak(None, true), "by its marker file");
     assert!(!detect::in_flatpak(None, false));
     assert!(!detect::in_flatpak(Some(OsString::new()), false), "an empty variable is none");
@@ -1862,7 +1862,7 @@ mod macos {
     use super::*;
     use crate::macos::{self, Tools};
 
-    const PLIST: &str = "<plist><dict><key>CFBundleExecutable</key><string>AptBIM</string>\n<key>CFBundleIdentifier</key><string>io.github.ipedrax.aptbim</string></dict></plist>";
+    const PLIST: &str = "<plist><dict><key>CFBundleExecutable</key><string>AptBIM</string>\n<key>CFBundleIdentifier</key><string>io.github.anuj09k.aptbim</string></dict></plist>";
 
     /// A disk image's contents (what `hdiutil attach` is made to mount) holding an AptBIM.app that says it is `version`, and an installed
     /// AptBIM.app that is the old one, in a folder of their own, with stand-ins for the macOS programs that write down how they were run.
@@ -2165,7 +2165,7 @@ mod installs {
     use super::unix::{log, script, serial};
     use super::*;
 
-    const PLIST: &str = "<plist><dict><key>CFBundleIdentifier</key><string>io.github.ipedrax.aptbim</string></dict></plist>";
+    const PLIST: &str = "<plist><dict><key>CFBundleIdentifier</key><string>io.github.anuj09k.aptbim</string></dict></plist>";
 
     /// Takes the right to write away from `folder`: whether that stops this process, which it doesn't when it's root's.
     fn shut(folder: &Path) -> bool {
@@ -2304,7 +2304,7 @@ mod installs {
         let dir = Scratch::new("inst5");
         let exe = bundle(&dir, None);
         assert_eq!(detect::mac_install(&exe), None, "no Info.plist");
-        std::fs::write(exe.parent().unwrap().parent().unwrap().join("Info.plist"), PLIST.replace("ipedrax", "someone")).unwrap();
+        std::fs::write(exe.parent().unwrap().parent().unwrap().join("Info.plist"), PLIST.replace("anuj09k", "someone")).unwrap();
         assert_eq!(detect::mac_install(&exe), None, "another app's identifier");
         assert_eq!(detect::mac_install(&dir.0.join("aptbim")), None, "not in an app at all");
         std::fs::write(exe.parent().unwrap().parent().unwrap().join("Info.plist"), PLIST).unwrap();

@@ -27,7 +27,7 @@ pub struct Limits {
     /// The largest DWG file read at all, checked before the decoder runs.
     pub dwg_bytes: usize,
     /// The largest DXF a DWG may become, checked while it is written: a DWG is compressed, and its DXF is several times
-    /// larger (about six in CADCraft's measures).
+    /// larger (about six times, as measured).
     pub dxf_bytes: usize,
 }
 

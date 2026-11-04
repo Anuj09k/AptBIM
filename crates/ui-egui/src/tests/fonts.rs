@@ -49,7 +49,7 @@ fn every_package_ships_the_notice_and_the_licence_of_the_fonts() {
         ("packaging/linux/package.sh", &["copy_docs \"$STAGE/usr/share/doc/aptbim\""][..]),
         ("packaging/linux/nfpm.yaml", &["src: ${STAGE}/usr/share/"][..]),
         ("packaging/linux/arch-package.sh", &["licenses/$pkgname/fonts/$font/OFL.txt"][..]),
-        ("packaging/linux/flatpak/io.github.ipedrax.aptbim.bundle.yml", &["cp -R share/doc/aptbim"][..]),
+        ("packaging/linux/flatpak/io.github.anuj09k.aptbim.bundle.yml", &["cp -R share/doc/aptbim"][..]),
         ("packaging/macos/package.sh", &["copy_docs \"$APP/Contents/Resources\""][..]),
         (
             "packaging/windows/aptbim.wxs",

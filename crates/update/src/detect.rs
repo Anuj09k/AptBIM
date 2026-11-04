@@ -83,7 +83,7 @@ pub fn mac_install(exe: &Path) -> Option<Install> {
 }
 
 /// The identifier of AptBIM's macOS bundle: `CFBundleIdentifier` in its Info.plist.
-const BUNDLE_ID: &str = "io.github.ipedrax.aptbim";
+const BUNDLE_ID: &str = "io.github.anuj09k.aptbim";
 
 /// The AppImage this program runs from. Its runtime sets `APPIMAGE` to the file and `APPDIR` to where the image's files are mounted,
 /// and this program (`exe`) stands inside that mount. All of that must hold: a variable left over from another run, or typed, doesn't

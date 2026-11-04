@@ -7,7 +7,7 @@ Moved from the root `CLAUDE.md`, word for word: the root keeps the rules and the
   `linux-riscv64` job shows); `flatpak-bundle.sh` and `arch-package.sh` repackage that tarball as a Flatpak and an Arch
   package; `packaging/macos/package.sh` writes the DMG, on a Mac. After touching `packaging/`, run shellcheck on the scripts
   and actionlint on the workflow, run the Linux one through, and install the deb in a clean container. The app id is
-  `io.github.ipedrax.aptbim` everywhere (`APP_ID`, the desktop file, AppStream, the Flatpak, the bundle); the icons come
+  `io.github.anuj09k.aptbim` everywhere (`APP_ID`, the desktop file, AppStream, the Flatpak, the bundle); the icons come
   from `packaging/icons.sh`.
 - Every package ships the licences, `NOTICE` and the interface fonts' two `OFL.txt` (the OFL asks for its text with each copy of
   the fonts, which the desktop's executable holds): `copy_docs` in `packaging/env.sh` puts them in the Linux packages (the AppImage

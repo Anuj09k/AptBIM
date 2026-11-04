@@ -220,6 +220,107 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "330a5ed07fa54e4702c9d6c4174f74427fc0ef6e214bbd677ae50a5099946470"
 
 [[package]]
+name = "aptbim"
+version = "0.10.0"
+dependencies = [
+ "aptbim-core",
+ "aptbim-dwg",
+ "aptbim-i18n",
+ "aptbim-rvt",
+ "aptbim-ui-egui",
+ "aptbim-update",
+ "eframe",
+ "fmv-macos-events",
+ "rfd",
+ "serde_json",
+]
+
+[[package]]
+name = "aptbim-cli"
+version = "0.10.0"
+dependencies = [
+ "aptbim-core",
+ "aptbim-dwg",
+ "aptbim-rvt",
+ "serde_json",
+]
+
+[[package]]
+name = "aptbim-core"
+version = "0.10.0"
+dependencies = [
+ "aptbim-i18n",
+ "encoding_rs",
+ "flate2",
+ "getrandom 0.3.4",
+ "rayon",
+ "serde",
+ "serde_json",
+ "tempfile",
+ "tiny-skia",
+ "ttf-parser",
+ "zune-jpeg",
+]
+
+[[package]]
+name = "aptbim-dwg"
+version = "0.10.0"
+dependencies = [
+ "acadrust",
+ "aptbim-core",
+]
+
+[[package]]
+name = "aptbim-i18n"
+version = "0.10.0"
+dependencies = [
+ "proc-macro2",
+ "syn 2.0.119",
+ "tempfile",
+]
+
+[[package]]
+name = "aptbim-rvt"
+version = "0.10.0"
+dependencies = [
+ "aptbim-core",
+ "cfb",
+ "flate2",
+ "memchr",
+ "serde_json",
+]
+
+[[package]]
+name = "aptbim-ui-egui"
+version = "0.10.0"
+dependencies = [
+ "aptbim-core",
+ "aptbim-i18n",
+ "aptbim-update",
+ "bytemuck",
+ "eframe",
+ "egui",
+ "egui_kittest",
+ "pollster 1.0.1",
+ "rayon",
+ "rfd",
+ "serde_json",
+ "sys-locale",
+ "tempfile",
+]
+
+[[package]]
+name = "aptbim-update"
+version = "0.10.0"
+dependencies = [
+ "ring",
+ "semver",
+ "serde",
+ "serde_json",
+ "ureq",
+]
+
+[[package]]
 name = "arboard"
 version = "3.6.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -451,107 +552,6 @@ name = "base64"
 version = "0.23.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ac07cdecf99051d9a5238b80f35af32cdeba5b336e55d957b318b50137e18da5"
-
-[[package]]
-name = "aptbim"
-version = "0.10.0"
-dependencies = [
- "aptbim-core",
- "aptbim-dwg",
- "aptbim-i18n",
- "aptbim-rvt",
- "aptbim-ui-egui",
- "aptbim-update",
- "eframe",
- "fmv-macos-events",
- "rfd",
- "serde_json",
-]
-
-[[package]]
-name = "aptbim-cli"
-version = "0.10.0"
-dependencies = [
- "aptbim-core",
- "aptbim-dwg",
- "aptbim-rvt",
- "serde_json",
-]
-
-[[package]]
-name = "aptbim-core"
-version = "0.10.0"
-dependencies = [
- "aptbim-i18n",
- "encoding_rs",
- "flate2",
- "getrandom 0.3.4",
- "rayon",
- "serde",
- "serde_json",
- "tempfile",
- "tiny-skia",
- "ttf-parser",
- "zune-jpeg",
-]
-
-[[package]]
-name = "aptbim-dwg"
-version = "0.10.0"
-dependencies = [
- "acadrust",
- "aptbim-core",
-]
-
-[[package]]
-name = "aptbim-i18n"
-version = "0.10.0"
-dependencies = [
- "proc-macro2",
- "syn 2.0.119",
- "tempfile",
-]
-
-[[package]]
-name = "aptbim-rvt"
-version = "0.10.0"
-dependencies = [
- "aptbim-core",
- "cfb",
- "flate2",
- "memchr",
- "serde_json",
-]
-
-[[package]]
-name = "aptbim-ui-egui"
-version = "0.10.0"
-dependencies = [
- "aptbim-core",
- "aptbim-i18n",
- "aptbim-update",
- "bytemuck",
- "eframe",
- "egui",
- "egui_kittest",
- "pollster 1.0.1",
- "rayon",
- "rfd",
- "serde_json",
- "sys-locale",
- "tempfile",
-]
-
-[[package]]
-name = "aptbim-update"
-version = "0.10.0"
-dependencies = [
- "ring",
- "semver",
- "serde",
- "serde_json",
- "ureq",
-]
 
 [[package]]
 name = "bit-set"

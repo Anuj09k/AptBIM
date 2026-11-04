@@ -1,7 +1,6 @@
 # AptBIM: instructions for agents
 
-AptBIM is a clean-room, pure-Rust BIM application following the Revit workflow, modeled on
-[storytold/cadcraft](https://github.com/storytold/cadcraft) (the AutoCAD one). Milestone 1, the headless engine with the CLI
+AptBIM is a clean-room, pure-Rust BIM application following the Revit workflow. Milestone 1, the headless engine with the CLI
 and MCP server, and milestone 2, the egui desktop app, are done. What works and what's missing: [README.md](README.md).
 
 ## Rules

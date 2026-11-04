@@ -11,12 +11,12 @@
 # the freedesktop runtime and SDK the manifest names are installed per user from Flathub. Unless
 # --no-test, the bundle is then installed per user and `aptbim-cli --version` runs inside its
 # sandbox as a smoke test.
-# Manifest: packaging/linux/flatpak/io.github.ipedrax.aptbim.bundle.yml.
+# Manifest: packaging/linux/flatpak/io.github.anuj09k.aptbim.bundle.yml.
 set -euo pipefail
 # shellcheck source=../env.sh
 . "$(dirname "${BASH_SOURCE[0]}")/../env.sh"
 HERE="$ROOT/packaging/linux"
-APP_ID=io.github.ipedrax.aptbim
+APP_ID=io.github.anuj09k.aptbim
 FLATHUB=https://dl.flathub.org/repo/flathub.flatpakrepo
 
 TEST=1

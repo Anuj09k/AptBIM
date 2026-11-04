@@ -33,7 +33,7 @@ Set APTBIM_NO_UPDATE_CHECK=1 and it never makes a request.";
 
 /// What the desktop knows the app by: Wayland's app id and X11's window class, which a Linux desktop
 /// matches to the `.desktop` file of that name for the window's icon, and the macOS bundle's identifier.
-const APP_ID: &str = "io.github.ipedrax.aptbim";
+const APP_ID: &str = "io.github.anuj09k.aptbim";
 
 /// The arguments without `--control PORT`, and the port it names: a number, 0 for one that is free.
 fn control_port(mut args: Vec<String>) -> Result<(Vec<String>, Option<u16>), String> {

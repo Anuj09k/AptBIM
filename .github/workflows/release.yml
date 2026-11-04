@@ -30,7 +30,7 @@ jobs:
       - name: Test
         run: cargo test --workspace
 
-      # The C runtime linked in, as CADCraft does, so the exes run on a Windows without the Visual C++
+      # The C runtime linked in, so the exes run on a Windows without the Visual C++
       # redistributable. Scoped to the target, so build scripts and proc macros are left as they are.
       - name: Build
         env:
