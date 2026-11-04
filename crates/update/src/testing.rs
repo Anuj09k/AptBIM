@@ -66,8 +66,7 @@ pub struct Scratch(pub PathBuf);
 impl Scratch {
     pub fn new(name: &str) -> Scratch {
         static COUNT: AtomicU64 = AtomicU64::new(0);
-        let dir =
-            std::env::temp_dir().join(format!("aptbim-test-{name}-{}-{}", std::process::id(), COUNT.fetch_add(1, Ordering::Relaxed)));
+        let dir = std::env::temp_dir().join(format!("aptbim-test-{name}-{}-{}", std::process::id(), COUNT.fetch_add(1, Ordering::Relaxed)));
         let _ = std::fs::remove_dir_all(&dir);
         std::fs::create_dir_all(&dir).unwrap();
         Scratch(dir)

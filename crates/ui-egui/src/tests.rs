@@ -4764,10 +4764,8 @@ fn reveal_hidden_elements_shows_what_the_view_hides_for_good_and_apply_makes_a_h
     shortcut(&mut h, "RH");
     let model = h.state_mut().view_model();
     let colours = |id: &Id| {
-        let o = aptbim_core::graphics::graphics_of(&model, 100000)
-            .and_then(|g| g.elements.get(&model.guid(*id)))
-            .cloned()
-            .unwrap_or_default();
+        let o =
+            aptbim_core::graphics::graphics_of(&model, 100000).and_then(|g| g.elements.get(&model.guid(*id))).cloned().unwrap_or_default();
         (o.projection.color, o.cut.color)
     };
     assert!(walls.iter().all(|w| plan_shows(&mut h, *w) && colours(w) == (Some([255, 0, 255]), Some([255, 0, 255]))));

@@ -611,8 +611,7 @@ fn the_copy_does_nothing_for_arguments_an_update_does_not_make() {
 
 #[test]
 fn the_handover_names_what_to_install_and_what_to_start_again() {
-    let (msi, exe, project) =
-        (Path::new("/t/aptbim-update-1/x.msi"), Path::new("/p/AptBIM/aptbim.exe"), Path::new("/w/house.aptbim"));
+    let (msi, exe, project) = (Path::new("/t/aptbim-update-1/x.msi"), Path::new("/p/AptBIM/aptbim.exe"), Path::new("/w/house.aptbim"));
     let digest = sha(b"x");
     let parse = |args: Vec<OsString>| install::parse(args);
     let with = parse(install::helper_args(msi, &digest, exe, Some(project))).unwrap();
@@ -1651,9 +1650,7 @@ fn a_bundle_is_ours_when_its_identifier_says_so() {
         )
     };
     assert!(detect::names_bundle(&plist("io.github.ipedrax.aptbim")));
-    for other in
-        ["io.github.ipedrax.aptbim.project", "io.github.ipedrax.aptbim2", "com.example.aptbim", "", " io.github.ipedrax.aptbim"]
-    {
+    for other in ["io.github.ipedrax.aptbim.project", "io.github.ipedrax.aptbim2", "com.example.aptbim", "", " io.github.ipedrax.aptbim"] {
         assert!(!detect::names_bundle(&plist(other)), "{other:?}");
     }
     // The name of our identifier somewhere else in the file, under another key, is not the bundle's identifier.
@@ -2332,8 +2329,7 @@ mod installs {
         let dir = Scratch::new("inst6");
         let log_file = dir.0.join("log");
         let target = script(&dir.0, "AptBIM.AppImage", "echo old");
-        let body =
-            format!("if [ \"$1\" = \"--version\" ]; then echo aptbim 0.5.0; exit 0; fi\necho \"ran $@\" >> {}", log_file.display());
+        let body = format!("if [ \"$1\" = \"--version\" ]; then echo aptbim 0.5.0; exit 0; fi\necho \"ran $@\" >> {}", log_file.display());
         let (folder, new) = download(&dir, "aptbim-0.5.0-linux-x86_64.AppImage", &body);
         let new_bytes = std::fs::read(&new).unwrap();
         let install = Install { target: Target::AppImage(Arch::X86_64), place: target.clone() };

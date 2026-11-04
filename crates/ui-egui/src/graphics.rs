@@ -255,11 +255,7 @@ impl BimApp {
 
     /// The selected elements views draw.
     pub(crate) fn drawn_selection(&self, m: &Model) -> Vec<Id> {
-        self.selection
-            .iter()
-            .copied()
-            .filter(|id| m.elements.get(id).is_some_and(|e| aptbim_core::graphics::drawn(e.category())))
-            .collect()
+        self.selection.iter().copied().filter(|id| m.elements.get(id).is_some_and(|e| aptbim_core::graphics::drawn(e.category()))).collect()
     }
 
     /// Hide in View: the selected elements, or with `category`, all the selected elements' categories.

@@ -910,15 +910,8 @@ impl Gpu {
             wgpu::VertexBufferLayout { array_stride: WIRE, step_mode: wgpu::VertexStepMode::Instance, attributes: &wire_attributes };
         let wires =
             pipeline("aptbim-3d-wires", &surface_layout, "vs_wire", "fs_wire", &[Some(wire_layout.clone())], &[target(COLOR)], false);
-        let wires_tinted = pipeline(
-            "aptbim-3d-wires-tinted",
-            &surface_layout,
-            "vs_wire_tinted",
-            "fs_wire",
-            &[Some(wire_layout)],
-            &[target(COLOR)],
-            false,
-        );
+        let wires_tinted =
+            pipeline("aptbim-3d-wires-tinted", &surface_layout, "vs_wire_tinted", "fs_wire", &[Some(wire_layout)], &[target(COLOR)], false);
         let dot_attributes = wgpu::vertex_attr_array![0 => Float32x3, 1 => Uint32, 2 => Uint32];
         let dot_layout =
             wgpu::VertexBufferLayout { array_stride: DOT, step_mode: wgpu::VertexStepMode::Instance, attributes: &dot_attributes };
@@ -1719,8 +1712,7 @@ impl Gpu {
             view(&texture("aptbim-3d-clear-ids", CLEAR_IDS, render | sampled)),
             view(&texture("aptbim-3d-clear-depth", DEPTH, render)),
         );
-        let picture =
-            texture("aptbim-3d-picture", COLOR, render | sampled | wgpu::TextureUsages::COPY_SRC | wgpu::TextureUsages::COPY_DST);
+        let picture = texture("aptbim-3d-picture", COLOR, render | sampled | wgpu::TextureUsages::COPY_SRC | wgpu::TextureUsages::COPY_DST);
         let picture_view = view(&picture);
         let bind = self.device.create_bind_group(&wgpu::BindGroupDescriptor {
             label: Some("aptbim-3d-targets"),

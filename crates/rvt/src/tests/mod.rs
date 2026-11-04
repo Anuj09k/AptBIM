@@ -10,12 +10,7 @@ fn read(path: &str) -> String {
 
 /// Imports `rounds` damaged copies of a synthetic project (one to eight bytes changed, one in seven cut short) and hands each
 /// import that comes back to `check`, after checking it passes the model's rules: none may panic.
-pub(super) fn sweep(
-    p: &crate::project_fixture::Project,
-    seed: u64,
-    rounds: usize,
-    check: impl Fn(&aptbim_core::import::Imported, usize),
-) {
+pub(super) fn sweep(p: &crate::project_fixture::Project, seed: u64, rounds: usize, check: impl Fn(&aptbim_core::import::Imported, usize)) {
     let bytes = p.partition_bytes();
     let mut seed = seed;
     let mut next = move || {

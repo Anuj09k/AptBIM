@@ -3111,9 +3111,8 @@ pub fn ifc(bytes: &[u8], name: &str) -> Result<Imported, String> {
             *left.entry(x.name.as_str()).or_default() += 1;
         }
     }
-    skipped.extend(
-        left.into_iter().map(|(name, n)| format!("{n} {name}: AptBIM has no element for {}", if n == 1 { "it" } else { "them" })),
-    );
+    skipped
+        .extend(left.into_iter().map(|(name, n)| format!("{n} {name}: AptBIM has no element for {}", if n == 1 { "it" } else { "them" })));
     let moved = (r.shift != P2(0.0, 0.0)).then_some(r.shift * -1.0);
     Ok(Imported { model: m, schema: file.schema.clone(), skipped, moved })
 }

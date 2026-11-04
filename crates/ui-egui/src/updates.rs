@@ -90,11 +90,10 @@ impl BimApp {
             ui.horizontal(|ui| match updates.state() {
                 State::Idle | State::Installing { .. } => {}
                 State::Available(release) => {
-                    ui.label(
-                        RichText::new(tf("AptBIM {} is available. You have {}.", &[&release.version.to_string(), &current])).strong(),
-                    );
+                    ui.label(RichText::new(tf("AptBIM {} is available. You have {}.", &[&release.version.to_string(), &current])).strong());
                     if release.installer.is_some() {
-                        if primary(ui, "Update now", msg!("Downloads and checks the update; AptBIM then closes, updates and starts again.")) {
+                        if primary(ui, "Update now", msg!("Downloads and checks the update; AptBIM then closes, updates and starts again."))
+                        {
                             click = Some(Click::Update);
                         }
                     } else if primary(ui, "Download", msg!("Opens the release page on GitHub. This copy can't update itself.")) {
@@ -125,7 +124,9 @@ impl BimApp {
                     if primary(
                         ui,
                         "Restart and install",
-                        msg!("Asks to save first if there are unsaved changes, then closes AptBIM, installs the update and starts it again."),
+                        msg!(
+                            "Asks to save first if there are unsaved changes, then closes AptBIM, installs the update and starts it again."
+                        ),
                     ) {
                         click = Some(Click::Restart);
                     }

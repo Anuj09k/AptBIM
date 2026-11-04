@@ -689,8 +689,7 @@ impl BimApp {
         let muted = |ui: &mut Ui, text: &str| ui.label(RichText::new(text).color(pal().muted));
         heading(ui, msg!("Control port"));
         let mut on = self.control.is_some();
-        let tip =
-            t("Opens the control port now and whenever AptBIM starts: an agent connects with aptbim-cli mcp --connect. Only this \
+        let tip = t("Opens the control port now and whenever AptBIM starts: an agent connects with aptbim-cli mcp --connect. Only this \
              machine can reach it, and only with the token in bridge.json beside your favorites");
         if ui.checkbox(&mut on, t("Let agents work on this project")).on_hover_text(tip).changed() {
             self.agents.listen = on;

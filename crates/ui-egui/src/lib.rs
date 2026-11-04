@@ -2264,9 +2264,7 @@ impl BimApp {
             Some(Element::Grid(_)) => Tool::Grid(None),
             Some(Element::Dimension(d)) => match d.kind {
                 DimKind::Aligned => Tool::Dimension(DimMode::Aligned, Vec::new()),
-                DimKind::Linear if d.orient == Some(aptbim_core::model::Orient::Vertical) => {
-                    Tool::Dimension(DimMode::Vertical, Vec::new())
-                }
+                DimKind::Linear if d.orient == Some(aptbim_core::model::Orient::Vertical) => Tool::Dimension(DimMode::Vertical, Vec::new()),
                 DimKind::Linear => Tool::Dimension(DimMode::Horizontal, Vec::new()),
                 DimKind::Angular => Tool::Angular(Vec::new()),
                 k @ (DimKind::Radial | DimKind::Diameter | DimKind::ArcLength) => Tool::Round(k, Vec::new()),

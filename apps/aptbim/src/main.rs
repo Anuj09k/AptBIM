@@ -337,10 +337,7 @@ mod control_tests {
     fn the_control_port_is_taken_out_of_the_arguments_wherever_it_stands() {
         assert_eq!(control_port(control_args("house.aptbim")), Ok((control_args("house.aptbim"), None)));
         assert_eq!(control_port(control_args("--control 7000 house.aptbim")), Ok((control_args("house.aptbim"), Some(7000))));
-        assert_eq!(
-            control_port(control_args("house.aptbim --sample --control 0")),
-            Ok((control_args("house.aptbim --sample"), Some(0)))
-        );
+        assert_eq!(control_port(control_args("house.aptbim --sample --control 0")), Ok((control_args("house.aptbim --sample"), Some(0))));
         assert_eq!(
             control_port(control_args("--control 65535")),
             Ok((vec![], Some(65535))),

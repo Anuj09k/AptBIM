@@ -183,9 +183,8 @@ pub fn extract(root: &Path, domain: &str) -> Result<Document, String> {
     }
     Ok(Document {
         entries,
-        header:
-            "Project-Id-Version: AptBIM\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\n"
-                .into(),
+        header: "Project-Id-Version: AptBIM\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\n"
+            .into(),
         header_comments: vec![format!("# AptBIM {domain} translation template."), "# SPDX-License-Identifier: MIT OR Apache-2.0".into()],
         ..Document::default()
     })
