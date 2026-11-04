@@ -1,0 +1,2 @@
+[alias]
+i18n = "run --quiet -p aptbim-i18n --features tooling --"

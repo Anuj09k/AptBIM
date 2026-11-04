@@ -1,0 +1,109 @@
+# What a pull request has to pass: the three checks CLAUDE.md asks for before anything is finished, on the three systems the app
+# ships for (the release workflow tests on all three too, but only once a tag is pushed, which is late to find a Windows or macOS break).
+# It runs for pull requests from forks as well, with a read-only token and no secrets: `pull_request`, never `pull_request_target`.
+# A first-time contributor's run waits for a maintainer's approval on GitHub's side (Actions > the run > Approve and run).
+name: CI
+
+on:
+  pull_request:
+  # Pushes to main as well: they go in without a pull request, and a Windows or macOS break shouldn't wait for a tag.
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# A newer push to the same pull request makes the run before it pointless.
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # The oldest Ubuntu runner, as the release workflow's Linux job.
+          - { name: Linux, runner: ubuntu-22.04 }
+          - { name: Windows, runner: windows-latest }
+          - { name: macOS, runner: macos-15 }
+    steps:
+      - uses: actions/checkout@v4
+
+      # The X11, Wayland and GL headers egui's window builds against, as the release workflow installs them.
+      - name: Linux libraries
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends libxkbcommon-dev libwayland-dev libx11-dev libxrandr-dev libxi-dev libgl1-mesa-dev
+
+      - name: Rust
+        shell: bash
+        run: rustup update stable && rustup default stable && rustup component add rustfmt clippy
+
+      # shortcut: no build cache, so each run builds egui and wgpu from scratch (about 15 minutes); add actions/cache when that hurts.
+      - name: Format
+        if: runner.os == 'Linux'
+        run: cargo fmt --check
+
+      - name: Translation catalogs
+        if: runner.os == 'Linux'
+        run: cargo i18n check
+
+      - name: Clippy
+        run: cargo clippy --workspace --all-targets -- -D warnings
+
+      - name: Test
+        run: cargo test --workspace
+
+  # What CLAUDE.md asks after touching ifc.rs: IfcOpenShell validates what AptBIM writes, with the EXPRESS rules, and builds every
+  # product's shape. The sample house, and ci/ifc-coverage.txt for what the sample doesn't reach (structure, runs, masses, phases).
+  ifc:
+    name: IFC (IfcOpenShell)
+    runs-on: ubuntu-22.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Rust
+        run: rustup update stable && rustup default stable
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # pytest: IfcOpenShell's EXPRESS rule checker runs through it.
+      - name: IfcOpenShell
+        run: pip install ifcopenshell==0.8.5 pytest
+
+      - name: Write IFC
+        run: |
+          cargo run -q -p aptbim-cli -- run --sample --save house.ifc
+          cargo run -q -p aptbim-cli -- run --script ci/ifc-coverage.txt --save coverage.ifc
+
+      - name: Validate
+        run: python ci/validate_ifc.py house.ifc coverage.ifc
+
+  # What CLAUDE.md asks after touching packaging/: shellcheck on the scripts and actionlint on the workflows (which runs shellcheck
+  # on their `run:` steps too). The runner image has shellcheck; actionlint is a pinned release, checked against its sum.
+  scripts:
+    name: Scripts and workflows
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: shellcheck
+        run: find packaging -name '*.sh' -print0 | xargs -0 shellcheck
+
+      - name: actionlint
+        run: |
+          curl -sSfL -o actionlint.tar.gz https://github.com/rhysd/actionlint/releases/download/v1.7.7/actionlint_1.7.7_linux_amd64.tar.gz
+          echo "023070a287cd8cccd71515fedc843f1985bf96c436b7effaecce67290e7e0757  actionlint.tar.gz" | sha256sum -c -
+          tar xzf actionlint.tar.gz actionlint
+          ./actionlint -color

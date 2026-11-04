@@ -1,0 +1,40 @@
+[package]
+name = "aptbim"
+description = "AptBIM desktop app"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version = "1.95"
+publish = false
+
+[lints]
+workspace = true
+
+[features]
+# Reads Revit's .rvt and .rfa files. That code is ported from rvt-rs and is Apache-2.0 only (docs/rvt-provenance.md),
+# so a build without it, which keeps the repository's MIT OR Apache-2.0, is `--no-default-features`.
+default = ["rvt", "dwg"]
+rvt = ["dep:aptbim-rvt"]
+# Reads DWG drawings in `import_cad`, through aptbim-dwg, which uses acadrust (MPL-2.0, unmodified; NOTICE).
+dwg = ["dep:aptbim-dwg"]
+
+[dependencies]
+aptbim-i18n = { workspace = true }
+aptbim-core = { workspace = true }
+aptbim-rvt = { workspace = true, optional = true }
+aptbim-dwg = { workspace = true, optional = true }
+aptbim-ui-egui = { workspace = true }
+aptbim-update = { workspace = true }
+eframe = { workspace = true }
+rfd = { workspace = true }
+serde_json = { workspace = true }
+
+[dev-dependencies]
+# Synthetic Revit-shaped files for the test of the reader the window is given.
+aptbim-rvt = { workspace = true, features = ["testing"] }
+
+[target.'cfg(target_os = "macos")'.dependencies]
+# Finder's double-click, Open With and drops on the Dock icon arrive as Apple events, which winit doesn't
+# hand on. Handling them needs Objective-C, so unsafe, which this workspace forbids: this small crate (the
+# one PhotoCraft uses) does it behind a safe API. Pinned exactly: read the diff before bumping.
+fmv-macos-events = "=0.1.0"

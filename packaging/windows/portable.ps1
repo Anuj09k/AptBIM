@@ -1,0 +1,50 @@
+# The portable build: aptbim.exe, aptbim-cli.exe, the licences and the readme in one zip, to unzip anywhere and run, for a PC
+# whose user can't install software. Then it unzips the zip somewhere else and runs what is in it, as a user would.
+#
+#   packaging\windows\portable.ps1 -Version 0.10.0 -BinDir target\x86_64-pc-windows-msvc\release
+#
+# The zip is aptbim-<version>-windows-x64-portable.zip in the current folder (its name goes to PORTABLE in $GITHUB_ENV, in
+# Actions). It isn't one of the files the updater looks for (`Target::asset_name`). Its settings still go to %APPDATA%\AptBIM,
+# which needs no rights, and the updater only replaces the installer's copy in Program Files, so a portable copy is told of a
+# newer version with a Download button.
+param(
+  [Parameter(Mandatory)][string]$Version,
+  [Parameter(Mandatory)][string]$BinDir
+)
+$ErrorActionPreference = 'Stop'
+$root = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
+$bin = (Resolve-Path $BinDir).Path
+$name = "aptbim-$Version-windows-x64-portable"
+$work = if ($env:RUNNER_TEMP) { $env:RUNNER_TEMP } else { $env:TEMP }
+$stage = Join-Path (Join-Path $work 'portable-stage') $name
+$zip = Join-Path (Get-Location) "$name.zip"
+
+Remove-Item (Split-Path $stage) -Recurse -Force -ErrorAction SilentlyContinue
+Remove-Item $zip -Force -ErrorAction SilentlyContinue
+New-Item -ItemType Directory $stage | Out-Null
+Copy-Item "$bin\aptbim.exe", "$bin\aptbim-cli.exe", "$root\LICENSE-MIT", "$root\LICENSE-APACHE", "$root\NOTICE", "$root\README.md" $stage
+# The fonts' licence, where NOTICE says it is: fonts\ibm-plex-sans\OFL.txt and fonts\ibm-plex-mono\OFL.txt.
+$licences = 'fonts\ibm-plex-sans\OFL.txt', 'fonts\ibm-plex-mono\OFL.txt'
+foreach ($licence in $licences) {
+  New-Item -ItemType Directory (Split-Path (Join-Path $stage $licence)) -Force | Out-Null
+  Copy-Item (Join-Path $root "assets\$licence") (Join-Path $stage $licence)
+}
+Compress-Archive -Path $stage -DestinationPath $zip
+
+# What a user gets: the zip opened in a folder of its own, and the programs in it run from there.
+$opened = Join-Path $work 'portable-opened'
+Remove-Item $opened -Recurse -Force -ErrorAction SilentlyContinue
+Expand-Archive $zip -DestinationPath $opened
+$inside = Join-Path $opened $name
+foreach ($file in @('aptbim.exe', 'aptbim-cli.exe', 'LICENSE-MIT', 'LICENSE-APACHE', 'NOTICE', 'README.md') + $licences) {
+  if (-not (Test-Path (Join-Path $inside $file))) { throw "expected $file in $name.zip" }
+}
+$said = & "$inside\aptbim-cli.exe" --version
+if ($said -ne "aptbim-cli $Version") { throw "expected 'aptbim-cli $Version' from the unzipped CLI, got '$said'" }
+# The window's program has no console, so what it prints goes nowhere: its exit code is what says it ran.
+$app = Start-Process "$inside\aptbim.exe" -ArgumentList '--version' -Wait -PassThru
+if ($app.ExitCode -ne 0) { throw "the unzipped aptbim.exe --version exited with $($app.ExitCode)" }
+Remove-Item $opened -Recurse -Force
+Write-Host "ok: $name.zip runs from a folder it was unzipped into"
+
+if ($env:GITHUB_ENV) { Add-Content -Path $env:GITHUB_ENV -Value "PORTABLE=$name.zip" }

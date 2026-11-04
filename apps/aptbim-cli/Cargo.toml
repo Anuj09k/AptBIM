@@ -1,0 +1,30 @@
+[package]
+name = "aptbim-cli"
+description = "AptBIM from the command line: scripts, conversion, and an MCP server for agents"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+
+[lints]
+workspace = true
+
+[features]
+# Reads Revit's .rvt and .rfa files. That code is ported from rvt-rs and is Apache-2.0 only (docs/rvt-provenance.md),
+# so a build without it, which keeps the repository's MIT OR Apache-2.0, is `--no-default-features`.
+default = ["rvt", "dwg"]
+rvt = ["dep:aptbim-rvt"]
+# Reads DWG drawings in `import_cad`, through aptbim-dwg, which uses acadrust (MPL-2.0, unmodified; NOTICE).
+dwg = ["dep:aptbim-dwg"]
+
+[dependencies]
+aptbim-core = { workspace = true }
+aptbim-rvt = { workspace = true, optional = true }
+aptbim-dwg = { workspace = true, optional = true }
+serde_json = { workspace = true }
+
+[dev-dependencies]
+# DWG files made from DXF text, for the test of the child that reads them.
+aptbim-dwg = { workspace = true, features = ["testing"] }
+# Synthetic Revit-shaped files for the tests of `info`.
+aptbim-rvt = { workspace = true, features = ["testing"] }

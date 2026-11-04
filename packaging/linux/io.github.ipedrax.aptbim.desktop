@@ -1,0 +1,14 @@
+[Desktop Entry]
+Type=Application
+Name=AptBIM
+GenericName=Building Information Modeling
+Comment=Model buildings: walls, floors, roofs, rooms, sheets and schedules; open and save IFC
+Exec=aptbim %F
+TryExec=aptbim
+Icon=io.github.ipedrax.aptbim
+Terminal=false
+StartupNotify=true
+StartupWMClass=io.github.ipedrax.aptbim
+Categories=Graphics;Engineering;3DGraphics;
+MimeType=application/x-aptbim;application/x-ifc;
+Keywords=bim;ifc;architecture;building;cad;revit;floor plan;

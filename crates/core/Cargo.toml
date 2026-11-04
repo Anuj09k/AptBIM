@@ -1,0 +1,26 @@
+[package]
+name = "aptbim-core"
+description = "AptBIM building model, command engine, views, sheets and IFC export"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]
+aptbim-i18n = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+tiny-skia = { workspace = true }
+flate2 = { workspace = true }
+zune-jpeg = { workspace = true }
+encoding_rs = { workspace = true }
+getrandom = { workspace = true }
+tempfile = { workspace = true }
+rayon = { workspace = true }
+ttf-parser = { workspace = true }
+
+[build-dependencies]
+aptbim-i18n = { workspace = true, features = ["catalog"] }

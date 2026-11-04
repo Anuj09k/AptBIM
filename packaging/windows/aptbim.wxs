@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  AptBIM's Windows installer, for the WiX Toolset 5 (the wix .NET tool, 5.0.2) and its UI extension,
+  which draws the setup wizard: wix extension add -g WixToolset.UI.wixext/5.0.2
+  From the repository root, after a release build of aptbim and aptbim-cli for x86_64-pc-windows-msvc:
+
+    wix build packaging\windows\aptbim.wxs -arch x64 -ext WixToolset.UI.wixext -d Version=0.2.0
+      -d BinDir=target\x86_64-pc-windows-msvc\release -o aptbim-0.2.0-windows-x64.msi
+
+  It works as CADCraft's installer does. It installs for every user into Program Files\AptBIM, or into the
+  folder chosen on the wizard's folder page (silent: INSTALLFOLDER="D:\Apps\AptBIM"), which an upgrade keeps:
+  the app, the CLI and the licences, a Start menu shortcut, .aptbim projects opening in AptBIM, and
+  AptBIM offered under "Open with" for .ifc files, without taking over the user's default app. A
+  newer version upgrades an older one in place, and so does a rebuild of the same version.
+
+  Desktop shortcut: the setup wizard asks (unticked by default). A silent install leaves it out unless
+  asked: msiexec /i aptbim-0.2.0-windows-x64.msi /qn DESKTOPSHORTCUT=1. An upgrade keeps the
+  previous choice unless DESKTOPSHORTCUT=1 or DESKTOPSHORTCUT=0 is given.
+-->
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+  <Package Name="AptBIM" Manufacturer="IPedrax" Version="$(var.Version)" UpgradeCode="5D7C2E8B-3F4A-4C1E-9B6D-2A8F0E1C7B34" Scope="perMachine" Compressed="yes" Language="1033">
+    <SummaryInformation Description="AptBIM: building information modeling in pure Rust" />
+    <!-- Whatever their language: 0.1.0 and 0.2.0 were language neutral, and an upgrade that only
+         looked for 1033 left them installed beside it. -->
+    <MajorUpgrade AllowSameVersionUpgrades="yes" IgnoreLanguage="yes" DowngradeErrorMessage="A newer version of AptBIM is already installed." />
+    <MediaTemplate EmbedCab="yes" CompressionLevel="high" />
+
+    <!-- Windows Installer writes the icon to a file named after its Id, and the shell only reads an icon
+         from a file named .ico or .exe: without the extension, the shortcuts showed no icon. -->
+    <Icon Id="AptBIMIcon.ico" SourceFile="assets\app-icon\aptbim.ico" />
+    <Property Id="ARPPRODUCTICON" Value="AptBIMIcon.ico" />
+    <Property Id="ARPURLINFOABOUT" Value="https://github.com/Anuj09k/AptBIM-" />
+    <Property Id="ARPURLUPDATEINFO" Value="https://github.com/Anuj09k/AptBIM-/releases" />
+    <Property Id="ARPHELPLINK" Value="https://github.com/Anuj09k/AptBIM-/issues" />
+
+    <StandardDirectory Id="ProgramFiles64Folder">
+      <Directory Id="INSTALLFOLDER" Name="AptBIM">
+        <!-- The fonts' licence, where NOTICE says it is: fonts\ibm-plex-sans\OFL.txt and fonts\ibm-plex-mono\OFL.txt.
+             Not "FontsFolder": that Id is Windows Installer's own for the system Fonts folder, and a directory of that name
+             is taken for it, so the licences did not land in the folder that was chosen. -->
+        <Directory Id="LicenceFontsFolder" Name="fonts">
+          <Directory Id="PlexSansFolder" Name="ibm-plex-sans" />
+          <Directory Id="PlexMonoFolder" Name="ibm-plex-mono" />
+        </Directory>
+      </Directory>
+    </StandardDirectory>
+
+    <!-- Where the previous install put AptBIM, from the key the app component writes, so an upgrade (the wizard's, or an
+         update's /passive) stays in the folder that was chosen. None, or a folder that's gone: the default above. Secure,
+         so the elevated install sees the folder the wizard picked. -->
+    <Property Id="INSTALLFOLDER" Secure="yes">
+      <RegistrySearch Id="PreviousInstallFolder" Root="HKLM" Key="Software\AptBIM" Name="InstallFolder" Type="directory" Bitness="always64" />
+    </Property>
+    <!-- The folder page edits this directory. -->
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
+
+    <!-- "Create a desktop shortcut": the wizard's checkbox sets it to 1 (unticked, it's unset), and a
+         silent install passes DESKTOPSHORTCUT=1. Secure, so the elevated install sees the wizard's choice. -->
+    <Property Id="DESKTOPSHORTCUT" Secure="yes" />
+    <!-- The previous install's choice, from the shortcut's key path, so an upgrade keeps it unasked. -->
+    <Property Id="PREVIOUSDESKTOPSHORTCUT">
+      <RegistrySearch Id="PreviousDesktopShortcut" Root="HKCU" Key="Software\AptBIM" Name="DesktopShortcut" Type="raw" />
+    </Property>
+    <!-- Only when DESKTOPSHORTCUT wasn't given; "first" runs it once (in the wizard's sequence when there
+         is one), so unticking the box isn't undone when the install runs. -->
+    <SetProperty Id="DESKTOPSHORTCUT" Value="1" After="AppSearch" Sequence="first"
+        Condition="NOT DESKTOPSHORTCUT AND PREVIOUSDESKTOPSHORTCUT = &quot;1&quot;" />
+
+    <UIRef Id="AptBIMUI" />
+
+    <Feature Id="Main" Title="AptBIM" Level="1">
+      <Component Id="App" Directory="INSTALLFOLDER">
+        <File Id="AptBIMExe" Source="$(var.BinDir)\aptbim.exe" KeyPath="yes">
+          <Shortcut Id="StartMenuShortcut" Directory="ProgramMenuFolder" Name="AptBIM" Description="Building information modeling" WorkingDirectory="INSTALLFOLDER" Icon="AptBIMIcon.ico" Advertise="yes" />
+        </File>
+        <ProgId Id="AptBIM.Project" Description="AptBIM project" Icon="AptBIMIcon.ico" Advertise="yes">
+          <Extension Id="aptbim" ContentType="application/x-aptbim">
+            <Verb Id="open" Command="Open" Argument="&quot;%1&quot;" />
+          </Extension>
+        </ProgId>
+        <!-- Run as `aptbim`, and listed under "Open with" for .ifc files as AptBIM. -->
+        <RegistryValue Root="HKLM" Key="Software\Microsoft\Windows\CurrentVersion\App Paths\aptbim.exe" Value="[#AptBIMExe]" Type="string" />
+        <RegistryValue Root="HKLM" Key="Software\Classes\Applications\aptbim.exe" Name="FriendlyAppName" Value="AptBIM" Type="string" />
+        <RegistryValue Root="HKLM" Key="Software\Classes\Applications\aptbim.exe\shell\open\command" Value="&quot;[#AptBIMExe]&quot; &quot;%1&quot;" Type="string" />
+        <RegistryValue Root="HKLM" Key="Software\Classes\.ifc\OpenWithProgids" Name="AptBIM.Ifc" Value="" Type="string" />
+        <RegistryValue Root="HKLM" Key="Software\Classes\AptBIM.Ifc\shell\open\command" Value="&quot;[#AptBIMExe]&quot; &quot;%1&quot;" Type="string" />
+        <RegistryValue Root="HKLM" Key="Software\AptBIM" Name="InstallFolder" Value="[INSTALLFOLDER]" Type="string" />
+      </Component>
+      <Component Id="Cli" Directory="INSTALLFOLDER">
+        <File Id="AptBIMCliExe" Source="$(var.BinDir)\aptbim-cli.exe" KeyPath="yes" />
+      </Component>
+      <Component Id="LicenceMit" Directory="INSTALLFOLDER">
+        <File Id="LicenseMit" Source="LICENSE-MIT" KeyPath="yes" />
+      </Component>
+      <Component Id="LicenceApache" Directory="INSTALLFOLDER">
+        <File Id="LicenseApache" Source="LICENSE-APACHE" KeyPath="yes" />
+      </Component>
+      <Component Id="NoticeFile" Directory="INSTALLFOLDER">
+        <File Id="Notice" Source="NOTICE" KeyPath="yes" />
+      </Component>
+      <Component Id="PlexSansLicence" Directory="PlexSansFolder">
+        <File Id="PlexSansOfl" Source="assets\fonts\ibm-plex-sans\OFL.txt" KeyPath="yes" />
+      </Component>
+      <Component Id="PlexMonoLicence" Directory="PlexMonoFolder">
+        <File Id="PlexMonoOfl" Source="assets\fonts\ibm-plex-mono\OFL.txt" KeyPath="yes" />
+      </Component>
+      <!-- A shortcut that isn't advertised needs a registry key path, and in a profile folder (the
+           desktop, which per-machine is the Public one) that key must be under HKCU (ICE38, ICE43, ICE57). -->
+      <Component Id="DesktopShortcut" Directory="DesktopFolder" Condition="DESKTOPSHORTCUT = &quot;1&quot;">
+        <Shortcut Id="DesktopShortcut" Name="AptBIM" Description="Building information modeling" Target="[INSTALLFOLDER]aptbim.exe" WorkingDirectory="INSTALLFOLDER" Icon="AptBIMIcon.ico" />
+        <RegistryValue Root="HKCU" Key="Software\AptBIM" Name="DesktopShortcut" Value="1" Type="string" KeyPath="yes" />
+      </Component>
+    </Feature>
+  </Package>
+
+  <!--
+    The setup wizard, as CADCraft's: WixUI_InstallDir's flow without the licence page,
+    plus a Shortcuts page after the folder's.
+      install:     Welcome > Folder > Shortcuts > Ready to install > Progress > Finish
+      maintenance: Maintenance welcome > Repair or Remove > Ready > Progress > Finish
+  -->
+  <Fragment>
+    <UI Id="AptBIMUI">
+      <TextStyle Id="WixUI_Font_Normal" FaceName="Tahoma" Size="8" />
+      <TextStyle Id="WixUI_Font_Bigger" FaceName="Tahoma" Size="12" />
+      <TextStyle Id="WixUI_Font_Title" FaceName="Tahoma" Size="9" Bold="yes" />
+      <Property Id="DefaultUIFont" Value="WixUI_Font_Normal" />
+
+      <DialogRef Id="BrowseDlg" />
+      <DialogRef Id="DiskCostDlg" />
+      <DialogRef Id="ErrorDlg" />
+      <DialogRef Id="FatalError" />
+      <DialogRef Id="FilesInUse" />
+      <DialogRef Id="MsiRMFilesInUse" />
+      <DialogRef Id="PrepareDlg" />
+      <DialogRef Id="ProgressDlg" />
+      <DialogRef Id="ResumeDlg" />
+      <DialogRef Id="UserExit" />
+
+      <Dialog Id="ShortcutsDlg" Width="370" Height="270" Title="!(loc.InstallDirDlg_Title)">
+        <Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="!(loc.WixUINext)" />
+        <Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="!(loc.WixUIBack)" />
+        <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="!(loc.WixUICancel)">
+          <Publish Event="SpawnDialog" Value="CancelDlg" />
+        </Control>
+
+        <Control Id="Description" Type="Text" X="25" Y="23" Width="280" Height="15" Transparent="yes" NoPrefix="yes" Text="Choose where to start [ProductName] from." />
+        <Control Id="Title" Type="Text" X="15" Y="6" Width="200" Height="15" Transparent="yes" NoPrefix="yes" Text="{\WixUI_Font_Title}Shortcuts" />
+        <Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="44" TabSkip="no" Text="!(loc.InstallDirDlgBannerBitmap)" />
+        <Control Id="BannerLine" Type="Line" X="0" Y="44" Width="370" Height="0" />
+        <Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
+
+        <Control Id="StartMenuText" Type="Text" X="20" Y="60" Width="330" Height="15" NoPrefix="yes" Text="[ProductName] will be added to the Start menu." />
+        <Control Id="DesktopShortcutCheckBox" Type="CheckBox" X="20" Y="85" Width="330" Height="17" Property="DESKTOPSHORTCUT" CheckBoxValue="1" Text="Create a &amp;desktop shortcut" />
+      </Dialog>
+
+      <Publish Dialog="ExitDialog" Control="Finish" Event="EndDialog" Value="Return" Order="999" />
+
+      <Publish Dialog="WelcomeDlg" Control="Next" Event="NewDialog" Value="InstallDirDlg" Condition="NOT Installed" />
+      <Publish Dialog="WelcomeDlg" Control="Next" Event="NewDialog" Value="VerifyReadyDlg" Condition="Installed AND PATCH" />
+
+      <!-- WixUI_InstallDir's own events for the folder page and its Browse dialog, with the path check (the x64 build of
+           WiX's WixUIValidatePath) that stops a folder Windows can't use before the install starts. -->
+      <Publish Dialog="InstallDirDlg" Control="Back" Event="NewDialog" Value="WelcomeDlg" />
+      <Publish Dialog="InstallDirDlg" Control="Next" Event="SetTargetPath" Value="[WIXUI_INSTALLDIR]" Order="1" />
+      <Publish Dialog="InstallDirDlg" Control="Next" Event="DoAction" Value="WixUIValidatePath_X64" Order="2" Condition="NOT WIXUI_DONTVALIDATEPATH" />
+      <Publish Dialog="InstallDirDlg" Control="Next" Event="SpawnDialog" Value="InvalidDirDlg" Order="3" Condition="NOT WIXUI_DONTVALIDATEPATH AND WIXUI_INSTALLDIR_VALID&lt;&gt;&quot;1&quot;" />
+      <Publish Dialog="InstallDirDlg" Control="Next" Event="NewDialog" Value="ShortcutsDlg" Order="4" Condition="WIXUI_DONTVALIDATEPATH OR WIXUI_INSTALLDIR_VALID=&quot;1&quot;" />
+      <Publish Dialog="InstallDirDlg" Control="ChangeFolder" Property="_BrowseProperty" Value="[WIXUI_INSTALLDIR]" Order="1" />
+      <Publish Dialog="InstallDirDlg" Control="ChangeFolder" Event="SpawnDialog" Value="BrowseDlg" Order="2" />
+      <Publish Dialog="BrowseDlg" Control="OK" Event="DoAction" Value="WixUIValidatePath_X64" Order="3" Condition="NOT WIXUI_DONTVALIDATEPATH" />
+      <Publish Dialog="BrowseDlg" Control="OK" Event="SpawnDialog" Value="InvalidDirDlg" Order="4" Condition="NOT WIXUI_DONTVALIDATEPATH AND WIXUI_INSTALLDIR_VALID&lt;&gt;&quot;1&quot;" />
+
+      <Publish Dialog="ShortcutsDlg" Control="Back" Event="NewDialog" Value="InstallDirDlg" />
+      <Publish Dialog="ShortcutsDlg" Control="Next" Event="NewDialog" Value="VerifyReadyDlg" />
+
+      <Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="ShortcutsDlg" Order="1" Condition="NOT Installed" />
+      <Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="MaintenanceTypeDlg" Order="2" Condition="Installed AND NOT PATCH" />
+      <Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="WelcomeDlg" Order="2" Condition="Installed AND PATCH" />
+
+      <Publish Dialog="MaintenanceWelcomeDlg" Control="Next" Event="NewDialog" Value="MaintenanceTypeDlg" />
+
+      <Publish Dialog="MaintenanceTypeDlg" Control="RepairButton" Event="NewDialog" Value="VerifyReadyDlg" />
+      <Publish Dialog="MaintenanceTypeDlg" Control="RemoveButton" Event="NewDialog" Value="VerifyReadyDlg" />
+      <Publish Dialog="MaintenanceTypeDlg" Control="Back" Event="NewDialog" Value="MaintenanceWelcomeDlg" />
+
+      <!-- No "Change" in Apps and features: there is a single feature. -->
+      <Property Id="ARPNOMODIFY" Value="1" />
+    </UI>
+
+    <UIRef Id="WixUI_Common" />
+  </Fragment>
+</Wix>
