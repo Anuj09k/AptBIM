@@ -29,6 +29,21 @@ fn house(s: &mut Session) -> Vec<u64> {
 }
 
 #[test]
+fn a_closed_chain_that_repeats_its_first_point_is_closed_once() {
+    // As people (and agents) write a loop: back to where it started, and `closed` as well.
+    let mut s = Session::new();
+    let r = run(&mut s, "wall", json!({"points": [[0, 0], [4000, 0], [4000, 3000], [0, 3000], [0, 0]], "closed": true}));
+    assert_eq!(r["ids"].as_array().map(Vec::len), Some(4), "{r}");
+    let r = run(&mut s, "room_separator", json!({"points": [[0, 5000], [4000, 5000], [4000, 8000], [0, 5000]], "closed": true}));
+    assert_eq!(r["ids"].as_array().map(Vec::len), Some(3), "{r}");
+    let r = run(&mut s, "beam", json!({"points": [[0, 10000], [4000, 10000], [4000, 13000], [0, 10000]], "closed": true}));
+    assert_eq!(r["ids"].as_array().map(Vec::len), Some(3), "{r}");
+    // Without `closed` it is a chain that ends where it began, as before.
+    let r = run(&mut s, "wall", json!({"points": [[10000, 0], [14000, 0], [14000, 3000], [10000, 0]]}));
+    assert_eq!(r["ids"].as_array().map(Vec::len), Some(3), "{r}");
+}
+
+#[test]
 fn a_closed_wall_chain_makes_one_wall_per_side_up_to_the_next_level() {
     let mut s = Session::new();
     assert_eq!(house(&mut s).len(), 4);

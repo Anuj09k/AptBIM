@@ -196,7 +196,8 @@ pub static ALL: &[Command] = &[
         msg!("Wall"),
         &["WA"],
         "{points: [[x,y],…], closed?, type?, level?, top_level?, top_offset?, height?, base_offset?, arc?, location?, attach_top?, \
-         attach_base?, room_bounding?} one wall per segment of its location line; up to the next level, or `height` mm tall (unconnected), or up \
+         attach_base?, room_bounding?} one wall per segment of its location line (`closed` joins the last point to the first, \
+         unless it is already there); up to the next level, or `height` mm tall (unconnected), or up \
          to `top_level`, `top_offset` mm above it (0; negative, below it; the top must stay above the base). `arc`: degrees each turns from its start to its end, counter-clockwise (180, a half circle bulging to \
          its right). `location`: the line of it the points are on: centre (the default), core-centre, exterior-finish, \
          interior-finish, exterior-core or interior-core; its exterior side is to the left of its start to its end, so walls \
@@ -1971,6 +1972,16 @@ fn point_opt(c: &str, p: &Value, key: &str) -> Result<Option<P2>, String> {
 
 fn point_req(c: &str, p: &Value, key: &str) -> Result<P2, String> {
     point_opt(c, p, key)?.ok_or_else(|| bad(c, format!("`{key}` [x, y] is required")))
+}
+
+/// `closed`: the chain goes back to its first point, unless it already ends there (a loop written back to where it
+/// began, as people and agents write one) — closing that again would make a segment of no length.
+fn close_loop<T: Copy>(pts: &mut Vec<T>, dist: impl Fn(&T, &T) -> f64) {
+    if let (Some(&first), Some(last)) = (pts.first(), pts.last())
+        && (pts.len() < 3 || dist(&first, last) > TOL)
+    {
+        pts.push(first);
+    }
 }
 
 fn points(c: &str, p: &Value, key: &str) -> Result<Vec<P2>, String> {
@@ -5780,10 +5791,8 @@ fn room_separator(s: &mut Session, p: &Value) -> R {
     if pts.len() < 2 {
         return Err(bad(c, "`points` needs at least 2 points"));
     }
-    if flag(c, p, "closed")?
-        && let Some(&first) = pts.first()
-    {
-        pts.push(first);
+    if flag(c, p, "closed")? {
+        close_loop(&mut pts, |a, b| a.dist(*b));
     }
     let level = level_param(c, &s.model, p, "level")?;
     let m = s.model_mut();
@@ -5803,10 +5812,8 @@ fn rebar_bars(s: &mut Session, p: &Value) -> R {
     if path.len() < 2 {
         return Err(bad(c, "`points` needs at least 2 points"));
     }
-    if flag(c, p, "closed")?
-        && let Some(&first) = path.first()
-    {
-        path.push(first);
+    if flag(c, p, "closed")? {
+        close_loop(&mut path, |a, b| ((a[0] - b[0]).powi(2) + (a[1] - b[1]).powi(2) + (a[2] - b[2]).powi(2)).sqrt());
     }
     if rebar::length(&path) <= TOL {
         return Err(bad(c, "the bar is too short: its points are all in one place"));
@@ -6183,10 +6190,8 @@ fn wall(s: &mut Session, p: &Value) -> R {
     if pts.len() < 2 {
         return Err(bad(c, "`points` needs at least 2 points"));
     }
-    if flag(c, p, "closed")?
-        && let Some(&first) = pts.first()
-    {
-        pts.push(first);
+    if flag(c, p, "closed")? {
+        close_loop(&mut pts, |a, b| a.dist(*b));
     }
     let m = &s.model;
     let level = level_param(c, m, p, "level")?;
@@ -7603,10 +7608,8 @@ pub fn runs_of(m: &Model, p: &Value, category: &str) -> Result<Vec<Element>, Str
     if pts.len() < 2 {
         return Err(bad(c, "`points` needs at least 2 points"));
     }
-    if flag(c, p, "closed")?
-        && let Some(&first) = pts.first()
-    {
-        pts.push(first);
+    if flag(c, p, "closed")? {
+        close_loop(&mut pts, |a, b| a.dist(*b));
     }
     let level = level_param(c, m, p, "level")?;
     let type_name = type_param(c, p, m, category)?;
