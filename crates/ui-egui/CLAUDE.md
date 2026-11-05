@@ -13,6 +13,10 @@ startup, tags) is [the desktop](../../docs/areas/desktop.md).
   with `aptbim_i18n::msg!`; run `cargo i18n update` after changing messages. Translations live in `translations/ui/*.po`;
   unfinished entries fall back to English. See [translations](../../docs/areas/translations.md).
   `nothing_a_translated_interface_shows_is_left_in_english` catches known translations the window forgot to use. Core diagnostics stay English.
+- **Every input widget has a name a screen reader can announce**: every harness fails a frame with an unnamed one (egui_kittest's
+  accessibility check; never turn it off). A widget beside a visible label takes `.labelled_by(label.id)`, which replaces its own
+  name with the label's text, colon and all, so tests find it by that text; one with no label takes `.accessible_name(t("Name"))`,
+  which keeps its value (a drop-down's choice, a slider's number), as `WidgetInfo::labeled` does not.
 - **A ribbon tool that drops choices down** goes through `ribbon::choices(ui, &response, open, content)`, not `Popup::menu`: the
   tool may be a row in its panel's list, where a popup of its own would close the list (egui keeps one popup open).
 - **An application dialog** uses `popup::Modal` with a title, `popup::body` for the scrolling form, and `popup::footer` for its

@@ -422,19 +422,20 @@ impl BimApp {
                     ui.group(|ui| {
                         ui.label(RichText::new(t("Add Shortcut")).strong());
                         ui.horizontal(|ui| {
-                            ui.label(t("Shortcut Keys:"));
-                            let r = ui.add(TextEdit::singleline(&mut self.shortcuts_dialog.new_keys).desired_width(60.0));
+                            let l = ui.label(t("Shortcut Keys:"));
+                            let r = ui.add(TextEdit::singleline(&mut self.shortcuts_dialog.new_keys).desired_width(60.0)).labelled_by(l.id);
                             if r.changed() {
                                 self.shortcuts_dialog.new_keys = self.shortcuts_dialog.new_keys.to_ascii_uppercase();
                             }
 
-                            ui.label(t("Command / Tool:"));
+                            let l = ui.label(t("Command / Tool:"));
                             let current_action = self.shortcuts_dialog.new_action.clone();
-                            ComboBox::from_id_salt("new_shortcut_action").selected_text(t(&current_action)).show_ui(ui, |ui| {
+                            let c = ComboBox::from_id_salt("new_shortcut_action").selected_text(t(&current_action)).show_ui(ui, |ui| {
                                 for &act in ACTIONS {
                                     ui.selectable_value(&mut self.shortcuts_dialog.new_action, act.to_string(), t(act));
                                 }
                             });
+                            c.response.labelled_by(l.id);
 
                             if ui.button(t("Add")).clicked() {
                                 let key = self.shortcuts_dialog.new_keys.trim().to_ascii_uppercase();
@@ -509,11 +510,13 @@ impl BimApp {
                             let is_editing = self.shortcuts_dialog.editing_action.as_deref() == Some(&action);
 
                             // Column 1: Action label
-                            ui.label(RichText::new(t(&action)).strong());
+                            let name = ui.label(RichText::new(t(&action)).strong());
 
-                            // Column 2: Keys display or editor
+                            // Column 2: Keys display or editor, named by the row's action
                             if is_editing {
-                                let r = ui.add(TextEdit::singleline(&mut self.shortcuts_dialog.edit_keys).desired_width(100.0));
+                                let r = ui
+                                    .add(TextEdit::singleline(&mut self.shortcuts_dialog.edit_keys).desired_width(100.0))
+                                    .labelled_by(name.id);
                                 if r.changed() {
                                     self.shortcuts_dialog.edit_keys = self.shortcuts_dialog.edit_keys.to_ascii_uppercase();
                                 }

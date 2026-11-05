@@ -107,8 +107,8 @@ pub(super) fn window(ctx: &Context, d: &mut LineStylesDialog) {
             paint(ui, &editor.segments, rect.shrink(10.0), editor.zoom, editor.curved);
             ui.horizontal(|ui| {
                 ui.checkbox(&mut editor.curved, t("Curve preview"));
-                ui.label(t("Zoom"));
-                ui.add(egui::Slider::new(&mut editor.zoom, 2.0..=20.0).show_value(false));
+                let l = ui.label(t("Zoom"));
+                ui.add(egui::Slider::new(&mut editor.zoom, 2.0..=20.0).show_value(false)).labelled_by(l.id);
             });
             ui.label(t("Lengths and sizes are mm on paper. The centerline defines geometry and dimensions."));
             let mut remove = None;

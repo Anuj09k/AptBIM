@@ -524,14 +524,15 @@ impl BimApp {
                 ui.radio_value(&mut self.compact, true, t("Compact")).on_hover_text(t(tip));
             });
         });
-        heading(ui, "Language");
-        ComboBox::from_id_salt("settings-language").selected_text(self.lang.label()).width(200.0).show_ui(ui, |ui| {
+        let label = heading(ui, "Language");
+        let c = ComboBox::from_id_salt("settings-language").selected_text(self.lang.label()).width(200.0).show_ui(ui, |ui| {
             for l in Lang::ALL {
                 if ui.selectable_label(self.lang == l, l.label()).clicked() {
                     self.set_lang(ctx, l);
                 }
             }
         });
+        c.response.labelled_by(label);
         heading(ui, msg!("Ribbon"));
         ui.checkbox(&mut self.ribbon_min, t("Minimize the ribbon to its tabs"))
             .on_hover_text(t("Double-clicking a tab's name does the same; a click on a tab then shows its tools until one is picked"));
@@ -574,8 +575,8 @@ impl BimApp {
         later(ui, |ui| {
             let (mut scale, mut keys, mut reopen, mut views) = (100.0, true, false, false);
             ui.horizontal(|ui| {
-                ui.label(t("Interface scale"));
-                ui.add(egui::Slider::new(&mut scale, 75.0..=200.0).suffix(" %"));
+                let l = ui.label(t("Interface scale"));
+                ui.add(egui::Slider::new(&mut scale, 75.0..=200.0).suffix(" %")).labelled_by(l.id);
             });
             ui.checkbox(&mut keys, t("Show shortcut keys in tooltips"));
             ui.checkbox(&mut reopen, t("Open the last project at startup"));
@@ -608,14 +609,15 @@ impl BimApp {
         later(ui, |ui| {
             let (mut undo, mut quality, mut smooth, mut background) = (100, 0, true, false);
             ui.horizontal(|ui| {
-                ui.label(t("Undo steps kept"));
-                ui.add(egui::DragValue::new(&mut undo).range(10..=1000));
+                let l = ui.label(t("Undo steps kept"));
+                ui.add(egui::DragValue::new(&mut undo).range(10..=1000)).labelled_by(l.id);
             });
             ui.horizontal(|ui| {
-                ui.label(t("3D view resolution"));
+                let l = ui.label(t("3D view resolution"));
                 ComboBox::from_id_salt("settings-3d")
                     .selected_text(t("Full"))
-                    .show_index(ui, &mut quality, 2, |i| if i == 0 { t("Full") } else { t("Half") }.to_string());
+                    .show_index(ui, &mut quality, 2, |i| if i == 0 { t("Full") } else { t("Half") }.to_string())
+                    .labelled_by(l.id);
             });
             ui.checkbox(&mut smooth, t("Smooth lines (anti-aliasing)"));
             ui.checkbox(&mut background, t("Redraw views in the background"));
@@ -648,10 +650,11 @@ fn graphics_later(ui: &mut Ui) {
     });
     ui.checkbox(&mut hover, t("Highlight what's under the cursor"));
     ui.horizontal(|ui| {
-        ui.label(t("Background of the 3D view"));
+        let l = ui.label(t("Background of the 3D view"));
         ComboBox::from_id_salt("settings-ground")
             .selected_text(t("Plain"))
-            .show_index(ui, &mut ground, 2, |i| if i == 0 { t("Plain") } else { t("Sky") }.to_string());
+            .show_index(ui, &mut ground, 2, |i| if i == 0 { t("Plain") } else { t("Sky") }.to_string())
+            .labelled_by(l.id);
     });
 }
 
@@ -664,8 +667,12 @@ impl BimApp {
         }
         if enabled {
             ui.horizontal(|ui| {
-                ui.label(t("Save a recovery copy every"));
-                if ui.add(egui::DragValue::new(&mut self.autosave.interval_minutes).range(1..=120).suffix(" min")).changed() {
+                let l = ui.label(t("Save a recovery copy every"));
+                if ui
+                    .add(egui::DragValue::new(&mut self.autosave.interval_minutes).range(1..=120).suffix(" min"))
+                    .labelled_by(l.id)
+                    .changed()
+                {
                     self.autosave.next_due =
                         std::time::Instant::now() + std::time::Duration::from_secs(u64::from(self.autosave.interval_minutes) * 60);
                 }
@@ -675,8 +682,8 @@ impl BimApp {
         later(ui, |ui| {
             let mut folder = String::new();
             ui.horizontal(|ui| {
-                ui.label(t("Folder for new projects"));
-                ui.add(egui::TextEdit::singleline(&mut folder).desired_width(220.0));
+                let l = ui.label(t("Folder for new projects"));
+                ui.add(egui::TextEdit::singleline(&mut folder).desired_width(220.0)).labelled_by(l.id);
             });
         });
     }
@@ -734,10 +741,10 @@ impl BimApp {
     }
 }
 
-/// A group's heading on a page.
-fn heading(ui: &mut Ui, text: &str) {
+/// A group's heading on a page; its id names a control under it that has no label of its own (`labelled_by`).
+fn heading(ui: &mut Ui, text: &str) -> UiId {
     ui.add_space(6.0);
-    ui.label(RichText::new(t(text)).strong());
+    ui.label(RichText::new(t(text)).strong()).id
 }
 
 /// Settings still to come: shown as they will be, greyed out.

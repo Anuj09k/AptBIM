@@ -1070,17 +1070,20 @@ impl BimApp {
                 if categories.len() > 1 {
                     let all = tf("Multiple Categories ({})", &[&self.selection.len().to_string()]);
                     let mut pick = None;
-                    ComboBox::from_id_salt("properties-filter").selected_text(&filter).width(ui.available_width()).show_ui(ui, |ui| {
-                        if ui.selectable_label(self.palette_filter.is_none(), &all).clicked() {
-                            pick = Some(None);
-                        }
-                        for (&category, n) in &categories {
-                            let on = self.palette_filter.as_ref().is_some_and(|(c, _)| *c == category);
-                            if ui.selectable_label(on, format!("{} ({n})", lang::category(category, true))).clicked() {
-                                pick = Some(Some(category));
+                    let c =
+                        ComboBox::from_id_salt("properties-filter").selected_text(&filter).width(ui.available_width()).show_ui(ui, |ui| {
+                            if ui.selectable_label(self.palette_filter.is_none(), &all).clicked() {
+                                pick = Some(None);
                             }
-                        }
-                    });
+                            for (&category, n) in &categories {
+                                let on = self.palette_filter.as_ref().is_some_and(|(c, _)| *c == category);
+                                if ui.selectable_label(on, format!("{} ({n})", lang::category(category, true))).clicked() {
+                                    pick = Some(Some(category));
+                                }
+                            }
+                        });
+                    // Nothing beside it names it: it shows the category picked.
+                    c.response.accessible_name(t("Filter by category"));
                     if let Some(category) = pick {
                         self.palette_filter = category.map(|c| (c, self.selection.clone()));
                     }
@@ -2658,8 +2661,8 @@ impl BimApp {
             ));
             if s.alignment_guides {
                 ui.horizontal(|ui| {
-                    ui.label(t("Snap tolerance"));
-                    ui.add(egui::Slider::new(&mut s.alignment_tolerance, 2.0..=32.0).suffix(" px"));
+                    let l = ui.label(t("Snap tolerance"));
+                    ui.add(egui::Slider::new(&mut s.alignment_tolerance, 2.0..=32.0).suffix(" px")).labelled_by(l.id);
                 });
                 }
                 ui.separator();

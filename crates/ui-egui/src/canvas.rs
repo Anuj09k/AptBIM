@@ -3167,13 +3167,18 @@ impl BimApp {
         let font = FontId::proportional(12.0);
         let (mut done, mut clicked) = (None, None);
         for start in [true, false] {
+            let which = t(if start { "start" } else { "end" });
+            // The field, while typing, keeps the name of the label it replaced.
+            let name = tf("Turn the wall about its {}: {}", &[which, &text]);
             let anchor = if start { a - u * 32.0 } else { b + u * 32.0 };
             let size = p.layout_no_wrap(text.clone(), font.clone(), pal().accent).size() + vec2(10.0, 4.0);
             let at = Rect::from_center_size(anchor, size);
             let field = ui.scope_id().with(("wall angle", id, start));
             match &mut self.angle_edit {
                 Some((wall, which, typed)) if *wall == id && *which == start => {
-                    let edit = ui.put(at.expand2(vec2(18.0, 2.0)), TextEdit::singleline(typed).id(field).align(egui::Align2::CENTER_TOP));
+                    let edit = ui
+                        .put(at.expand2(vec2(18.0, 2.0)), TextEdit::singleline(typed).id(field).align(egui::Align2::CENTER_TOP))
+                        .accessible_name(name);
                     if edit.lost_focus() {
                         done = Some((start, ui.input(|i| !i.key_pressed(Key::Escape)).then(|| typed.clone())));
                     } else if !edit.has_focus() {
@@ -3182,8 +3187,7 @@ impl BimApp {
                 }
                 _ => {
                     let r = ui.interact(at, field, Sense::click());
-                    let which = t(if start { "start" } else { "end" });
-                    r.widget_info(|| WidgetInfo::labeled(Role::Button, true, tf("Turn the wall about its {}: {}", &[which, &text])));
+                    r.widget_info(|| WidgetInfo::labeled(Role::Button, true, &name));
                     p.rect_filled(at, 2.0, pal().surface);
                     p.text(at.center(), Align2::CENTER_CENTER, &text, font.clone(), if r.hovered() { pal().hover } else { pal().accent });
                     if r.clicked() {
@@ -3227,9 +3231,13 @@ impl BimApp {
         let font = FontId::proportional(12.0);
         let field = ui.scope_id().with(("temporary dimension", key));
         let (mut done, mut start) = (None, false);
+        // The field, while typing, keeps the name of the number it replaced.
+        let name = tf(name, &[text]);
         match &mut self.dim_edit {
             Some((id, n, typed)) if (*id, *n) == key => {
-                let edit = ui.put(at.expand2(vec2(18.0, 2.0)), TextEdit::singleline(typed).id(field).align(egui::Align2::CENTER_TOP));
+                let edit = ui
+                    .put(at.expand2(vec2(18.0, 2.0)), TextEdit::singleline(typed).id(field).align(egui::Align2::CENTER_TOP))
+                    .accessible_name(name);
                 if edit.lost_focus() {
                     done = Some(ui.input(|i| !i.key_pressed(Key::Escape)).then(|| typed.clone()));
                 } else if !edit.has_focus() {
@@ -3238,7 +3246,7 @@ impl BimApp {
             }
             _ => {
                 let r = ui.interact(at, field.with("number"), Sense::click());
-                r.widget_info(|| WidgetInfo::labeled(Role::Button, true, tf(name, &[text])));
+                r.widget_info(|| WidgetInfo::labeled(Role::Button, true, &name));
                 ui.painter().rect_filled(at, 2.0, pal().surface);
                 ui.painter().text(at.center(), Align2::CENTER_CENTER, text, font, if r.hovered() { pal().hover } else { pal().accent });
                 start = r.clicked();

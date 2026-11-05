@@ -69,14 +69,15 @@ impl BimApp {
             crate::popup::body(ui, |ui| {
                 ui.add_space(6.0);
                 ui.horizontal(|ui| {
-                    ui.label(t("Filter by:"));
-                    ComboBox::from_id_salt("selection-filter-by").selected_text(t(&d.by)).width(220.0).show_ui(ui, |ui| {
+                    let l = ui.label(t("Filter by:"));
+                    let c = ComboBox::from_id_salt("selection-filter-by").selected_text(t(&d.by)).width(220.0).show_ui(ui, |ui| {
                         for f in &d.fields {
                             if ui.selectable_label(*f == d.by, t(f)).clicked() {
                                 by = Some(f.clone());
                             }
                         }
                     });
+                    c.response.labelled_by(l.id);
                 });
                 ui.add_space(4.0);
                 ui.horizontal(|ui| {

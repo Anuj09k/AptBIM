@@ -5106,6 +5106,11 @@ impl BimApp {
                                     let said = said(c, v);
                                     let text = RichText::new(&said);
                                     let text = if v.is_number() { text.monospace() } else { text };
+                                    // An empty cell has no width to click and nothing to name: its row is picked by the others.
+                                    if said.trim().is_empty() {
+                                        ui.label(text);
+                                        continue;
+                                    }
                                     let r = ui.add(egui::Label::new(text).sense(egui::Sense::click()));
                                     // Selected or not, for screen readers, as a selectable label says.
                                     r.widget_info(|| WidgetInfo::selected(Role::Button, true, selected, &said));

@@ -362,7 +362,7 @@ fn pattern_text_counters_remain_open_on_the_canvas_and_on_paper_when_selected_or
                 d.parts = vec![Part::LinePattern; prims.len()];
                 // Viewport primitives on a sheet have already been sized; their pen metadata is cleared.
                 d.pens = if paper { vec![None; prims.len()] } else { pens.clone() };
-                let mut h = Harness::builder().with_accessibility_check(false).with_size([760.0, 320.0]).build_ui(move |ui| {
+                let mut h = Harness::builder().with_size([760.0, 320.0]).build_ui(move |ui| {
                     crate::canvas::paint(
                         ui.painter(),
                         crate::canvas::Place { paper, ..crate::canvas::Place::at(egui::Pos2::ZERO) },

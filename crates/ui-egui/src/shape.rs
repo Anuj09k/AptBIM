@@ -340,9 +340,13 @@ impl BimApp {
         let at = label_rect(ui, anchor, text);
         let field = ui.scope_id().with(("shape height", (q.0.to_bits(), q.1.to_bits())));
         let mut done = None;
+        // The field, while typing, keeps the name of the label it replaced.
+        let name = tf("Point height {}", &[text]);
         match &mut self.shape_label_edit {
             Some((p, typed)) if p.dist(q) <= TOL => {
-                let edit = ui.put(at.expand2(vec2(18.0, 2.0)), TextEdit::singleline(typed).id(field).align(Align2::CENTER_TOP));
+                let edit = ui
+                    .put(at.expand2(vec2(18.0, 2.0)), TextEdit::singleline(typed).id(field).align(Align2::CENTER_TOP))
+                    .accessible_name(name);
                 if edit.lost_focus() {
                     done = Some(ui.input(|i| !i.key_pressed(Key::Escape)).then(|| typed.clone()));
                 } else if !edit.has_focus() {
@@ -351,7 +355,7 @@ impl BimApp {
             }
             _ => {
                 let r = ui.interact(at, field, Sense::click());
-                r.widget_info(|| WidgetInfo::labeled(Role::Button, true, tf("Point height {}", &[text])));
+                r.widget_info(|| WidgetInfo::labeled(Role::Button, true, &name));
                 let p = ui.painter();
                 p.rect_filled(at, 2.0, if r.hovered() { pal().accent } else { pal().surface.gamma_multiply(0.85) });
                 p.text(

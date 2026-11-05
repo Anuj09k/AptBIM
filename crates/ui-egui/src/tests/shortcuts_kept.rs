@@ -16,27 +16,9 @@ fn add_in_the_dialog(h: &mut Harness<BimApp>, keys: &str, action: &str) {
     assert!(h.state().show_shortcuts);
     press(h, "Add Shortcut");
     h.state_mut().shortcuts_dialog.new_action = action.to_string();
-    type_beside(h, "Shortcut Keys:", keys);
+    type_into(h, "Shortcut Keys:", keys);
     press(h, "Add");
     assert!(h.state().shortcuts_dialog.error.is_none(), "{:?}", h.state().shortcuts_dialog.error);
-}
-
-/// Replaces the text of the field on the row of `label`, to its right, as a user selecting all and typing does: the dialog's label is
-/// not tied to its field.
-fn type_beside(h: &mut Harness<BimApp>, label: &str, text: &str) {
-    let at = h.get_by_label(label).rect();
-    // Of the fields on that row, to its right, the nearest (AptBIM's Inspector has others on the row, further right).
-    let field = h
-        .get_all_by_role(Role::TextInput)
-        .filter(|n| n.rect().left() >= at.right() && (n.rect().center().y - at.center().y).abs() < 6.0)
-        .min_by(|a, b| a.rect().left().total_cmp(&b.rect().left()))
-        .map(|n| n.accesskit_node().id())
-        .unwrap();
-    h.get_by(|n| n.id() == field).click();
-    h.run();
-    h.key_press_modifiers(Modifiers::COMMAND, Key::A);
-    h.get_by(|n| n.id() == field).type_text(text);
-    h.run();
 }
 
 #[test]

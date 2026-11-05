@@ -632,11 +632,12 @@ fn parameters_tab(ed: &mut FamilyEditor, ui: &mut Ui, materials: &[String]) {
             let n = i + 1;
             field(ui, format!("{} {n}", t("Parameter Name")), &mut p.name, 130.0);
             let kinds = [Holds::Length, Holds::Number, Holds::Angle, Holds::YesNo, Holds::Material];
-            ComboBox::from_id_salt(("fe-param-kind", i)).selected_text(t(kind_name(p.kind))).width(84.0).show_ui(ui, |ui| {
+            let c = ComboBox::from_id_salt(("fe-param-kind", i)).selected_text(t(kind_name(p.kind))).width(84.0).show_ui(ui, |ui| {
                 for k in kinds {
                     ui.selectable_value(&mut p.kind, k, t(kind_name(k)));
                 }
             });
+            c.response.accessible_name(format!("{} {n}", t("Parameter Kind")));
             let r = ui.checkbox(&mut p.instance, "");
             r.widget_info(|| WidgetInfo::selected(Role::CheckBox, true, p.instance, format!("{} {n}", t("Parameter Instance"))));
             match p.kind {
@@ -745,7 +746,7 @@ fn form_fields(ui: &mut Ui, f: &mut FormText, i: usize, options: &[String]) {
             ui.end_row();
         } else {
             ui.label(t("Plane"));
-            ComboBox::from_id_salt(("fe-plane", i))
+            let c = ComboBox::from_id_salt(("fe-plane", i))
                 .selected_text(t(planes.iter().find(|(p, _)| *p == f.plane).map_or("Plane XY", |(_, l)| l)))
                 .width(110.0)
                 .show_ui(ui, |ui| {
@@ -753,15 +754,17 @@ fn form_fields(ui: &mut Ui, f: &mut FormText, i: usize, options: &[String]) {
                         ui.selectable_value(&mut f.plane, p, t(label));
                     }
                 });
+            c.response.accessible_name(format!("{} {n}", t("Form Plane")));
             ui.end_row();
             ui.label(t("Shape"));
-            ComboBox::from_id_salt(("fe-shape", i))
+            let c = ComboBox::from_id_salt(("fe-shape", i))
                 .selected_text(if f.shape == Shape::Profile { t("Profile") } else { t("Circle") })
                 .width(110.0)
                 .show_ui(ui, |ui| {
                     ui.selectable_value(&mut f.shape, Shape::Profile, t("Profile"));
                     ui.selectable_value(&mut f.shape, Shape::Circle, t("Circle"));
                 });
+            c.response.accessible_name(format!("{} {n}", t("Form Shape")));
             ui.end_row();
             if f.shape == Shape::Profile {
                 ui.label(t("Corners"));
