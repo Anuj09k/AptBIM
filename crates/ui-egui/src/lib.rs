@@ -1374,6 +1374,19 @@ impl BimApp {
         &self.title
     }
 
+    /// The keymap's code, `aptimizer` or `classic` (Settings > User Interface > Keys). A host with another mode (Aptimizer
+    /// Studio) keeps one keymap for both through this and [`set_keymap_code`](Self::set_keymap_code).
+    pub fn keymap_code(&self) -> &'static str {
+        self.keymap.code()
+    }
+
+    /// Takes the keymap `code` names, kept in the settings file as one picked in Settings is; a code it doesn't know changes nothing.
+    pub fn set_keymap_code(&mut self, code: &str) {
+        if let Some(keymap) = keys::Keymap::from_code(code) {
+            self.keymap = keymap;
+        }
+    }
+
     /// Whether the model changed since it was last opened or saved.
     pub fn dirty(&self) -> bool {
         !Arc::ptr_eq(&self.saved, &self.session.model)

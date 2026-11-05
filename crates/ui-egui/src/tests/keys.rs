@@ -113,3 +113,13 @@ fn the_keymap_is_picked_in_settings_and_the_settings_file_keeps_it() {
     assert_eq!(again.state().keymap, Keymap::Classic);
     let _ = std::fs::remove_dir_all(file.parent().unwrap());
 }
+
+#[test]
+fn a_host_reads_and_sets_the_keymap_by_its_code() {
+    let mut h = app(BOX);
+    assert_eq!(h.state().keymap_code(), "aptimizer");
+    h.state_mut().set_keymap_code("classic");
+    assert_eq!((h.state().keymap, h.state().keymap_code()), (Keymap::Classic, "classic"));
+    h.state_mut().set_keymap_code("dvorak");
+    assert_eq!(h.state().keymap, Keymap::Classic, "a code it doesn't know changes nothing");
+}
