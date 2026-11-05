@@ -1441,7 +1441,7 @@ impl BimApp {
         };
         let enabled = !names.is_empty();
         let (rect, r) = ui.allocate_exact_size(vec2(ui.available_width(), 50.0), if enabled { Sense::click() } else { Sense::hover() });
-        r.widget_info(|| WidgetInfo::labeled(Role::ComboBox, enabled, t("Type Selector")));
+        r.widget_info(|| WidgetInfo::labeled(Role::ComboBox, enabled, t("Type Picker")));
         let p = ui.painter();
         p.rect(
             rect,

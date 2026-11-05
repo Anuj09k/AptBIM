@@ -115,7 +115,7 @@ fn a_views_linework_is_counted_in_range_and_in_a_line_style_there_is() {
     ];
     for b in bad {
         let e = err(&mut s, "modify", json!({"id": 100000, "graphics": {"linework": [b]}}));
-        assert!(e.contains("linework") || e.contains("Linework"), "{e}");
+        assert!(e.contains("linework") || e.contains("Edge Style"), "{e}");
     }
     // The most, and one over it.
     let most = crate::graphics::MAX_LINEWORK;

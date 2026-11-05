@@ -30,7 +30,7 @@ fn the_renovation_filter_sets_the_phase_and_the_phase_filter_a_view_shows_in_bot
         choose(&mut h, "Renovation", "Demolition");
         assert_eq!(phasing(&h), (None, Some("Show Previous + Demolished".into())), "rev {rev}");
         assert_eq!(shows(&h, "Renovation"), "Demolition", "rev {rev}");
-        assert_eq!(h.state().session.history().last(), Some(&"Visibility/Graphics"), "one command, one undo step");
+        assert_eq!(h.state().session.history().last(), Some(&"View Visibility"), "one command, one undo step");
         choose(&mut h, "Renovation", "New");
         assert_eq!(phasing(&h), (None, Some("Show Previous + New".into())), "rev {rev}");
         choose(&mut h, "Renovation", "Existing");

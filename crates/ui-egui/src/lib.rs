@@ -345,8 +345,8 @@ const SHORTCUTS: [(&str, &str); 54] = [
     ("MD", "Modify"),
     ("SB", "Floor: Structural"),
     ("RF", "Reinforce"),
-    ("MM", msg!("Mirror Pick Axis")),
-    ("DM", msg!("Mirror Draw Axis")),
+    ("MM", msg!("Mirror Across Line")),
+    ("DM", msg!("Mirror on Drawn Line")),
     ("AL", msg!("Align")),
     ("OF", "Offset"),
     ("DW", "Demolish"),
@@ -358,7 +358,7 @@ const SHORTCUTS: [(&str, &str); 54] = [
     ("PP", "Properties"),
     ("VP", "Properties"),
     ("NP", "Project Browser"),
-    ("SA", "Select All Instances"),
+    ("SA", "Select All of Type"),
     ("AG", msg!("Alignment Guides")),
     ("OG", msg!("Orthogonal Guides")),
     ("SE", msg!("Snap to Endpoints")),
@@ -371,16 +371,16 @@ const SHORTCUTS: [(&str, &str); 54] = [
     ("SN", msg!("Snap to Nearest")),
     ("SO", msg!("Snaps Off")),
     ("SS", msg!("Turn Snap Override Off")),
-    ("VV", "Visibility/Graphics"),
-    ("VG", "Visibility/Graphics"),
+    ("VV", "View Visibility"),
+    ("VG", "View Visibility"),
     ("EH", "Hide Element"),
     ("VH", "Hide Category"),
-    ("HH", msg!("Temporary Hide Element")),
-    ("HC", msg!("Temporary Hide Category")),
-    ("HI", msg!("Temporary Isolate Element")),
-    ("IC", msg!("Temporary Isolate Category")),
-    ("HR", msg!("Reset Temporary Hide/Isolate")),
-    ("RH", "Reveal Hidden Elements"),
+    ("HH", msg!("Quick Hide Element")),
+    ("HC", msg!("Quick Hide Category")),
+    ("HI", msg!("Quick Isolate Element")),
+    ("IC", msg!("Quick Isolate Category")),
+    ("HR", msg!("Reset Quick Hide/Isolate")),
+    ("RH", "Show Hidden Elements"),
     ("EU", msg!("Unhide Elements")),
     ("UE", "Unhide Elements"),
     ("VU", "Unhide Category"),
@@ -388,13 +388,13 @@ const SHORTCUTS: [(&str, &str); 54] = [
     ("FT", "Filters"),
     ("VT", "View Templates"),
     ("PH", "Phasing"),
-    ("DO", "Design Options"),
+    ("DO", "Design Variants"),
     ("WF", "Wireframe"),
     ("HL", "Hidden Line"),
     ("SD", "Shaded"),
     ("KS", "Keyboard Shortcuts"),
     ("BX", "Section Box"),
-    ("GD", "Graphic Display Options"),
+    ("GD", "Display Options"),
 ];
 
 /// Every two-letter shortcut of `keymap` and what it does.
@@ -3587,16 +3587,16 @@ impl BimApp {
                     (Icon::Floor, "Mass Floors", msg!("Mass Floors (MF): a floor at each level the selected masses cross"), "mass_floors"),
                     (
                         Icon::Wall,
-                        "Wall by Face",
-                        msg!("Wall by Face (WB): a wall on each edge of the selected masses' footprints"),
+                        "Wall on Mass",
+                        msg!("Wall on Mass (WB): a wall on each edge of the selected masses' footprints"),
                         "wall_by_face",
                     ),
-                    (Icon::Floor, "Floor by Face", msg!("Floor by Face (FB): a floor on the selected masses' top faces"), "floor_by_face"),
-                    (Icon::Roof, "Roof by Face", msg!("Roof by Face (RB): a roof on the selected masses' top faces"), "roof_by_face"),
+                    (Icon::Floor, "Floor on Mass", msg!("Floor on Mass (FB): a floor on the selected masses' top faces"), "floor_by_face"),
+                    (Icon::Roof, "Roof on Mass", msg!("Roof on Mass (RB): a roof on the selected masses' top faces"), "roof_by_face"),
                     (
                         Icon::Align,
-                        "Update to Face",
-                        msg!("Update to Face (UF): the walls, floors and roofs made by face from the selected masses follow them again"),
+                        "Update from Mass",
+                        msg!("Update from Mass (UF): the walls, floors and roofs made by face from the selected masses follow them again"),
                         "update_by_face",
                     ),
                 ] {
@@ -3689,8 +3689,8 @@ impl BimApp {
                 (Icon::Room, "Room", msg!("Room (RM): click inside walls"), Tool::Room),
                 (
                     Icon::RoomSeparator,
-                    "Room Separator",
-                    msg!("Room Separator: lines that bound rooms as walls do, to split an open space; click from point to point"),
+                    "Room Boundary Line",
+                    msg!("Room Boundary Line: lines that bound rooms as walls do, to split an open space; click from point to point"),
                     Tool::RoomSeparator(None),
                 ),
             ],
@@ -3832,9 +3832,8 @@ impl BimApp {
             )],
         );
         panel(ui, "Tag", |ui| {
-            let tip =
-                msg!("Tag by Category (TG): click an element to tag it with its type, a door's or window's mark, or the field in Label");
-            if big_button(ui, Icon::Tag, "Tag by Category", self.tool == Tool::Tag, tip).clicked() {
+            let tip = msg!("Tag Element (TG): click an element to tag it with its type, a door's or window's mark, or the field in Label");
+            if big_button(ui, Icon::Tag, "Tag Element", self.tool == Tool::Tag, tip).clicked() {
                 self.set_tool(Tool::Tag);
             }
             if big_button(ui, Icon::TagAll, "Tag All", false, "Tag every door and window in this view that has no tag").clicked() {
@@ -3868,10 +3867,10 @@ impl BimApp {
 
     fn view_tab(&mut self, ui: &mut Ui) {
         panel(ui, "Graphics", |ui| {
-            let tip = msg!("Visibility/Graphics (VV): what this view hides, and how it draws the rest, by category, filter and element");
+            let tip = msg!("View Visibility (VV): what this view hides, and how it draws the rest, by category, filter and element");
             let on = self.graphic_view().is_some();
             if ui
-                .add_enabled_ui(on, |ui| big_button(ui, Icon::Visibility, "Visibility/Graphics", self.vg_dialog.is_some(), tip))
+                .add_enabled_ui(on, |ui| big_button(ui, Icon::Visibility, "View Visibility", self.vg_dialog.is_some(), tip))
                 .inner
                 .clicked()
             {
@@ -4093,9 +4092,9 @@ impl BimApp {
                 }
             });
             let tip = msg!(
-                "Purge Unused (PU): take out the types, families and the rest nothing in the project uses; each category keeps a type"
+                "Clean Up Unused (PU): take out the types, families and the rest nothing in the project uses; each category keeps a type"
             );
-            if big_button(ui, Icon::Delete, "Purge Unused", self.purge_dialog.is_some(), tip).clicked() {
+            if big_button(ui, Icon::Delete, "Clean Up Unused", self.purge_dialog.is_some(), tip).clicked() {
                 self.open_purge();
             }
             let now_std = self.session.model.standard();
@@ -4111,8 +4110,8 @@ impl BimApp {
             }
             // Object styles, snaps and units, stacked.
             stacked(ui, |ui| {
-                let tip = msg!("Object Styles: the pen each category draws in, seen and cut, in every view");
-                if stacked_button(ui, Icon::ObjectStyles, "Object Styles", self.object_styles_dialog.is_some(), tip).clicked() {
+                let tip = msg!("Category Styles: the pen each category draws in, seen and cut, in every view");
+                if stacked_button(ui, Icon::ObjectStyles, "Category Styles", self.object_styles_dialog.is_some(), tip).clicked() {
                     self.object_styles_dialog = Some(objectstyles::ObjectStylesDialog::new(&self.session.model));
                 }
                 let tip = msg!(
@@ -4206,9 +4205,9 @@ impl BimApp {
                 self.phasing_dialog = Some(phasing::PhasingDialog::default());
             }
         });
-        panel(ui, "Design Options", |ui| {
-            let tip = msg!("Design Options (DO): sets of options for a part of the design, and the one new elements are made in");
-            if big_button(ui, Icon::Options, "Design Options", self.options_dialog.is_some(), tip).clicked() {
+        panel(ui, "Design Variants", |ui| {
+            let tip = msg!("Design Variants (DO): sets of options for a part of the design, and the one new elements are made in");
+            if big_button(ui, Icon::Options, "Design Variants", self.options_dialog.is_some(), tip).clicked() {
                 self.options_dialog = Some(phasing::OptionsDialog::default());
             }
         });
@@ -4294,15 +4293,15 @@ impl BimApp {
                 ),
                 (
                     Icon::MirrorPick,
-                    "Mirror Pick Axis",
-                    msg!("Mirror, Pick Axis (MM): pick a wall or grid to mirror across"),
+                    "Mirror Across Line",
+                    msg!("Mirror Across Line (MM): pick a wall or grid to mirror across"),
                     Some(Tool::Mirror { draw: false, start: None }),
                     some,
                 ),
                 (
                     Icon::MirrorDraw,
-                    "Mirror Draw Axis",
-                    msg!("Mirror, Draw Axis (DM): click the axis's two ends"),
+                    "Mirror on Drawn Line",
+                    msg!("Mirror on Drawn Line (DM): click the axis's two ends"),
                     Some(Tool::Mirror { draw: true, start: None }),
                     some,
                 ),
@@ -4315,8 +4314,8 @@ impl BimApp {
                 ),
                 (
                     Icon::Linework,
-                    msg!("Linework"),
-                    msg!("Linework (LW): click an edge to draw it in another line style, or hide it, in this view only"),
+                    msg!("Edge Style"),
+                    msg!("Edge Style (LW): click an edge to draw it in another line style, or hide it, in this view only"),
                     Some(Tool::Linework),
                     true,
                 ),
@@ -4340,8 +4339,8 @@ impl BimApp {
                 ),
                 (
                     Icon::Trim,
-                    "Trim/Extend to Corner",
-                    msg!("Trim/Extend to Corner (TR): pick two walls or two lines, on the parts to keep"),
+                    "Trim to Corner",
+                    msg!("Trim to Corner (TR): pick two walls or two lines, on the parts to keep"),
                     Some(Tool::Trim(None)),
                     true,
                 ),

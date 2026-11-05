@@ -59,7 +59,7 @@ fn the_views_tabs_and_its_control_bar_float_over_it_and_a_click_on_them_is_no_cl
     let mut h = aptbim(BOX);
     let view = h.state().view_rect;
     let tab = h.state().tab_rects.first().map(|(_, r)| *r).unwrap();
-    let bar = h.get_by_label("Temporary Hide/Isolate").rect().union(h.get_by_label("Reveal Hidden Elements").rect());
+    let bar = h.get_by_label("Quick Hide/Isolate").rect().union(h.get_by_label("Show Hidden Elements").rect());
     // The view runs under both: no band of its own above or below it.
     assert!(view.contains_rect(tab) && view.contains_rect(bar), "{tab:?} and {bar:?} in {view:?}");
     assert!(view.bottom() - bar.bottom() < 20.0 && tab.top() - view.top() < 20.0);
@@ -83,7 +83,7 @@ fn the_views_tabs_and_its_control_bar_float_over_it_and_a_click_on_them_is_no_cl
     press(&mut h, "Close");
     let view = h.state().view_rect;
     let tab = h.state().tab_rects.first().map(|(_, r)| *r).unwrap();
-    assert!(tab.bottom() <= view.top() && h.get_by_label("Reveal Hidden Elements").rect().top() >= view.bottom());
+    assert!(tab.bottom() <= view.top() && h.get_by_label("Show Hidden Elements").rect().top() >= view.bottom());
 }
 
 #[test]

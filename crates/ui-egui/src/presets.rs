@@ -59,7 +59,7 @@ impl Scale {
     /// Whether the Tools palette leaves out the panel or the tool named `name` (its English name) at this scale: a team's (design
     /// options, links, inquiry) below Team, and the documents' (sheets, phasing, view templates) in Sketch too.
     pub fn hides(self, name: &str) -> bool {
-        const TEAM: [&str; 4] = ["Design Options", "Links", "Link", "Inquiry"];
+        const TEAM: [&str; 4] = ["Design Variants", "Links", "Link", "Inquiry"];
         const STUDIO: [&str; 3] = ["Sheet Composition", "Phasing", "View Templates"];
         match self {
             Scale::Team => false,
@@ -255,7 +255,7 @@ mod tests {
 
     #[test]
     fn each_scale_leaves_out_less_than_the_one_before() {
-        for name in ["Design Options", "Links", "Link", "Inquiry", "Sheet Composition", "Phasing", "View Templates", "Wall"] {
+        for name in ["Design Variants", "Links", "Link", "Inquiry", "Sheet Composition", "Phasing", "View Templates", "Wall"] {
             let (sketch, studio, team) = (Scale::Sketch.hides(name), Scale::Studio.hides(name), Scale::Team.hides(name));
             assert!(sketch >= studio && studio >= team && !team, "{name}");
         }

@@ -224,6 +224,8 @@ fn shortcuts_from(v: &Value, base: BTreeMap<String, String>) -> BTreeMap<String,
         .iter()
         .filter_map(|(key, action)| {
             let (key, action) = (key.to_ascii_uppercase(), action.as_str()?);
+            // An action kept under its older name (Visibility/Graphics) is the one it is now (View Visibility).
+            let action = crate::shortcuts::RENAMED.iter().find(|(old, _)| *old == action).map_or(action, |(_, new)| *new);
             (crate::shortcuts::is_key(&key) && crate::shortcuts::ACTIONS.contains(&action)).then(|| (key, action.to_string()))
         })
         .take(MAX_SHORTCUTS)
@@ -471,9 +473,9 @@ impl BimApp {
             for (keymap, tip) in [
                 (
                     Keymap::Aptimizer,
-                    msg!("Aptimizer's two-letter keys, the same as AptCAD's for the tools both have: MI Mirror, BR Split, PR Properties, VI Visibility/Graphics"),
+                    msg!("Aptimizer's two-letter keys, the same as AptCAD's for the tools both have: MI Mirror, BR Split, PR Properties, VI View Visibility"),
                 ),
-                (Keymap::Classic, msg!("The two-letter keys AptBIM had before: MM Mirror, SL Split, PP Properties, VV Visibility/Graphics")),
+                (Keymap::Classic, msg!("The two-letter keys AptBIM had before: MM Mirror, SL Split, PP Properties, VV View Visibility")),
             ] {
                 ui.radio_value(&mut self.keymap, keymap, t(keymap.name())).on_hover_text(t(tip));
             }

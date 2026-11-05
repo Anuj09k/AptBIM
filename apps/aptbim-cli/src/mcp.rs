@@ -379,7 +379,7 @@ mod tests {
         };
         assert_eq!(by("family")["menu"], json!("Manage > Family Editor"), "the button the agent looked for");
         assert_eq!(by("door")["menu"], json!("Architecture > Door"));
-        assert_eq!(by("purge")["menu"], json!("Manage > Purge Unused"));
+        assert_eq!(by("purge")["menu"], json!("Manage > Clean Up Unused"));
         assert_eq!(by("undo")["menu"], json!(null), "a shortcut with no place in the ribbon");
         let filtered = tool(&mut s, "list_commands", json!({"filter": "family"}));
         assert!(filtered.as_array().is_some_and(|a| a.iter().any(|c| c["menu"] == json!("Manage > Family Editor"))), "{filtered}");

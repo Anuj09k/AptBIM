@@ -30,12 +30,12 @@ fn popup_title_bar_moves_vg_and_its_actions_stay_at_the_bottom_on_every_tab() {
     let mut h = app(BOX);
     shortcut(&mut h, "VG");
     let before = area(&h, "visibility-graphics");
-    let title = h.get_by_label("Visibility/Graphics Overrides for Floor Plan: Level 1").rect().center();
+    let title = h.get_by_label("View Visibility Overrides for Floor Plan: Level 1").rect().center();
     let delta = vec2(65.0, 40.0);
     drag_screen(&mut h, title, title + delta, PointerButton::Primary);
     let moved = area(&h, "visibility-graphics");
     assert!((moved.min - before.min - delta).length() < 2.0, "{before:?} -> {moved:?}");
-    for tab in ["Model Categories", "Annotation Categories", "Imported Categories", "Filters", "Design Options"] {
+    for tab in ["Model Categories", "Annotation Categories", "Imported Categories", "Filters", "Design Variants"] {
         press(&mut h, tab);
         let r = area(&h, "visibility-graphics");
         for label in ["OK", "Cancel", "Apply"] {

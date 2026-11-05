@@ -93,7 +93,7 @@ fn a_double_click_on_a_note_rewrites_it_and_overridden_parts_keep_their_formatti
     assert_eq!((n.text.as_str(), n.override_format), ("Bold words", true));
     assert_eq!((n.runs.len(), n.runs[0].from, n.runs[0].to, n.runs[0].bold), (1, 0, 4, Some(true)));
     // Another type in the Type Selector keeps them.
-    press(&mut h, "Type Selector");
+    press(&mut h, "Type Picker");
     press(&mut h, "3.5mm");
     let n = note(&h, id);
     assert_eq!((n.type_name.as_str(), n.runs[0].bold), ("3.5mm", Some(true)));

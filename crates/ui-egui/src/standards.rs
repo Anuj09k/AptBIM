@@ -11,7 +11,7 @@ use serde_json::json;
 use crate::BimApp;
 use crate::lang::{category, t, tf};
 
-const TABS: [&str; 5] = ["Overview", "Line Weights", "Sheets & Margins", "Object Styles", "Dimensions & Annotations"];
+const TABS: [&str; 5] = ["Overview", "Line Weights", "Sheets & Margins", "Category Styles", "Dimensions & Annotations"];
 
 /// The Technical Standards dialog.
 pub(crate) struct StandardsDialog {
@@ -315,7 +315,7 @@ impl BimApp {
             ui.add_space(4.0);
             ui.horizontal(|ui| {
                 ui.checkbox(&mut d.adapt_line_weights, t("Adapt Line Weights"));
-                ui.checkbox(&mut d.adapt_object_styles, t("Adapt Object Styles"));
+                ui.checkbox(&mut d.adapt_object_styles, t("Adapt Category Styles"));
                 ui.checkbox(&mut d.adapt_units, t("Adapt Project Units"));
             });
 

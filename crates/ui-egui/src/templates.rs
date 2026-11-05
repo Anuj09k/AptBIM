@@ -696,7 +696,7 @@ fn group_rows(rows: &mut Rows, g: Group, now: &mut ViewTemplate, m: &Model) -> O
         }
         Group::Categories => rows.edit(t("V/G Overrides"), include, Ask::Graphics(0)),
         Group::Filters => rows.edit(t("V/G Filters"), include, Ask::Graphics(FILTERS_TAB)),
-        Group::Options => rows.edit(t("Design Options"), include, Ask::Graphics(OPTIONS_TAB)),
+        Group::Options => rows.edit(t("Design Variants"), include, Ask::Graphics(OPTIONS_TAB)),
         Group::Range => rows.edit(t("View Range"), include, Ask::Range),
         Group::BackgroundGrid => rows.edit(t("Background Grids"), include, Ask::Grid),
         Group::Phase => {

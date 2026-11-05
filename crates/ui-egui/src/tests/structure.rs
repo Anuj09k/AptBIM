@@ -89,7 +89,7 @@ fn the_beam_tools_options_set_its_justification_height_and_type() {
     h.run();
     press(&mut h, "Centre");
     type_into(&mut h, "Offset:", "2800");
-    press(&mut h, "Type Selector");
+    press(&mut h, "Type Picker");
     press(&mut h, "Beam 150 x 400");
     click(&mut h, P2(1000.0, 1000.0));
     click(&mut h, P2(5000.0, 1000.0));
@@ -275,7 +275,7 @@ fn edit_type_changes_a_beams_section_for_every_beam_of_the_type() {
         assert_eq!((field(&h, id, "width"), field(&h, id, "depth")), (json!(250.0), json!(600.0)));
     }
     // The type selector lists the beam types, and only those.
-    press(&mut h, "Type Selector");
+    press(&mut h, "Type Picker");
     assert!(h.query_by_label("Steel Tube 150").is_some() && h.query_by_label("Rectangular 400 x 400").is_none());
     press(&mut h, "Steel Tube 150");
     assert_eq!(field(&h, a, "round"), json!(true));

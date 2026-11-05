@@ -53,7 +53,7 @@ impl Action {
             Action::ZoomOut => "Zoom Out",
             Action::HomeView => "Home View",
             Action::EditType => "Edit Type",
-            Action::SelectAllInstances => msg!("Select All Instances"),
+            Action::SelectAllInstances => msg!("Select All of Type"),
             Action::HideElement => "Hide Element",
             Action::HideCategory => "Hide Category",
             Action::OverrideGraphics => "Override Graphics",

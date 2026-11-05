@@ -82,7 +82,7 @@ fn sketch_trim_corner_cuts_crossing_lines_to_close_a_floor_boundary_and_is_one_s
     ]);
     let before = curves(&h);
     let model = Arc::clone(&h.state().session.model);
-    press(&mut h, "Trim/Extend to Corner");
+    press(&mut h, "Trim to Corner");
     assert!(h.state().prompt().contains("first sketch line"));
     click(&mut h, P2(3000., 1000.));
     assert!(h.state().prompt().contains("second sketch line"));
@@ -103,7 +103,7 @@ fn sketch_trim_corner_cuts_crossing_lines_to_close_a_floor_boundary_and_is_one_s
 #[test]
 fn sketch_trim_highlights_candidates_and_escape_clears_the_first_pick() {
     let mut h = sketching(vec![line([1000., 1000.], [6000., 1000.]), line([3000., 2000.], [3000., 4000.])]);
-    for button in ["Trim/Extend to Corner", "Trim/Extend Single Element", "Trim/Extend Multiple Elements"] {
+    for button in ["Trim to Corner", "Trim/Extend Single Element", "Trim/Extend Multiple Elements"] {
         press(&mut h, button);
         let a = h.state().screen(P2(1000., 1000.));
         let b = h.state().screen(P2(6000., 1000.));

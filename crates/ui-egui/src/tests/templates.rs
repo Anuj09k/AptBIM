@@ -115,7 +115,7 @@ fn visibility_graphics_edits_a_templates_draft_without_the_elements_tab() {
     shortcut(&mut h, "VT");
     press(&mut h, "T");
     press(&mut h, "Edit V/G Overrides");
-    assert!(h.query_by_label("Visibility/Graphics Overrides for View Template: T").is_some());
+    assert!(h.query_by_label("View Visibility Overrides for View Template: T").is_some());
     assert!(h.query_by_role_and_label(Role::Button, "Elements").is_none(), "an element is a view's own");
     pick(&mut h, Role::CheckBox, "Walls");
     press(&mut h, "OK");
@@ -135,7 +135,7 @@ fn properties_view_template_is_a_button_that_picks_the_views_template_in_the_sam
     let width = |h: &Harness<BimApp>, role, label| h.get_by_role_and_label(role, label).rect().width();
     let combo = width(&h, Role::ComboBox, "View Scale");
     assert_eq!(width(&h, Role::Button, "View Template"), combo);
-    assert_eq!(width(&h, Role::Button, "Edit Visibility/Graphics Overrides"), combo);
+    assert_eq!(width(&h, Role::Button, "Edit View Visibility Overrides"), combo);
     assert_eq!(h.get_by_role_and_label(Role::Button, "View Template").value().as_deref(), Some("<None>"));
     h.get_by_role_and_label(Role::Button, "View Template").click_accesskit();
     h.run();

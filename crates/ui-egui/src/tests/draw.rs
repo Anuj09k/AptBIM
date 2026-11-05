@@ -252,7 +252,7 @@ fn trim_extend_and_offset_work_on_detail_lines_as_on_walls() {
     ));
     let l = ids(&h, "line");
     topmost(&mut h, "Modify");
-    press(&mut h, "Trim/Extend to Corner");
+    press(&mut h, "Trim to Corner");
     click(&mut h, P2(1500.0, 1000.0));
     click(&mut h, P2(3000.0, 3000.0));
     assert_eq!(curve(&h, l[0]), Curve::line(P2(1000.0, 1000.0), P2(3000.0, 1000.0)), "both run on to the corner");

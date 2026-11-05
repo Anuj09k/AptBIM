@@ -56,7 +56,7 @@ pub fn known(category: &str) -> Result<(), String> {
         Ok(())
     } else {
         Err(format!(
-            "`{category}` isn't a model category; Object Styles has: {} (and `{COMPONENT}`, for every family category)",
+            "`{category}` isn't a model category; Category Styles has: {} (and `{COMPONENT}`, for every family category)",
             MODEL.join(", ")
         ))
     }
@@ -110,7 +110,7 @@ mod tests {
         assert!(s.history().is_empty());
         // Given, by category, a pen or both, in one undo step.
         s.execute("object_styles", &json!({"categories": {"wall": {"cut": 12}, "door": {"projection": 2, "cut": 5}}})).unwrap();
-        assert_eq!(s.history(), ["Object Styles"]);
+        assert_eq!(s.history(), ["Category Styles"]);
         assert_eq!(s.model.object_style("wall"), ObjectStyle { projection: Pen(4), cut: Pen(12) });
         assert_eq!(s.model.object_style("door"), ObjectStyle { projection: Pen(2), cut: Pen(5) });
         // Saved with the project and read back.
@@ -128,7 +128,7 @@ mod tests {
         let before = s.model.clone();
         for (p, says) in [
             (json!({"categories": {"grid": {"cut": 3}}}), "isn't a model category"),
-            (json!({"categories": {"walls": {"cut": 3}}}), "Object Styles has: wall"),
+            (json!({"categories": {"walls": {"cut": 3}}}), "Category Styles has: wall"),
             (json!({"categories": {"wall": {"cut": 17}}}), "0 (a hairline) to 16"),
             (json!({"categories": {"wall": {"cut": 2.5}}}), "whole number"),
             (json!({"categories": {"wall": {"colour": 3}}}), "colour"),

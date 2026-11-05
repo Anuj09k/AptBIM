@@ -15,7 +15,7 @@ fn open(h: &Harness<BimApp>) -> bool {
 
 /// The dialog's own button `label`: of those so named (Properties has an Apply too), the one under its title nearest across.
 fn button_of_dialog(h: &mut Harness<BimApp>, label: &str) {
-    let title = h.get_by_label("Graphic Display Options").rect().center();
+    let title = h.get_by_label("Display Options").rect().center();
     let off = |r: egui::Rect| (r.center().x - title.x).abs();
     let at = h.get_all_by_label(label).map(|n| n.rect()).filter(|r| r.top() > title.y).min_by(|a, b| off(*a).total_cmp(&off(*b)));
     click_at(h, at.map(|r| r.center()).unwrap_or(title));
@@ -41,7 +41,7 @@ fn graphic_display_options_open_by_gd_and_from_the_visual_style_menu_in_both_loo
         let set = DisplayOptions { edges: false, silhouette: 3, ambient_shadows: true };
         assert_eq!(options(&h), set, "rev {rev}");
         assert!(open(&h));
-        assert_eq!(h.state().session.history().last(), Some(&"Graphic Display Options"));
+        assert_eq!(h.state().session.history().last(), Some(&"Display Options"));
         // Cancel takes back only what was changed since.
         pick(&mut h, Role::CheckBox, "Show Ambient Shadows");
         button_of_dialog(&mut h, "Cancel");
@@ -49,7 +49,7 @@ fn graphic_display_options_open_by_gd_and_from_the_visual_style_menu_in_both_loo
         assert_eq!(options(&h), set);
         // From the Visual Style menu, it shows what the view has; OK sets and closes.
         pick(&mut h, Role::Button, "Visual Style");
-        press(&mut h, "Graphic Display Options...");
+        press(&mut h, "Display Options...");
         assert!(open(&h), "rev {rev}");
         assert_eq!(h.state().display_dialog.as_ref().map(|d| d.options), Some(set));
         pick(&mut h, Role::CheckBox, "Show Edges");

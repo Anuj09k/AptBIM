@@ -208,7 +208,7 @@ fn visibility_graphics_lists_point_clouds_with_the_model_categories() {
     let path = face("vg", "face.xyz", 0.0);
     let mut h = app(&format!("point_cloud {}", json!({"path": path})));
     press(&mut h, "View");
-    press(&mut h, "Visibility/Graphics");
+    press(&mut h, "View Visibility");
     // Last of the model's categories, it is found by name.
     type_into(&mut h, "Category name search:", "point");
     pick(&mut h, Role::CheckBox, "Point Clouds");
@@ -415,5 +415,5 @@ fn a_scan_with_a_colour_of_its_own_keeps_it_and_the_buttons_tip_says_so() {
         h.run();
     }
     let said = painted_text(&h).into_iter().find(|t| t.starts_with("High Contrast Point Clouds:")).unwrap_or_default();
-    assert!(said.contains("a colour of its own in Visibility/Graphics keeps it"), "{said:?}");
+    assert!(said.contains("a colour of its own in View Visibility keeps it"), "{said:?}");
 }

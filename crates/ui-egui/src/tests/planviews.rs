@@ -121,7 +121,7 @@ fn a_plan_views_properties_name_its_level_and_a_dependents_name_its_parent() {
     assert!(h.query_by_label("Parent View").is_some());
     assert!(h.query_by_label("Cut Plane").is_none(), "a dependent follows its parent's range");
     // Visibility/Graphics is its parent's to open.
-    let vg = h.get_by_label("Visibility/Graphics");
+    let vg = h.get_by_label("View Visibility");
     assert!(vg.accesskit_node().is_disabled());
 }
 

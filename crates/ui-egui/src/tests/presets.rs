@@ -30,12 +30,12 @@ fn the_project_scale_leaves_out_what_a_project_does_not_need_yet_in_both_profile
         let mut h = if rev { app(BOX) } else { aptbim(BOX) };
         assert_eq!(h.state().scale, Scale::Team, "everything to begin with, so nobody loses a tool");
         press(&mut h, "Manage");
-        assert!(offered(&h, "Design Options", "Design Options"), "rev {rev}");
+        assert!(offered(&h, "Design Variants", "Design Variants"), "rev {rev}");
         // The chip on the title bar, at any time: nothing in the project changes.
         let before = h.state().session.model.clone();
         press(&mut h, "Team");
         pick(&mut h, Role::RadioButton, "Studio");
-        assert!(!offered(&h, "Design Options", "Design Options"), "a team's tools wait for Team (rev {rev})");
+        assert!(!offered(&h, "Design Variants", "Design Variants"), "a team's tools wait for Team (rev {rev})");
         press(&mut h, "View");
         assert!(offered(&h, "Place View", "Sheet Composition"), "sheets from Studio up (rev {rev})");
         press(&mut h, "Studio");
@@ -65,7 +65,7 @@ fn edit_tools_takes_a_tool_out_of_the_palette_and_puts_it_back_and_the_settings_
     h.state_mut().use_settings(file.clone());
     h.run();
     press(&mut h, "Edit Tools");
-    let hide = h.get_by_label("Temporary Hide/Isolate").accesskit_node().role();
+    let hide = h.get_by_label("Quick Hide/Isolate").accesskit_node().role();
     assert_eq!(hide, Role::Button, "the view's own buttons stay buttons: Edit Tools is the tools'");
     // Each row is a box to tick: what it shows.
     let door = h.get_by_role_and_label(Role::CheckBox, "Door");

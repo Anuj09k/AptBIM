@@ -36,13 +36,11 @@ pub struct Export {
 /// Whether a scene of `n` triangles can be written, and if not, why.
 fn check_count(n: usize) -> Result<(), String> {
     if n == 0 {
-        return Err(
-            "the default 3D view shows nothing to export: draw something, or show again what Visibility/Graphics hides there".into()
-        );
+        return Err("the default 3D view shows nothing to export: draw something, or show again what View Visibility hides there".into());
     }
     if n > MAX_TRIS {
         return Err(format!(
-            "the default 3D view shows {n} triangles, more than a glTF file is given ({MAX_TRIS}); hide some of the model there (Visibility/Graphics, a phase or a design option) and export again"
+            "the default 3D view shows {n} triangles, more than a glTF file is given ({MAX_TRIS}); hide some of the model there (View Visibility, a phase or a design option) and export again"
         ));
     }
     Ok(())

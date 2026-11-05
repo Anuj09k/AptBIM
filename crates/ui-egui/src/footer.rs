@@ -373,7 +373,7 @@ impl BimApp {
                                     }
                                 }
                                 ui.separator();
-                                if ui.button(t("Graphic Display Options...")).clicked() {
+                                if ui.button(t("Display Options...")).clicked() {
                                     self.open_display();
                                 }
                             });
@@ -393,10 +393,9 @@ impl BimApp {
                             self.toggle_linked_3d();
                         }
                     }
-                    let tip = msg!(
-                        "Temporary Hide/Isolate: hide or isolate what is selected, or its categories, in this view until you reset it"
-                    );
-                    let r = small_button(ui, Icon::TempHide, "Temporary Hide/Isolate", temp.hides(), tip);
+                    let tip =
+                        msg!("Quick Hide/Isolate: hide or isolate what is selected, or its categories, in this view until you reset it");
+                    let r = small_button(ui, Icon::TempHide, "Quick Hide/Isolate", temp.hides(), tip);
                     // Revit greys out what needs a selection until there is one.
                     let picked = !self.drawn_selection(&self.session.model).is_empty();
                     Popup::menu(&r).show(|ui| {
@@ -417,8 +416,7 @@ impl BimApp {
                         if ui.add_enabled(temp.hides(), egui::Button::new(t("Apply Hide/Isolate to View"))).clicked() {
                             self.temp_apply();
                         }
-                        if ui.add_enabled(temp.hides() || temp.reveal, egui::Button::new(t("Reset Temporary Hide/Isolate (HR)"))).clicked()
-                        {
+                        if ui.add_enabled(temp.hides() || temp.reveal, egui::Button::new(t("Reset Quick Hide/Isolate (HR)"))).clicked() {
                             self.temp_reset();
                         }
                     });
@@ -455,8 +453,8 @@ impl BimApp {
                             self.set_background_grid(grid);
                         }
                     }
-                    let tip = msg!("Reveal Hidden Elements (RH): draw what this view hides in magenta; again to hide it");
-                    if small_button(ui, Icon::Reveal, "Reveal Hidden Elements", temp.reveal, tip).clicked() {
+                    let tip = msg!("Show Hidden Elements (RH): draw what this view hides in magenta; again to hide it");
+                    if small_button(ui, Icon::Reveal, "Show Hidden Elements", temp.reveal, tip).clicked() {
                         self.temp_reveal();
                     }
                     // Only where there is a scan to show: the project's or a link's. A command drops a scan nothing places, so one held
@@ -483,7 +481,7 @@ impl BimApp {
                     }
                     if temp.hides() || temp.reveal {
                         ui.add_space(8.0);
-                        let note = if temp.reveal && !temp.hides() { msg!("Revealing hidden elements") } else { "Temporary Hide/Isolate" };
+                        let note = if temp.reveal && !temp.hides() { msg!("Revealing hidden elements") } else { "Quick Hide/Isolate" };
                         ui.label(RichText::new(tf("{} (HR resets)", &[t(note)])).color(FRAME));
                     }
                     // The control port: off, listening, the agents connected, read-only.

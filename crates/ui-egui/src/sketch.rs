@@ -709,8 +709,8 @@ impl BimApp {
             (Icon::Align, msg!("Align"), msg!("Align (AL): pick a reference line, then what to line up with it"), Tool::Align(None)),
             (
                 Icon::Trim,
-                msg!("Trim/Extend to Corner"),
-                msg!("Trim/Extend to Corner (TR): pick two walls or two lines, on the parts to keep"),
+                msg!("Trim to Corner"),
+                msg!("Trim to Corner (TR): pick two walls or two lines, on the parts to keep"),
                 Tool::Trim(None),
             ),
             (
@@ -961,7 +961,7 @@ impl BimApp {
                         (crate::icons::Icon::AddVertex, aptbim_i18n::msg!("Add Vertex"), Tool::Vertex { delete: false }),
                         (crate::icons::Icon::Split, aptbim_i18n::msg!("Split Element"), Tool::Split),
                         (crate::icons::Icon::Offset, aptbim_i18n::msg!("Offset"), Tool::Offset),
-                        (crate::icons::Icon::Trim, aptbim_i18n::msg!("Trim/Extend to Corner"), Tool::Trim(None)),
+                        (crate::icons::Icon::Trim, aptbim_i18n::msg!("Trim to Corner"), Tool::Trim(None)),
                     ] {
                         if crate::icon_button(ui, icon, label).clicked() {
                             pick = Some(tool);

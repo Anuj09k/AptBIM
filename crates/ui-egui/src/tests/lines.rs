@@ -155,7 +155,7 @@ fn linework_draws_the_edge_clicked_in_the_style_chosen_hides_it_or_puts_it_back(
     // On the Modify tab, beside Split Element.
     key(&mut h, Key::Escape);
     topmost(&mut h, "Modify");
-    press(&mut h, "Linework");
+    press(&mut h, "Edge Style");
     assert_eq!(h.state().tool, Tool::Linework);
 }
 

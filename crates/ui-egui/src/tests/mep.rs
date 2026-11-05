@@ -319,7 +319,7 @@ fn the_options_of_a_run_tool_set_its_justification_height_and_type_and_are_its_o
         h.run();
         press(&mut h, "Bottom");
         type_into(&mut h, "Offset:", "2400");
-        press(&mut h, "Type Selector");
+        press(&mut h, "Type Picker");
         press(&mut h, c.other);
         click(&mut h, P2(1000.0, 1000.0));
         click(&mut h, P2(5000.0, 1000.0));
@@ -399,7 +399,7 @@ fn a_fixture_tool_places_a_family_of_its_kind_where_clicked_and_lists_only_those
         let placed = ids(&h, "component");
         assert_eq!((placed.len(), field(&h, placed[0], "family")), (1, json!(c.first)), "{}", c.button);
         // The Type Selector lists the families of its kind, and no others; the one picked is the one placed, turned by Space.
-        press(&mut h, "Type Selector");
+        press(&mut h, "Type Picker");
         assert!(h.query_by_label(c.listed).is_some(), "{} lists {}", c.button, c.listed);
         assert!(h.query_by_label(c.not_listed).is_none(), "{} lists {}", c.button, c.not_listed);
         press(&mut h, c.listed);
@@ -685,7 +685,7 @@ fn the_electrical_tab_loads_the_arei_symbols_on_request_and_only_once() {
     press(&mut h, "Load AREI Symbols");
     assert_eq!(families(&h), loaded);
     press(&mut h, "Device");
-    press(&mut h, "Type Selector");
+    press(&mut h, "Type Picker");
     assert!(h.query_by_label("Switch, single-pole: Standard").is_some());
     assert!(h.query_by_label("Cooker: Standard").is_none(), "a cooker is not a device");
     // And one placed on the plan is a component of its family.

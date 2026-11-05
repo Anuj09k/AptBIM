@@ -823,12 +823,12 @@ fn create_similar_starts_the_selected_elements_tool_placing_its_type() {
 #[test]
 fn pp_shows_and_hides_the_properties_palette() {
     let mut h = app(BOX);
-    assert!(h.query_by_label("Type Selector").is_some());
+    assert!(h.query_by_label("Type Picker").is_some());
     shortcut(&mut h, "PP");
-    assert!(h.query_by_label("Type Selector").is_none());
+    assert!(h.query_by_label("Type Picker").is_none());
     assert!(h.query_by_label("Floor Plans").is_some(), "the Project Browser stays");
     shortcut(&mut h, "PP");
-    assert!(h.query_by_label("Type Selector").is_some());
+    assert!(h.query_by_label("Type Picker").is_some());
 }
 
 #[test]
@@ -894,7 +894,7 @@ fn ks_lists_every_shortcut_and_every_one_it_lists_works() {
     let mut h = app(BOX);
     h.state_mut().keymap = crate::keys::Keymap::Classic;
     shortcut(&mut h, "KS");
-    for label in ["Create Similar", "CS", "Select All Instances", "SA", "CR", "WA", "KS", "ZF, ZE, ZA", "Demolish", "DW"] {
+    for label in ["Create Similar", "CS", "Select All of Type", "SA", "CR", "WA", "KS", "ZF, ZE, ZA", "Demolish", "DW"] {
         assert!(h.query_by_label(label).is_some(), "{label}");
     }
     shortcut(&mut h, "WA");
@@ -924,7 +924,7 @@ fn ks_lists_every_shortcut_and_every_one_it_lists_works() {
     }
     use crate::lang::Lang;
     // Names the catalogs don't have yet: KS shows them in English until a translator gives them, as any missing translation.
-    let awaiting = ["Graphic Display Options"];
+    let awaiting = ["Display Options"];
     for (_, name) in crate::shortcuts().into_iter().filter(|(_, name)| !awaiting.contains(name)) {
         for l in [Lang::Portuguese, Lang::Spanish] {
             assert!(crate::lang::translated_in(l, name).is_some(), "{name} in {l:?}");
@@ -1091,7 +1091,7 @@ fn the_type_selector_and_edit_type_change_types_as_in_revit() {
     let wall = ids(&h, "wall")[0];
     click(&mut h, P2(4000.0, 0.0));
     assert_eq!(h.state().selection, [wall]);
-    press(&mut h, "Type Selector");
+    press(&mut h, "Type Picker");
     press(&mut h, "Exterior - 300mm");
     assert_eq!(field(&h, wall, "type"), json!("Exterior - 300mm"));
     // Edit Type changes the type, so every wall of it.
@@ -1111,7 +1111,7 @@ fn the_type_selector_and_edit_type_change_types_as_in_revit() {
     // With a tool on, the Type Selector picks the type of what it places.
     key(&mut h, Key::Escape);
     tool(&mut h, "Door");
-    press(&mut h, "Type Selector");
+    press(&mut h, "Type Picker");
     press(&mut h, "Single 800 x 2100");
     click(&mut h, P2(2000.0, 0.0));
     let door = ids(&h, "door");
@@ -1736,7 +1736,7 @@ fn rotate_turns_the_selection_about_its_middle() {
 fn mirror_pick_axis_copies_across_the_line_picked() {
     let mut h = app("wall {\"points\": [[0, 0], [4000, 0]]}\ngrid {\"start\": [6000, -3000], \"end\": [6000, 3000]}");
     click(&mut h, P2(2000.0, 0.0));
-    press(&mut h, "Mirror Pick Axis");
+    press(&mut h, "Mirror Across Line");
     click(&mut h, P2(6000.0, 2000.0));
     // Copy is on, as in Revit; the copy runs back the other way, its exterior mirrored.
     assert_eq!(walls(&h), [(P2(0.0, 0.0), P2(4000.0, 0.0)), (P2(8000.0, 0.0), P2(12000.0, 0.0))]);
@@ -1757,7 +1757,7 @@ fn align_lines_a_wall_face_up_with_a_grid() {
 fn trim_extend_to_corner_takes_two_picks() {
     let mut h = app("wall {\"points\": [[0, 0], [4000, 0]]}\nwall {\"points\": [[5000, 1000], [5000, 6000]]}");
     topmost(&mut h, "Modify");
-    press(&mut h, "Trim/Extend to Corner");
+    press(&mut h, "Trim to Corner");
     click(&mut h, P2(2000.0, 0.0));
     click(&mut h, P2(5000.0, 3000.0));
     assert_eq!(walls(&h), [(P2(0.0, 0.0), P2(5000.0, 0.0)), (P2(5000.0, 0.0), P2(5000.0, 6000.0))]);
@@ -1814,7 +1814,7 @@ fn aligned_dimensions_pick_parallel_references_then_place_the_line() {
 fn tag_by_category_tags_the_door_clicked_and_tag_all_the_rest() {
     let mut h = app(&format!("{BOX}\ndoor {{\"at\": [2000, 0]}}\nwindow {{\"at\": [8000, 3000]}}"));
     press(&mut h, "Annotate");
-    press(&mut h, "Tag by Category");
+    press(&mut h, "Tag Element");
     assert!(h.query_by_label("Modify | Tag").is_some());
     click(&mut h, P2(2000.0, 0.0));
     let tags = ids(&h, "tag");
@@ -2963,7 +2963,7 @@ mass {"boundary": [[1000, 1000], [3000, 1000], [3000, 2000], [1000, 2000]], "nam
         pick(&mut h, Role::Button, &over);
         missed.extend(english(&h, l));
         press(&mut h, tr("Cancel"));
-        for tab in ["Annotation Categories", "Imported Categories", "Filters", "Elements", "Design Options"] {
+        for tab in ["Annotation Categories", "Imported Categories", "Filters", "Elements", "Design Variants"] {
             press(&mut h, tr(tab));
             missed.extend(english(&h, l));
         }
@@ -2998,7 +2998,7 @@ mass {"boundary": [[1000, 1000], [3000, 1000], [3000, 2000], [1000, 2000]], "nam
         }
         key(&mut h, Key::Escape);
         topmost(&mut h, tr("Modify"));
-        press(&mut h, tr("Linework"));
+        press(&mut h, tr("Edge Style"));
         missed.extend(english(&h, l));
         key(&mut h, Key::Escape);
         // Manage > Annotation Settings' list; Fill Patterns, with a pattern's families and New Pattern's choices; Line Styles on
@@ -3144,7 +3144,7 @@ fn the_type_selectors_list_stays_in_the_window_and_scrolls() {
     // the top and the bottom of it.
     let mut h = app(BOX);
     tool(&mut h, "Component");
-    press(&mut h, "Type Selector");
+    press(&mut h, "Type Picker");
     let list = h.ctx.memory(|m| m.areas().top_layer_id(egui::Order::Foreground).and_then(|l| m.area_rect(l.id)));
     let list = list.expect("the list is open");
     let window = h.ctx.content_rect();
@@ -3156,7 +3156,7 @@ fn the_component_tool_places_a_familys_type_that_space_turns() {
     let mut h = app(BOX);
     tool(&mut h, "Component");
     assert!(h.query_by_label("Modify | Place Component").is_some());
-    press(&mut h, "Type Selector");
+    press(&mut h, "Type Picker");
     press(&mut h, "Bed: 900 x 2000");
     // A quarter turn before it goes down, as Revit's Space gives.
     key(&mut h, Key::Space);
@@ -3504,7 +3504,7 @@ fn ceilings_go_in_the_room_clicked_and_show_in_its_ceiling_plan() {
     let mut h = app(BOX);
     tool(&mut h, "Ceiling");
     assert!(h.query_by_label("Modify | Place Ceiling").is_some());
-    press(&mut h, "Type Selector");
+    press(&mut h, "Type Picker");
     press(&mut h, "Tile 600 x 600");
     type_into(&mut h, "Height Offset:", "2400");
     click(&mut h, P2(4000.0, 3000.0));
@@ -4388,7 +4388,7 @@ fn plan_graphics(h: &Harness<BimApp>, level: Id) -> aptbim_core::graphics::Graph
 fn visibility_graphics_hides_and_overrides_by_category_in_the_active_view_alone() {
     let mut h = app(&format!("{BOX}\nroom {{\"point\": [4000, 3000], \"name\": \"Living\"}}"));
     shortcut(&mut h, "VV");
-    assert!(h.query_by_label("Visibility/Graphics Overrides for Floor Plan: Level 1").is_some());
+    assert!(h.query_by_label("View Visibility Overrides for Floor Plan: Level 1").is_some());
     // Edited in the dialog, a draft: nothing is the model's until Apply or OK.
     pick(&mut h, Role::CheckBox, "Rooms");
     assert!(plan_graphics(&h, 100000).is_default());
@@ -4401,7 +4401,7 @@ fn visibility_graphics_hides_and_overrides_by_category_in_the_active_view_alone(
     press(&mut h, "OK");
     press(&mut h, "OK");
     let g = plan_graphics(&h, 100000);
-    assert!(h.query_by_label("Visibility/Graphics Overrides for Floor Plan: Level 1").is_none(), "OK closes it");
+    assert!(h.query_by_label("View Visibility Overrides for Floor Plan: Level 1").is_none(), "OK closes it");
     assert_eq!(g.categories["wall"].cut.weight, Some(Pen(10)), "a cut wall's own pen");
     assert_eq!(g.categories["wall"].projection.color, Some([40, 40, 40]));
     assert!(g.hides("room") && !g.hides("wall"));
@@ -4465,7 +4465,7 @@ fn visibility_graphics_is_a_table_each_cell_overriding_its_own_part() {
     // Object Styles… stands in its place, for what isn't overridden, and gives it back as it was.
     shortcut(&mut h, "VV");
     pick(&mut h, Role::CheckBox, "Doors");
-    press(&mut h, "Object Styles…");
+    press(&mut h, "Category Styles…");
     assert!(h.query_by_role_and_label(Role::ComboBox, "Walls: Cut").is_some());
     // It settles over a few frames, as a window opened from another does.
     for _ in 0..6 {
@@ -4497,7 +4497,7 @@ fn temporary_hide_and_isolate_change_what_a_view_shows_and_nothing_in_the_projec
     assert!(!plan_shows(&mut h, walls[0]) && plan_shows(&mut h, walls[1]));
     // Hide Category (HC), from the bar: every wall.
     click(&mut h, P2(8000.0, 3000.0));
-    press(&mut h, "Temporary Hide/Isolate");
+    press(&mut h, "Quick Hide/Isolate");
     press(&mut h, "Hide Category (HC)");
     assert!(walls.iter().all(|w| !plan_shows(&mut h, *w)) && plan_shows(&mut h, door));
     // Nothing of it is the project's: no new model, no undo step, nothing to save.
@@ -4532,15 +4532,15 @@ fn the_temporary_hide_menu_greys_out_what_needs_a_selection_as_revits_does() {
     let mut h = app(BOX);
     let items = ["Hide Element (HH)", "Hide Category (HC)", "Isolate Element (HI)", "Isolate Category (IC)"];
     // Nothing selected: nothing to hide or isolate, and the menu says so before it is tried.
-    press(&mut h, "Temporary Hide/Isolate");
+    press(&mut h, "Quick Hide/Isolate");
     for label in items {
         assert!(is_disabled(&h, Role::Button, label), "{label}");
     }
-    assert!(is_disabled(&h, Role::Button, "Reset Temporary Hide/Isolate (HR)"));
+    assert!(is_disabled(&h, Role::Button, "Reset Quick Hide/Isolate (HR)"));
     key(&mut h, Key::Escape);
     // Something drawn selected: all four work.
     click(&mut h, P2(5000.0, 0.0));
-    press(&mut h, "Temporary Hide/Isolate");
+    press(&mut h, "Quick Hide/Isolate");
     for label in items {
         assert!(!is_disabled(&h, Role::Button, label), "{label}");
     }
@@ -4602,9 +4602,9 @@ fn a_temporary_hide_the_views_template_forbids_is_dropped_and_says_why() {
     h.state_mut().status = crate::Status { text: String::new(), error: false };
     shortcut(&mut h, "RH");
     assert!(!plan_shows(&mut h, walls[0]), "revealing shows what the view hides for good, and the wall is hidden for now");
-    assert!(!h.state().status.error && lit(&h, "Reveal Hidden Elements"), "{}", h.state().status.text);
+    assert!(!h.state().status.error && lit(&h, "Show Hidden Elements"), "{}", h.state().status.text);
     shortcut(&mut h, "RH");
-    press(&mut h, "Temporary Hide/Isolate");
+    press(&mut h, "Quick Hide/Isolate");
     press(&mut h, "Apply Hide/Isolate to View");
     assert!(plan_graphics(&h, 100000).elements[&gid(&h, walls[0])].hidden, "{}", h.state().status.text);
 }
@@ -4665,25 +4665,25 @@ fn a_3d_view_following_a_template_shows_its_visual_style_greyed_out() {
 fn a_view_that_hides_isolates_or_reveals_wears_a_frame_and_lights_the_bar_and_says_so() {
     let mut h = app(BOX);
     let note = |h: &Harness<BimApp>| painted_text(h).into_iter().find(|t| t.contains("(HR resets)") || t.contains("Revealing"));
-    assert!(!framed(&h) && !lit(&h, "Temporary Hide/Isolate") && !lit(&h, "Reveal Hidden Elements") && note(&h).is_none());
+    assert!(!framed(&h) && !lit(&h, "Quick Hide/Isolate") && !lit(&h, "Show Hidden Elements") && note(&h).is_none());
     click(&mut h, P2(5000.0, 0.0));
     shortcut(&mut h, "HH");
-    assert!(framed(&h) && lit(&h, "Temporary Hide/Isolate") && !lit(&h, "Reveal Hidden Elements"));
-    assert_eq!(note(&h).as_deref(), Some("Temporary Hide/Isolate (HR resets)"));
+    assert!(framed(&h) && lit(&h, "Quick Hide/Isolate") && !lit(&h, "Show Hidden Elements"));
+    assert_eq!(note(&h).as_deref(), Some("Quick Hide/Isolate (HR resets)"));
     // Revealing too: still hiding, and it says so.
     shortcut(&mut h, "RH");
-    assert!(framed(&h) && lit(&h, "Reveal Hidden Elements"));
-    assert_eq!(note(&h).as_deref(), Some("Temporary Hide/Isolate (HR resets)"));
+    assert!(framed(&h) && lit(&h, "Show Hidden Elements"));
+    assert_eq!(note(&h).as_deref(), Some("Quick Hide/Isolate (HR resets)"));
     shortcut(&mut h, "HR");
-    assert!(!framed(&h) && !lit(&h, "Temporary Hide/Isolate") && !lit(&h, "Reveal Hidden Elements") && note(&h).is_none());
+    assert!(!framed(&h) && !lit(&h, "Quick Hide/Isolate") && !lit(&h, "Show Hidden Elements") && note(&h).is_none());
     // Only revealing: framed, and the button's Reset takes it off.
     shortcut(&mut h, "RH");
-    assert!(framed(&h) && lit(&h, "Reveal Hidden Elements") && !lit(&h, "Temporary Hide/Isolate"));
+    assert!(framed(&h) && lit(&h, "Show Hidden Elements") && !lit(&h, "Quick Hide/Isolate"));
     assert_eq!(note(&h).as_deref(), Some("Revealing hidden elements (HR resets)"));
-    press(&mut h, "Temporary Hide/Isolate");
-    assert!(!is_disabled(&h, Role::Button, "Reset Temporary Hide/Isolate (HR)"), "there is something to reset");
+    press(&mut h, "Quick Hide/Isolate");
+    assert!(!is_disabled(&h, Role::Button, "Reset Quick Hide/Isolate (HR)"), "there is something to reset");
     assert!(is_disabled(&h, Role::Button, "Apply Hide/Isolate to View"), "but nothing to apply");
-    press(&mut h, "Reset Temporary Hide/Isolate (HR)");
+    press(&mut h, "Reset Quick Hide/Isolate (HR)");
     assert!(!framed(&h) && h.state().temporary().is_none());
 }
 
@@ -4789,7 +4789,7 @@ fn reveal_hidden_elements_shows_what_the_view_hides_for_good_and_apply_makes_a_h
     // Apply Hide/Isolate to View: a temporary hide of another wall becomes the view's own.
     click(&mut h, P2(8000.0, 3000.0));
     shortcut(&mut h, "HH");
-    press(&mut h, "Temporary Hide/Isolate");
+    press(&mut h, "Quick Hide/Isolate");
     press(&mut h, "Apply Hide/Isolate to View");
     assert!(plan_graphics(&h, 100000).elements[&gid(&h, walls[1])].hidden);
     assert!(h.state().temporary().is_none(), "nothing left to hide for now");
@@ -4797,7 +4797,7 @@ fn reveal_hidden_elements_shows_what_the_view_hides_for_good_and_apply_makes_a_h
     // A category hidden for now goes in with it.
     click(&mut h, P2(0.0, 3000.0));
     shortcut(&mut h, "HC");
-    press(&mut h, "Temporary Hide/Isolate");
+    press(&mut h, "Quick Hide/Isolate");
     press(&mut h, "Apply Hide/Isolate to View");
     assert!(plan_graphics(&h, 100000).hides("wall") && h.state().temporary().is_none());
 }
@@ -4826,7 +4826,7 @@ fn unhide_element_and_unhide_category_bring_back_what_the_selection_hides_while_
     click(&mut h, P2(8000.0, 3000.0));
     shortcut(&mut h, "EU");
     assert!(plan_graphics(&h, 100000).elements.is_empty());
-    assert!(h.query_by_label("Visibility/Graphics Overrides for Level 1").is_none(), "the dialog stays shut");
+    assert!(h.query_by_label("View Visibility Overrides for Level 1").is_none(), "the dialog stays shut");
     // A category hidden whole: Unhide Category (VU) brings back all its elements.
     shortcut(&mut h, "VH");
     assert!(plan_graphics(&h, 100000).hides("wall"));
@@ -4840,7 +4840,7 @@ fn unhide_element_and_unhide_category_bring_back_what_the_selection_hides_while_
     assert!(!plan_graphics(&h, 100000).hides("wall"));
     // With nothing the selection hides, VU says so and changes nothing.
     shortcut(&mut h, "VU");
-    assert!(h.state().status.text.contains("Reveal Hidden Elements"), "{:?}", h.state().status);
+    assert!(h.state().status.text.contains("Show Hidden Elements"), "{:?}", h.state().status);
     key(&mut h, Key::Escape);
 }
 
@@ -4969,7 +4969,7 @@ fn the_3d_view_leaves_out_what_its_graphics_hide() {
     assert_eq!(h.state().selection.len(), 1, "the south wall's face");
     key(&mut h, Key::Escape);
     shortcut(&mut h, "VV");
-    assert!(h.query_by_label("Visibility/Graphics Overrides for 3D View: {3D}").is_some());
+    assert!(h.query_by_label("View Visibility Overrides for 3D View: {3D}").is_some());
     pick(&mut h, Role::CheckBox, "Walls");
     press(&mut h, "OK");
     let id = h.state().session.model.default_3d().unwrap();
@@ -4997,7 +4997,7 @@ fn sheets_and_schedules_have_no_graphics_to_override() {
     let mut h = app(&format!("{BOX}\nsheet {{\"name\": \"Plans\"}}"));
     browse(&mut h, "A101 - Plans");
     shortcut(&mut h, "VV");
-    assert!(h.query_by_label("Visibility/Graphics Overrides for Sheet: Plans").is_none());
+    assert!(h.query_by_label("View Visibility Overrides for Sheet: Plans").is_none());
     assert!(h.query_by_label("This view has no graphics to override.").is_some());
 }
 
@@ -5040,7 +5040,7 @@ fn ph_and_do_open_phasing_and_design_options_and_so_do_the_manage_tabs_buttons()
     from_list(&mut h, "Phasing", "Phasing");
     assert!(h.query_by_label("Phases, in order:").is_some());
     press(&mut h, "Close");
-    from_list(&mut h, "Design Options", "Design Options");
+    from_list(&mut h, "Design Variants", "Design Variants");
     assert!(h.query_by_label("Option set:").is_some());
     press(&mut h, "Close");
     assert!(h.query_by_label("Option set:").is_none());
@@ -5054,12 +5054,12 @@ fn a_ribbon_tab_wider_than_the_window_folds_its_last_panels_to_buttons_that_list
     h.run();
     let window = h.ctx.content_rect().right();
     press(&mut h, "Manage");
-    assert!(h.query_by_label("Design Options").is_none(), "the last panel is folded at {window}");
-    assert!(h.get_by_label("Design Options ▾").rect().right() <= window, "to one button, in the window");
+    assert!(h.query_by_label("Design Variants").is_none(), "the last panel is folded at {window}");
+    assert!(h.get_by_label("Design Variants ▾").rect().right() <= window, "to one button, in the window");
     assert!(h.get_by_label("Materials").rect().left() >= 0.0, "and the first panel is as it was");
     // The folded panel lists its tools, and a tool there works as on the ribbon.
-    press(&mut h, "Design Options ▾");
-    press(&mut h, "Design Options");
+    press(&mut h, "Design Variants ▾");
+    press(&mut h, "Design Variants");
     assert!(h.query_by_label("Option set:").is_some());
 }
 
@@ -5276,7 +5276,7 @@ fn the_active_design_option_in_the_status_bar_is_what_new_walls_are_made_in() {
     press(&mut h, "Main Model");
     let again = draw_wall(&mut h, P2(2000.0, 4500.0), P2(6000.0, 4500.0));
     assert_eq!(option(&h, again), None);
-    let steps = ["Wall", "Design Options", "Wall", "Visibility/Graphics", "Wall", "Wall"];
+    let steps = ["Wall", "Design Variants", "Wall", "View Visibility", "Wall", "Wall"];
     assert_eq!(h.state().session.history(), steps, "picking an option is no undo step, but showing it in the view is");
 }
 
@@ -5398,7 +5398,7 @@ fn visibility_graphics_picks_the_option_a_view_shows_of_each_set_unless_a_templa
     use egui_kittest::kittest::NodeT;
     let mut h = app(&format!("{BOX}\n{MASSING}"));
     shortcut(&mut h, "VV");
-    press(&mut h, "Design Options");
+    press(&mut h, "Design Variants");
     pick(&mut h, Role::ComboBox, "Massing");
     press(&mut h, "Low");
     // A draft until OK, as every tab's.
@@ -5407,7 +5407,7 @@ fn visibility_graphics_picks_the_option_a_view_shows_of_each_set_unless_a_templa
     assert_eq!(plan_graphics(&h, 100000).options["Massing"], "Low");
     // The primary again takes the choice away.
     shortcut(&mut h, "VV");
-    press(&mut h, "Design Options");
+    press(&mut h, "Design Variants");
     pick(&mut h, Role::ComboBox, "Massing");
     press(&mut h, "Primary (Tall)");
     press(&mut h, "OK");
@@ -5416,15 +5416,15 @@ fn visibility_graphics_picks_the_option_a_view_shows_of_each_set_unless_a_templa
     h.state_mut().session.execute("template", &json!({"name": "T", "from": 100000, "controls": ["options"]})).unwrap();
     h.state_mut().session.execute("graphics", &json!({"view": 100000, "template": "T"})).unwrap();
     shortcut(&mut h, "VV");
-    press(&mut h, "Design Options");
+    press(&mut h, "Design Variants");
     assert!(h.get_by_role_and_label(Role::ComboBox, "Massing").accesskit_node().is_disabled());
-    assert!(h.query_by_label("Design Options follow view template T: change them there.").is_some());
+    assert!(h.query_by_label("Design Variants follow view template T: change them there.").is_some());
     press(&mut h, "Cancel");
     // A project with no sets says where to make them.
     let mut h = app(BOX);
     shortcut(&mut h, "VV");
-    press(&mut h, "Design Options");
-    assert!(h.query_by_label("The project has no design options: Manage > Design Options makes them.").is_some());
+    press(&mut h, "Design Variants");
+    assert!(h.query_by_label("The project has no design options: Manage > Design Variants makes them.").is_some());
 }
 
 #[test]
@@ -5721,12 +5721,12 @@ fn the_door_tool_places_the_projects_single_door_of_a_family_and_the_type_select
     // Selected, its Type Selector lists the project's own types, then the families' as `Family: Type`.
     key(&mut h, Key::Escape);
     click(&mut h, P2(2000.0, 0.0));
-    press(&mut h, "Type Selector");
+    press(&mut h, "Type Picker");
     assert!(h.query_by_label("Double Door: 1500 x 2100").is_some() && h.query_by_label("Single 800 x 2100").is_some());
     // One of the project's own takes it off the family; another family's gives it that.
     press(&mut h, "Single 800 x 2100");
     assert_eq!((field(&h, door, "family"), field(&h, door, "type")), (Value::Null, json!("Single 800 x 2100")));
-    press(&mut h, "Type Selector");
+    press(&mut h, "Type Picker");
     press(&mut h, "Double Door: 1500 x 2100");
     assert_eq!((field(&h, door, "family"), field(&h, door, "type")), (json!("Double Door"), json!("1500 x 2100")));
     // Its Edit Type is its family type's, with a family's own parameters.
@@ -5793,10 +5793,10 @@ fn the_massing_tab_makes_floors_walls_a_floor_and_a_roof_from_the_selected_mass(
     assert_eq!(h.state().selection, mass);
     massing(&mut h, "Mass Floors");
     assert_eq!(ids(&h, "floor").len(), 2, "Levels 1 and 2; Level 3 is its top");
-    massing(&mut h, "Wall by Face");
+    massing(&mut h, "Wall on Mass");
     assert_eq!(ids(&h, "wall").len(), 4);
-    massing(&mut h, "Floor by Face");
-    massing(&mut h, "Roof by Face");
+    massing(&mut h, "Floor on Mass");
+    massing(&mut h, "Roof on Mass");
     assert_eq!((ids(&h, "floor").len(), ids(&h, "roof").len()), (3, 1));
     // Each its own undo step.
     key(&mut h, Key::Escape);
@@ -5848,6 +5848,7 @@ mod links;
 mod look;
 mod mep;
 mod minimap;
+mod names;
 mod notes;
 mod objectstyles;
 mod origin;
@@ -5917,7 +5918,7 @@ fn update_to_face_makes_what_was_made_by_face_follow_the_selected_mass_again() {
     let mass = ids(&h, "mass");
     click(&mut h, P2(4000.0, 1500.0));
     assert_eq!(h.state().selection, mass);
-    massing(&mut h, "Floor by Face");
+    massing(&mut h, "Floor on Mass");
     let floor = *ids(&h, "floor").last().unwrap();
     // The mass grows; nothing follows it until Update to Face.
     h.state_mut().session.execute("modify", &json!({"id": mass[0], "boundary": [[0, 0], [5000, 0], [5000, 3000], [0, 3000]]})).unwrap();
@@ -5927,7 +5928,7 @@ fn update_to_face_makes_what_was_made_by_face_follow_the_selected_mass_again() {
             .and_then(|a| a.iter().find(|e| e["id"] == floor).and_then(|e| e["area_m2"].as_f64()))
     };
     assert_eq!(area_of(&mut h), Some(12.0));
-    massing(&mut h, "Update to Face");
+    massing(&mut h, "Update from Mass");
     assert_eq!(area_of(&mut h), Some(15.0));
     // Its shortcut; and with nothing selected it says to select a mass.
     h.state_mut().session.execute("modify", &json!({"id": mass[0], "boundary": [[0, 0], [6000, 0], [6000, 3000], [0, 3000]]})).unwrap();
@@ -6406,7 +6407,7 @@ fn choose_item(h: &mut Harness<BimApp>, label: &str) {
     h.run();
 }
 
-const MENU: [&str; 8] = ["Cancel", "Zoom to Fit", "Zoom In", "Home View", "Edit Type", "Select All Instances", "Hide Element", "Delete"];
+const MENU: [&str; 8] = ["Cancel", "Zoom to Fit", "Zoom In", "Home View", "Edit Type", "Select All of Type", "Hide Element", "Delete"];
 
 #[test]
 fn a_right_click_in_a_plan_opens_a_menu_of_what_the_view_and_the_selection_can_do() {
@@ -6426,7 +6427,7 @@ fn a_right_click_in_a_plan_opens_a_menu_of_what_the_view_and_the_selection_can_d
     let at = h.state().screen(P2(4000.0, 3000.0));
     assert_eq!(
         offered(&mut h, at, &MENU),
-        ["Cancel", "Zoom to Fit", "Zoom In", "Edit Type", "Select All Instances", "Hide Element", "Delete"]
+        ["Cancel", "Zoom to Fit", "Zoom In", "Edit Type", "Select All of Type", "Hide Element", "Delete"]
     );
     choose_item(&mut h, "Edit Type");
     assert!(h.state().type_dialog.is_some(), "Type Properties is open");
@@ -6453,7 +6454,7 @@ fn every_view_has_the_right_click_menu() {
     h.get_by_label("Hall").click();
     h.run();
     let at = h.get_by_label("Hall").rect().center();
-    assert_eq!(offered(&mut h, at, &MENU), ["Cancel", "Edit Type", "Select All Instances", "Delete"]);
+    assert_eq!(offered(&mut h, at, &MENU), ["Cancel", "Edit Type", "Select All of Type", "Delete"]);
     choose_item(&mut h, "Delete");
     assert!(ids(&h, "room").is_empty());
 }

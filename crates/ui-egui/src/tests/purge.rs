@@ -31,7 +31,7 @@ fn purge_button<'a>(h: &'a Harness<BimApp>) -> Option<egui_kittest::Node<'a>> {
 fn purge_unused_lists_what_the_checked_kinds_would_take_out_and_takes_it_out_in_one_step() {
     let mut h = with_spare_types();
     press(&mut h, "Manage");
-    press(&mut h, "Purge Unused");
+    press(&mut h, "Clean Up Unused");
     let listed = |h: &Harness<BimApp>| h.state().purge_dialog.as_ref().map_or(0, |d| d.listed.len());
     let (types, steps) = (h.state().session.model.types.wall.len(), h.state().session.history().len());
     assert!(listed(&h) > 0 && h.state().purge_dialog.as_ref().is_some_and(|d| d.kinds[..2] == [true, true]));

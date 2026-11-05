@@ -32,7 +32,7 @@ use crate::{BimApp, Sheet, Status};
 
 /// Visibility/Graphics' tabs.
 const TABS: [&str; 6] =
-    [msg!("Model Categories"), msg!("Annotation Categories"), msg!("Imported Categories"), "Filters", "Elements", "Design Options"];
+    [msg!("Model Categories"), msg!("Annotation Categories"), msg!("Imported Categories"), "Filters", "Elements", "Design Variants"];
 
 /// The Elements tab's place in [`TABS`], the Filters' and the Design Options'.
 pub(crate) const ELEMENTS_TAB: usize = 4;
@@ -117,7 +117,7 @@ pub(crate) fn group_name(g: Group) -> &'static str {
         Group::Filters => "Filters",
         Group::Range => msg!("View Range"),
         Group::Phase => msg!("Phase and Phase Filter"),
-        Group::Options => "Design Options",
+        Group::Options => "Design Variants",
         Group::Scale => "View Scale",
         Group::Detail => "Detail Level",
         Group::Style => "Visual Style",
@@ -302,7 +302,7 @@ impl BimApp {
         let Some(view) = self.graphic_view() else { return };
         let (elements, categories) = self.hidden_selection();
         if if category { categories.is_empty() } else { elements.is_empty() } {
-            let text = t("Nothing selected is hidden in this view. Reveal Hidden Elements (RH) draws what is, to select it.");
+            let text = t("Nothing selected is hidden in this view. Show Hidden Elements (RH) draws what is, to select it.");
             self.status = Status { text: text.to_string(), error: false };
             return;
         }
@@ -322,7 +322,7 @@ impl BimApp {
         let (mut ok, mut cancel, mut apply, mut styles) = (false, false, false, false);
         // A cell's dialog over it has its own OK and Cancel.
         let over = d.cell.is_some();
-        let r = Modal::new(UiId::unique("visibility-graphics"), tf("Visibility/Graphics Overrides for {}", &[&d.title]))
+        let r = Modal::new(UiId::unique("visibility-graphics"), tf("View Visibility Overrides for {}", &[&d.title]))
             .width(800.0)
             .min_height(500.0)
             .closable(!over)
@@ -611,9 +611,9 @@ impl BimApp {
             });
             assign |= r.clicked();
             crate::properties::end_row(ui);
-            ui.label(t("Visibility/Graphics Overrides"));
+            ui.label(t("View Visibility Overrides"));
             let r = crate::properties::wide_button(ui, t("Edit…"));
-            r.widget_info(|| WidgetInfo::labeled(Role::Button, true, tf("Edit {}", &[t("Visibility/Graphics Overrides")])));
+            r.widget_info(|| WidgetInfo::labeled(Role::Button, true, tf("Edit {}", &[t("View Visibility Overrides")])));
             edit |= r.clicked();
             crate::properties::end_row(ui);
         });
@@ -1089,8 +1089,8 @@ fn categories(ui: &mut Ui, d: &mut VgDialog, model: &Model, shown: &Graphics, na
         visibility_buttons(ui, d, model, &rows, enabled);
         if model_tab {
             ui.add_space(16.0);
-            ui.label(RichText::new(t("Categories not overridden are drawn as Object Styles sets them.")).color(pal().muted));
-            styles = ui.button(t("Object Styles…")).clicked();
+            ui.label(RichText::new(t("Categories not overridden are drawn as Category Styles sets them.")).color(pal().muted));
+            styles = ui.button(t("Category Styles…")).clicked();
         }
     });
     styles
@@ -1235,7 +1235,7 @@ fn imported_layers(ui: &mut Ui, d: &mut VgDialog, model: &Model) {
 /// it chooses another.
 fn design_options(ui: &mut Ui, d: &mut VgDialog, model: &Model, shown: &Graphics, enabled: bool) {
     if model.option_sets.is_empty() {
-        ui.label(RichText::new(t("The project has no design options: Manage > Design Options makes them.")).color(pal().muted));
+        ui.label(RichText::new(t("The project has no design options: Manage > Design Variants makes them.")).color(pal().muted));
         return;
     }
     Grid::new("vg-options").num_columns(2).striped(true).spacing(vec2(16.0, 6.0)).show(ui, |ui| {

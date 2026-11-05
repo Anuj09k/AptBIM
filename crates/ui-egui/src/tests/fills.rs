@@ -18,7 +18,7 @@ fn a_filled_region_is_sketched_in_the_options_bars_type_and_line_style_any_numbe
     assert!(h.query_by_label("Modify | Create Filled Region Boundary").is_some());
     // The type is the Type Selector's alone; the Options Bar has the line style.
     assert!(h.query_by_role_and_label(Role::ComboBox, "Region Type").is_none());
-    press(&mut h, "Type Selector");
+    press(&mut h, "Type Picker");
     press(&mut h, "Crosshatch");
     choose(&mut h, "Line Style", "<Invisible lines>");
     rectangle(&mut h, P2(1000.0, 1000.0), P2(3000.0, 3000.0));
@@ -32,8 +32,8 @@ fn a_filled_region_is_sketched_in_the_options_bars_type_and_line_style_any_numbe
     assert_eq!(h.state().selection, vec![r]);
     // Its type only in the Type Selector, its lines in Properties; its sketch with Edit Boundary.
     press(&mut h, "Modify | Filled Regions");
-    assert!(h.query_by_role_and_label(Role::ComboBox, "Region Type").is_none(), "type is only in the Type Selector");
-    press(&mut h, "Type Selector");
+    assert!(h.query_by_role_and_label(Role::ComboBox, "Region Type").is_none(), "type is only in the Type Picker");
+    press(&mut h, "Type Picker");
     press(&mut h, "Sand");
     choose(&mut h, "Line Style", "Wide Lines");
     assert_eq!((field(&h, r, "type"), field(&h, r, "line_style")), (json!("Sand"), json!("Wide Lines")));

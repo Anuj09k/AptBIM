@@ -22,7 +22,7 @@ fn aptimizers_keys_are_the_default_and_the_classic_keys_they_replace_do_nothing(
     typed(&mut h, "VV");
     assert!(h.state().vg_dialog.is_none());
     typed(&mut h, "VI");
-    assert!(h.state().vg_dialog.is_some(), "Visibility/Graphics");
+    assert!(h.state().vg_dialog.is_some(), "View Visibility");
 }
 
 #[test]
@@ -85,7 +85,7 @@ fn every_key_a_keymap_lists_works_and_no_other_does() {
 fn tooltips_and_find_name_the_keymaps_key() {
     assert_eq!(Keymap::Aptimizer.keyed("Window (WN): click a wall"), "Window (WI): click a wall");
     assert_eq!(Keymap::Classic.keyed("Window (WN): click a wall"), "Window (WN): click a wall");
-    assert_eq!(Keymap::Aptimizer.keyed("Visibility/Graphics (VV): what this view hides"), "Visibility/Graphics (VI): what this view hides");
+    assert_eq!(Keymap::Aptimizer.keyed("View Visibility (VV): what this view hides"), "View Visibility (VI): what this view hides");
     assert_eq!(Keymap::Aptimizer.keyed("Wall (WA): each click builds a wall"), "Wall (WA): each click builds a wall");
     let mut h = app(BOX);
     shortcut(&mut h, "KS");

@@ -43,11 +43,11 @@ impl BimApp {
     pub(crate) fn object_styles_window(&mut self, ctx: &Context) {
         let Some(mut d) = self.object_styles_dialog.take() else { return };
         let (mut ok, mut apply, mut cancel) = (false, false, false);
-        let r = Modal::new(UiId::unique("object-styles"), t("Object Styles")).width(520.0).show(ctx, |ui| {
+        let r = Modal::new(UiId::unique("object-styles"), t("Category Styles")).width(520.0).show(ctx, |ui| {
             crate::popup::body(ui, |ui| {
                 ui.add_space(6.0);
                 ui.label(t(
-                    "The pen each category draws its lines in, seen and cut, in every plan and section. A view's Visibility/Graphics overrides them.",
+                    "The pen each category draws its lines in, seen and cut, in every plan and section. A view's View Visibility overrides them.",
                 ));
                 ui.add_space(4.0);
                 ScrollArea::vertical().max_height(520.0).show(ui, |ui| {

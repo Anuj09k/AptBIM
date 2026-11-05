@@ -367,7 +367,7 @@ pub static ALL: &[Command] = &[
     ),
     edit(
         "wall_by_face",
-        ui_msg!("Wall by Face"),
+        ui_msg!("Wall on Mass"),
         &["WB"],
         "{mass, faces?: [edge, …], type?, location?} a wall on each edge of the mass's footprint (numbered from its first \
          point), or the `faces` given, as tall as the mass; its exterior finish on the edge, facing out (`location` changes \
@@ -376,7 +376,7 @@ pub static ALL: &[Command] = &[
     ),
     edit(
         "floor_by_face",
-        ui_msg!("Floor by Face"),
+        ui_msg!("Floor on Mass"),
         &["FB"],
         "{mass, type?} a floor on the mass's top face: its top at the mass's top level, or `height` over its base. An ordinary \
          floor from then on",
@@ -384,7 +384,7 @@ pub static ALL: &[Command] = &[
     ),
     edit(
         "roof_by_face",
-        ui_msg!("Roof by Face"),
+        ui_msg!("Roof on Mass"),
         &["RB"],
         "{mass, type?, slope?, overhang?} a roof on the mass's top face, flat unless it has a `slope` (degrees), over the mass's \
          top level or `height` over its base. An ordinary roof from then on",
@@ -392,7 +392,7 @@ pub static ALL: &[Command] = &[
     ),
     edit(
         "update_by_face",
-        ui_msg!("Update to Face"),
+        ui_msg!("Update from Mass"),
         &["UF"],
         "{mass?, ids?} rebuilds what `wall_by_face`, `floor_by_face` and `roof_by_face` made from the mass as it is now (Revit's \
          Update to Face): the walls on its edges, as tall as it is, a floor and a roof on its top face. The ones of `mass`, or the \
@@ -430,7 +430,7 @@ pub static ALL: &[Command] = &[
     .menu("Architecture > Room"),
     edit(
         "room_separator",
-        "Room Separator",
+        "Room Boundary Line",
         &[],
         "{points: [[x,y],…], level?, closed?} room separation lines along `points`, one per segment (`closed` joins the last \
          to the first): they bound rooms as walls do, to split an open space (a living room and its corridor) into rooms, \
@@ -821,7 +821,7 @@ pub static ALL: &[Command] = &[
     ),
     edit(
         "tag",
-        "Tag by Category",
+        "Tag Element",
         &["TG"],
         "{ids?: [id,…], label?, level?, category?, offset?: [dx, dy], leader?} tags elements with a field of theirs: a door's or \
          window's mark, a room's name, else the type, or `label`, any field its category's schedule has (`Height`, `Area`, a \
@@ -1152,7 +1152,7 @@ pub static ALL: &[Command] = &[
     ),
     edit(
         "corner",
-        ui_msg!("Trim/Extend to Corner"),
+        ui_msg!("Trim to Corner"),
         &["TR"],
         "{ids: [a, b], keep?: [[x, y], [x, y]]} trims or extends two walls, or two detail lines (lines or arcs), to meet where \
          their lines (or circles) cross; `keep` is a point on the part of each to keep",
@@ -1295,7 +1295,7 @@ pub static ALL: &[Command] = &[
     ),
     edit(
         "linework",
-        "Linework",
+        "Edge Style",
         &["LW"],
         "{view?, id, at: [x, y], style? | invisible?: true, remove?: true} Revit's Linework: the edge of element `id` that a \
          plan (`view`, a level's or a plan view; the lowest level's by default) draws nearest `at` (within 200 mm), drawn in \
@@ -1452,14 +1452,14 @@ pub static ALL: &[Command] = &[
     ),
     edit(
         "purge",
-        "Purge Unused",
+        "Clean Up Unused",
         &["PU"],
         "{kinds?: [type|family|material|picture|filter|template, …], dry_run?} takes out what nothing uses, again for what that \
          leaves unused: types and families unless `kinds` says; a category keeps a type and a family a type; with `dry_run` it \
          lists what would go and changes nothing",
         purge,
     )
-    .menu("Manage > Purge Unused"),
+    .menu("Manage > Clean Up Unused"),
     edit(
         "line_weights",
         "Line Weights",
@@ -1477,7 +1477,7 @@ pub static ALL: &[Command] = &[
     .menu("Manage > Line Weights"),
     edit(
         "object_styles",
-        "Object Styles",
+        "Category Styles",
         &[],
         "{categories?: {category: {projection?: pen, cut?: pen}, …}, reset?: true} the project's object styles, as Revit's \
          Manage > Object Styles: the pen (0, a hairline, to 16) each model category draws its lines in where it is seen \
@@ -1488,7 +1488,7 @@ pub static ALL: &[Command] = &[
          category's, `own` whether the project has set it apart",
         object_styles,
     )
-    .menu("Manage > Object Styles"),
+    .menu("Manage > Category Styles"),
     edit(
         "units",
         "Project Units",
@@ -1577,7 +1577,7 @@ pub static ALL: &[Command] = &[
     ),
     edit(
         "graphics",
-        "Visibility/Graphics",
+        "View Visibility",
         &[],
         "{view?: a level's, section's or elevation's name or id, or {3D} (the lowest level's plan unless given), hide?: [category, \
          …], show?: […], hide_elements?: [id, …], show_elements?: […], categories?: {category: override | null, …}, elements?: \
@@ -1635,7 +1635,7 @@ pub static ALL: &[Command] = &[
     ),
     edit(
         "graphic_display_options",
-        "Graphic Display Options",
+        "Display Options",
         &["GD"],
         "{view?: a 3D view's name or id ({3D} unless given), edges?: true | false, silhouette?: px, ambient_shadows?: true | \
          false} how a 3D view draws its edges and shadows, as Revit's Graphic Display Options: `edges`, the lines where its \
@@ -1741,7 +1741,7 @@ pub static ALL: &[Command] = &[
     .menu("Manage > Phasing"),
     edit(
         "option",
-        "Design Options",
+        "Design Variants",
         &[],
         "{set?, options?, primary?, option?, rename?, delete?, accept?, now?} sets of design options, as Revit's Design \
          Options has them: `set` with `options` ([names]; no colons) makes a set or changes its options (one with elements in \
@@ -1754,7 +1754,7 @@ pub static ALL: &[Command] = &[
          lists the elements that went)",
         design_options,
     )
-    .menu("Manage > Design Options"),
+    .menu("Manage > Design Variants"),
     Command {
         id: "measure",
         label: ui_msg!("Measure"),
