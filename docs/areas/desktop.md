@@ -481,6 +481,11 @@ popup open, so a popup of a row's own closes the panel's list that holds the row
 submenu of the row; a request to open them at once (UN) opens the panel's list when the tool has no button, and waits for a tab's second
 frame, since its first lays out every tool (`a_tool_with_choices_of_its_own_opens_them_from_a_panels_list`).
 
+Keymaps. The window dispatches Classic keys; `keys.rs` holds Aptimizer's keymap (the default) as the keys it moves (`keys::MOVED`: WI for WN,
+MI for MM, VI for VV and VG…), the keys AptCAD types for the tools both modes of Aptimizer Studio have. `Keymap::classic` turns a typed key into
+the Classic one `shortcut` matches (none for a Classic key Aptimizer's moved), `keyed_shortcuts` lists a keymap's keys for KS and Find, and
+`Keymap::keyed` swaps the keys tooltips name. Settings > User Interface > Keys picks it, kept in `settings.json` (`keymap`). Tests: `tests/keys.rs`.
+
 Keyboard Shortcuts. Manage > Shortcuts (or KS) opens `shortcuts_window` (`shortcuts.rs`): every shortcut by what it does, from `shortcuts()`
 (`SHORTCUTS`, the fixtures' letters, the commands' aliases), with Add, Edit and Load File. A shortcut is two letters or digits, all that `typed` holds,
 and a custom one is tried before the defaults. Each name in `ACTIONS` is a tool or command the window runs (`execute_shortcut_action`), and a key never

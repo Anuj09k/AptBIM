@@ -281,8 +281,10 @@ fn key(h: &mut Harness<BimApp>, k: Key) {
 }
 
 /// Letters typed over the view: a two-letter shortcut.
+/// Types a Classic key (`VV`) over the view as the app's keymap has it (`VI` in Aptimizer's), so a test reads the same in either.
 fn shortcut(h: &mut Harness<BimApp>, letters: &str) {
-    h.event(Event::Text(letters.into()));
+    let letters = h.state().keymap.key_for(letters).to_string();
+    h.event(Event::Text(letters));
     h.run();
 }
 
@@ -890,6 +892,7 @@ fn sa_selects_every_element_of_the_selected_ones_type_the_view_shows() {
 #[test]
 fn ks_lists_every_shortcut_and_every_one_it_lists_works() {
     let mut h = app(BOX);
+    h.state_mut().keymap = crate::keys::Keymap::Classic;
     shortcut(&mut h, "KS");
     for label in ["Create Similar", "CS", "Select All Instances", "SA", "CR", "WA", "KS", "ZF, ZE, ZA", "Demolish", "DW"] {
         assert!(h.query_by_label(label).is_some(), "{label}");
@@ -915,7 +918,7 @@ fn ks_lists_every_shortcut_and_every_one_it_lists_works() {
     for a in 'A'..='Z' {
         for b in 'A'..='Z' {
             let mut app = BimApp::new(Session::new());
-            app.typed = format!("{a}{b}");
+            (app.typed, app.keymap) = (format!("{a}{b}"), crate::keys::Keymap::Classic);
             assert_eq!(app.shortcut(), listed.contains(&format!("{a}{b}").as_str()), "{a}{b}");
         }
     }
@@ -978,7 +981,7 @@ fn ma_gives_the_walls_selected_after_the_first_its_type_in_one_undo_step() {
 fn keys_for_tools_aptbim_lacks_are_bound_to_nothing_rather_than_to_another_tool() {
     for keys in ["SU", "LI", "SF", "BR", "BS", "RN", "RP", "CV", "TF", "DA", "FD"] {
         let mut app = BimApp::new(Session::new());
-        app.typed = keys.into();
+        (app.typed, app.keymap) = (keys.into(), crate::keys::Keymap::Classic);
         assert!(!app.shortcut(), "{keys}");
     }
 }
@@ -5836,6 +5839,7 @@ mod gpu;
 mod graphics;
 mod groups;
 mod inspector;
+mod keys;
 mod korean;
 mod light_canvas;
 mod lines;

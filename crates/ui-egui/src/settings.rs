@@ -20,6 +20,7 @@ use serde_json::{Value, json};
 
 use crate::BimApp;
 use crate::dock::{Docking, Palette};
+use crate::keys::Keymap;
 use crate::lang::{Lang, t, tf};
 use crate::presets::{Preset, Scale, hidden_from_json, presets_from_json};
 use crate::style::{Profile, Scheme, pal};
@@ -92,6 +93,8 @@ pub struct Settings {
     /// The Compact layout: the bars and palettes flush to the window's edges, not floating cards.
     pub compact: bool,
     pub profile: Profile,
+    /// Which keys typed over a view reach which tool: Aptimizer's or Classic.
+    pub keymap: Keymap,
     /// A preset's colours when dark, and the user's accent.
     pub scheme: Scheme,
     pub accent: Option<[u8; 3]>,
@@ -139,6 +142,7 @@ impl Settings {
             "light_canvas": self.light_canvas,
             "layout": if self.compact { "compact" } else { "floating" },
             "profile": self.profile.code(),
+            "keymap": self.keymap.code(),
             "scheme": self.scheme.code(),
             "accent": self.accent,
             "panel_colour": self.panel_colour,
@@ -183,6 +187,7 @@ impl Settings {
                 _ => base.compact,
             },
             profile: v["profile"].as_str().and_then(Profile::from_code).unwrap_or(base.profile),
+            keymap: v["keymap"].as_str().and_then(Keymap::from_code).unwrap_or(base.keymap),
             scheme: v["scheme"].as_str().and_then(Scheme::from_code).unwrap_or(base.scheme),
             accent: own("accent", base.accent),
             panel_colour: own("panel_colour", base.panel_colour),
@@ -297,7 +302,7 @@ impl BimApp {
         let now = self.settings_now(ThemePreference::System);
         let kept = read(&path).map_or(now.clone(), |v| Settings::from_json(&v, now));
         (self.lang, self.ribbon_min, self.docking) = (kept.language, kept.ribbon_minimized, kept.docking.clone());
-        (self.compact, self.profile, self.scale) = (kept.compact, kept.profile, kept.scale);
+        (self.compact, self.profile, self.scale, self.keymap) = (kept.compact, kept.profile, kept.scale, kept.keymap);
         (self.scheme, self.accent) = (kept.scheme, kept.accent);
         (self.panel_colour, self.canvas_colour, self.text_colour) = (kept.panel_colour, kept.canvas_colour, kept.text_colour);
         (self.tools_hidden, self.presets) = (kept.tools_hidden.clone(), kept.presets.clone());
@@ -331,6 +336,7 @@ impl BimApp {
             light_canvas: self.light_canvas,
             compact: self.compact,
             profile: self.profile,
+            keymap: self.keymap,
             scheme: self.scheme,
             accent: self.accent,
             panel_colour: self.panel_colour,
@@ -460,6 +466,18 @@ impl BimApp {
         if before != self.profile && self.profile == Profile::AptBIM {
             self.docking.show(Palette::Tools, true);
         }
+        heading(ui, msg!("Keys"));
+        ui.horizontal(|ui| {
+            for (keymap, tip) in [
+                (
+                    Keymap::Aptimizer,
+                    msg!("Aptimizer's two-letter keys, the same as AptCAD's for the tools both have: MI Mirror, BR Split, PR Properties, VI Visibility/Graphics"),
+                ),
+                (Keymap::Classic, msg!("The two-letter keys AptBIM had before: MM Mirror, SL Split, PP Properties, VV Visibility/Graphics")),
+            ] {
+                ui.radio_value(&mut self.keymap, keymap, t(keymap.name())).on_hover_text(t(tip));
+            }
+        });
         heading(ui, msg!("Presets"));
         self.presets_section(ui);
         heading(ui, msg!("Theme"));

@@ -35,6 +35,7 @@ mod graphics;
 mod groups;
 pub mod icons;
 mod inquiry;
+mod keys;
 pub mod lang;
 mod linestyles;
 mod lineweights;
@@ -396,7 +397,12 @@ const SHORTCUTS: [(&str, &str); 54] = [
     ("GD", "Graphic Display Options"),
 ];
 
-/// Every two-letter shortcut and what it does: the desktop's own, then the commands' aliases.
+/// Every two-letter shortcut of `keymap` and what it does.
+pub(crate) fn keyed_shortcuts(keymap: keys::Keymap) -> Vec<(&'static str, &'static str)> {
+    shortcuts().into_iter().filter_map(|(key, does)| Some((keymap.shown(key)?, does))).collect()
+}
+
+/// Every Classic two-letter shortcut and what it does: the desktop's own, then the commands' aliases.
 fn shortcuts() -> Vec<(&'static str, &'static str)> {
     let aliases = engine::commands().iter().flat_map(|c| c.aliases.iter().map(move |a| (*a, c.label)));
     SHORTCUTS
@@ -705,6 +711,8 @@ pub struct BimApp {
     new_level: (String, String),
     /// The last letters typed over the plan, for two-letter shortcuts.
     typed: String,
+    /// Which keys typed over a view reach which tool (Settings > User Interface > Keys).
+    keymap: keys::Keymap,
     pending: Option<Pending>,
     type_dialog: Option<properties::TypeDialog>,
     materials_dialog: Option<properties::MaterialsDialog>,
@@ -881,7 +889,7 @@ fn big_button(ui: &mut Ui, icon: Icon, label: &str, active: bool, tip: &str) -> 
     if ribbon::editing_tools() {
         return edit_tool(ui, r, rect, name);
     }
-    r.on_hover_text(tip)
+    r.on_hover_text(keys::now().keyed(tip))
 }
 
 /// A small ribbon button: an icon alone, as in Revit's Modify panel; its name in its tooltip.
@@ -911,7 +919,7 @@ fn small_button(ui: &mut Ui, icon: Icon, label: &str, active: bool, tip: &str) -
     if ribbon::editing_tools() {
         return edit_tool(ui, r, rect, name);
     }
-    r.on_hover_text(tip)
+    r.on_hover_text(keys::now().keyed(tip))
 }
 
 /// A ribbon button in its panel's list: a row of its icon and its name.
@@ -944,7 +952,7 @@ fn list_row(ui: &mut Ui, icon: Icon, label: &str, active: bool, tip: &str) -> Re
     if ribbon::editing_tools() {
         return edit_tool(ui, r, rect, name);
     }
-    r.on_hover_text(tip)
+    r.on_hover_text(keys::now().keyed(tip))
 }
 
 /// In Edit Tools a tool's button or row is a box to tick, what the ribbon or the Tools palette shows: a click ticks or clears it and
@@ -1013,7 +1021,7 @@ pub(crate) fn stacked_button(ui: &mut Ui, icon: Icon, label: &str, active: bool,
     if ribbon::editing_tools() {
         return edit_tool(ui, r, rect, name);
     }
-    r.on_hover_text(tip)
+    r.on_hover_text(keys::now().keyed(tip))
 }
 
 /// A small icon button, named for screen readers and tests.
@@ -1301,6 +1309,7 @@ impl BimApp {
             edit: None,
             new_level: (String::new(), String::new()),
             typed: String::new(),
+            keymap: keys::Keymap::default(),
             pending: None,
             type_dialog: None,
             materials_dialog: None,
@@ -1545,6 +1554,7 @@ impl BimApp {
             text_colour: self.text_colour,
         };
         style::follow(&ctx, look);
+        keys::follow(self.keymap);
         ribbon::tool_rules(self.tools_hidden.clone(), self.scale, self.editing_tools);
         // The fonts with the hanzi and the Hangul go behind the window's own whatever language it speaks: content — a floor's
         // name from a Korean file — is not the interface's. Chinese needs its glyphs, which the system may not have: then the
@@ -1978,13 +1988,17 @@ impl BimApp {
         }
     }
 
-    /// Revit's two-letter shortcuts: the desktop's own ([`SHORTCUTS`]), then the commands' aliases
-    /// (WA, DR, CR…). Whether `typed` is one.
+    /// The two-letter shortcuts: the user's, then the keymap's, which stand for Classic's: the desktop's own ([`SHORTCUTS`]),
+    /// then the commands' aliases (WA, DR, CR…). Whether `typed` is one.
     fn shortcut(&mut self) -> bool {
         if let Some(action) = self.custom_shortcuts.get(&self.typed).cloned()
             && self.execute_shortcut_action(&action)
         {
             return true;
+        }
+        match self.keymap.classic(&self.typed) {
+            Some(classic) => self.typed = classic.to_string(),
+            None => return false,
         }
         let tool = match self.typed.as_str() {
             "3D" => {

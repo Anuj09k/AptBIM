@@ -52,7 +52,7 @@ pub(crate) fn button(ui: &mut egui::Ui) -> egui::Response {
 impl BimApp {
     /// What Find lists for `query`: the tools and commands, then the views, `MOST` at most; each with the shortcut it has.
     fn find_matches(&self, query: &str) -> Vec<(String, Option<&'static str>, Found)> {
-        let keys = crate::shortcuts();
+        let keys = crate::keyed_shortcuts(self.keymap);
         let actions = crate::shortcuts::ACTIONS.iter().map(|a| {
             let key = keys.iter().find(|(_, does)| does == a).map(|(k, _)| *k);
             (t(a).to_string(), key, Found::Action(a))

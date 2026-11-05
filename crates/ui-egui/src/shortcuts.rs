@@ -199,7 +199,7 @@ pub fn find_conflict(key: &str, for_action: &str, app: &BimApp) -> Option<String
     {
         return Some(act.clone());
     }
-    for (d_key, d_act) in crate::shortcuts() {
+    for (d_key, d_act) in crate::keyed_shortcuts(app.keymap) {
         if d_key == key && d_act != for_action && !app.custom_shortcuts.contains_key(d_key) {
             return Some(d_act.to_string());
         }
@@ -477,7 +477,7 @@ impl BimApp {
 
                 // Build map of action -> list of shortcut keys
                 let mut by_action: BTreeMap<String, Vec<String>> = BTreeMap::new();
-                for (letters, name) in crate::shortcuts() {
+                for (letters, name) in crate::keyed_shortcuts(self.keymap) {
                     if !self.custom_shortcuts.contains_key(letters) {
                         by_action.entry(name.to_string()).or_default().push(letters.to_string());
                     }
