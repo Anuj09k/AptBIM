@@ -453,7 +453,7 @@ impl BimApp {
                     msg!("Flat and square, the title bar in the ribbon's greys: the File tab leads the ribbon's tabs and the Options Bar is docked under the ribbon"),
                 ),
             ] {
-                ui.radio_value(&mut self.profile, profile, profile.name()).on_hover_text(t(tip));
+                ui.radio_value(&mut self.profile, profile, t(profile.name())).on_hover_text(t(tip));
             }
         });
         // Back in AptBIM, its tools come back where they were: Rev, which has the ribbon, put them away.

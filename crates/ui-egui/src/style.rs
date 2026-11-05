@@ -453,7 +453,8 @@ pub fn canvas_pal() -> &'static Palette {
     if canvas_dark() { &DARK } else { &CANVAS_LIGHT }
 }
 
-/// Which interface the window wears: AptBIM's own (the default), or Rev, laid out as the ribbon tool its users know: flat and
+/// Which interface the window wears: AptBIM's own (the default), or Ribbon (`Rev` in code, `rev` in older settings), laid out
+/// round a ribbon of tabs: flat and
 /// square, the chrome in the ribbon's own greys, the File tab leading the ribbon's tabs and the Options Bar docked under the ribbon.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
 pub enum Profile {
@@ -465,11 +466,11 @@ pub enum Profile {
 impl Profile {
     pub const ALL: [Profile; 2] = [Profile::AptBIM, Profile::Rev];
 
-    /// Its name, which is its label too: a name, so never translated.
+    /// Its name, which is its label too, in English: AptBIM's is a name, the same in every language; Ribbon is translated.
     pub fn name(self) -> &'static str {
         match self {
             Profile::AptBIM => "AptBIM",
-            Profile::Rev => "Rev",
+            Profile::Rev => aptbim_i18n::msg!("Ribbon"),
         }
     }
 
@@ -477,11 +478,13 @@ impl Profile {
     pub fn code(self) -> &'static str {
         match self {
             Profile::AptBIM => "aptbim",
-            Profile::Rev => "rev",
+            Profile::Rev => "ribbon",
         }
     }
 
     pub fn from_code(code: &str) -> Option<Profile> {
+        // `rev`: what settings kept before the profile was named Ribbon.
+        let code = if code == "rev" { "ribbon" } else { code };
         Profile::ALL.into_iter().find(|p| p.code() == code)
     }
 }

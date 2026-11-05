@@ -1,4 +1,4 @@
-//! The interface's profiles: AptBIM's own look (the default) and Rev, flat and square in light chrome, with the File tab
+//! The interface's profiles: AptBIM's own look (the default) and Ribbon (`Rev` in code), flat and square in light chrome, with the File tab
 //! leading the ribbon's tabs and the Options Bar docked under the ribbon.
 
 use egui::Shape;
@@ -41,11 +41,13 @@ fn the_profile_is_picked_in_settings_and_the_settings_file_keeps_it() {
     h.run();
     assert_eq!(h.state().profile, Profile::AptBIM);
     press(&mut h, "Settings");
-    pick(&mut h, Role::RadioButton, "Rev");
+    pick(&mut h, Role::RadioButton, "Ribbon");
     press(&mut h, "Close");
     assert_eq!(h.state().profile, Profile::Rev);
     let kept: Value = serde_json::from_str(&std::fs::read_to_string(&file).unwrap()).unwrap();
-    assert_eq!(kept["profile"], "rev");
+    assert_eq!(kept["profile"], "ribbon");
+    // Settings kept before the profile was named Ribbon say `rev`, and still open in it.
+    assert_eq!(Profile::from_code("rev"), Some(Profile::Rev));
     // A window started on the same file is in the profile this one was left in, and AptBIM puts its own look back.
     let mut again = aptbim(BOX);
     again.state_mut().use_settings(file.clone());
