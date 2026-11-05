@@ -347,7 +347,11 @@ mod tests {
         syn::parse_file(&generated).unwrap();
         assert!(generated.contains("Salvar") && generated.contains("Guardar"));
         assert!(!generated.contains("Blank") && !generated.contains("Count") && !generated.contains("Antigo"));
-        assert!(generated.find("es").unwrap() < generated.find("pt").unwrap());
+        // Locate each catalog by the `("<language>", &[` header `compile` writes, not by a bare
+        // substring that also matches identifiers such as `aptbim_i18n`.
+        let catalog =
+            |language: &str| generated.find(&format!("({language:?}, &[")).unwrap_or_else(|| panic!("no {language} catalog: {generated}"));
+        assert!(catalog("es") < catalog("pt"), "catalogs are not sorted by language: {generated}");
     }
 
     #[test]
