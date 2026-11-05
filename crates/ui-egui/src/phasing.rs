@@ -255,7 +255,7 @@ impl BimApp {
             d.filter = model.phase_filters.keys().next().cloned().unwrap_or_default();
         }
         let (mut close, mut run, mut phase, mut filter) = (false, None, None::<String>, None::<String>);
-        let r = Modal::new(UiId::new("phasing"), t("Phasing")).width(640.0).min_height(380.0).show(ctx, |ui| {
+        let r = Modal::new(UiId::unique("phasing"), t("Phasing")).width(640.0).min_height(380.0).show(ctx, |ui| {
             crate::popup::body(ui, |ui| {
                 // As large on every tab, so the dialog doesn't move about as the tabs change.
                 ui.add_space(6.0);
@@ -315,7 +315,7 @@ impl BimApp {
             d.option = set.as_ref().map(|s| s.primary.clone()).unwrap_or_default();
         }
         let (mut close, mut run, mut pick, mut edit) = (false, None::<Value>, None::<(String, String)>, None::<Option<String>>);
-        let r = Modal::new(UiId::new("design-options"), t("Design Options")).width(640.0).min_height(300.0).show(ctx, |ui| {
+        let r = Modal::new(UiId::unique("design-options"), t("Design Options")).width(640.0).min_height(300.0).show(ctx, |ui| {
             crate::popup::body(ui, |ui| {
                 ui.add_space(6.0);
                 ui.horizontal(|ui| {

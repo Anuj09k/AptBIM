@@ -14,8 +14,8 @@ use aptbim_core::model::{Model, ViewRange};
 use aptbim_i18n::msg;
 use egui::text::{CCursor, CCursorRange};
 use egui::{
-    Align, Button, Checkbox, ComboBox, Context, Frame, Id as UiId, Key, Label, Layout, Popup, Rect, RichText, ScrollArea, Sense, Stroke,
-    TextEdit, Ui, UiBuilder, WidgetInfo, WidgetType, pos2, vec2,
+    Align, Button, Checkbox, ComboBox, Context, Frame, Id as UiId, Key, Label, Layout, Popup, Rect, RichText, Role, ScrollArea, Sense,
+    Stroke, TextEdit, Ui, UiBuilder, WidgetInfo, pos2, vec2,
 };
 use serde_json::{Value, json};
 
@@ -225,7 +225,7 @@ impl BimApp {
                 ui.visuals_mut().extreme_bg_color = pal().surface;
                 ui.visuals_mut().widgets.inactive.bg_stroke = Stroke::new(1.0, pal().border);
                 // The name being typed, the menu's own: egui keeps it between frames.
-                let id = ui.id().with("set-name");
+                let id = ui.scope_id().with("set-name");
                 let mut name: String = ui.data_mut(|d| d.get_temp(id)).unwrap_or_default();
                 let l = ui.label(t("Save as"));
                 let edit = ui.add(TextEdit::singleline(&mut name).desired_width(120.0)).labelled_by(l.id);
@@ -303,7 +303,7 @@ impl BimApp {
         let title = if d.assign.is_some() { t("Assign View Template") } else { t("View Templates") };
         let (mut ok, mut cancel, mut apply, mut ask) = (false, false, false, None::<Ask>);
         let over = d.range.is_some();
-        let r = Modal::new(UiId::new("view-templates"), title).width(WIDTH).closable(!over).show(ctx, |ui| {
+        let r = Modal::new(UiId::unique("view-templates"), title).width(WIDTH).closable(!over).show(ctx, |ui| {
             crate::popup::body(ui, |ui| {
                 ui.add_space(4.0);
                 ui.horizontal_top(|ui| {
@@ -467,12 +467,12 @@ fn list(ui: &mut Ui, d: &mut TemplatesDialog, m: &Model, here: Option<ViewKind>,
         let duplicating = on(&d.naming, |n| matches!(n, Naming::Duplicate(_)));
         if ui.add_enabled(can, Button::new(t("Duplicate…")).selected(duplicating).min_size(size)).clicked() {
             d.naming = (!duplicating).then(|| Naming::Duplicate(fresh(m, picked.as_deref().unwrap_or_default())));
-            ui.data_mut(|w| w.insert_temp(UiId::new("view-template-focus"), true));
+            ui.data_mut(|w| w.insert_temp(UiId::unique("view-template-focus"), true));
         }
         let renaming = on(&d.naming, |n| matches!(n, Naming::Rename(_)));
         if ui.add_enabled(can, Button::new(t("Rename…")).selected(renaming).min_size(size)).clicked() {
             d.naming = (!renaming).then(|| Naming::Rename(picked.clone().unwrap_or_default()));
-            ui.data_mut(|w| w.insert_temp(UiId::new("view-template-focus"), true));
+            ui.data_mut(|w| w.insert_temp(UiId::unique("view-template-focus"), true));
         }
         if ui.add_enabled(can, Button::new(t("Delete")).min_size(size)).clicked() {
             d.naming = None;
@@ -490,7 +490,7 @@ fn list(ui: &mut Ui, d: &mut TemplatesDialog, m: &Model, here: Option<ViewKind>,
     };
     if r.clicked() {
         d.naming = (!making).then(|| Naming::New(fresh(m, &tf("{} Template", &[t(kind_name(d.kind))]))));
-        ui.data_mut(|w| w.insert_temp(UiId::new("view-template-focus"), true));
+        ui.data_mut(|w| w.insert_temp(UiId::unique("view-template-focus"), true));
     }
     if let Some(naming) = &mut d.naming {
         let (verb, typed) = match naming {
@@ -501,9 +501,9 @@ fn list(ui: &mut Ui, d: &mut TemplatesDialog, m: &Model, here: Option<ViewKind>,
         ui.add_space(2.0);
         ui.horizontal(|ui| {
             let l = ui.label(t("Name:"));
-            let id = UiId::new("view-template-naming");
+            let id = UiId::unique("view-template-naming");
             let r = ui.add(TextEdit::singleline(typed).id(id).desired_width(LIST - 130.0)).labelled_by(l.id);
-            if ui.data_mut(|w| w.remove_temp::<bool>(UiId::new("view-template-focus"))).is_some() {
+            if ui.data_mut(|w| w.remove_temp::<bool>(UiId::unique("view-template-focus"))).is_some() {
                 r.request_focus();
                 if let Some(mut state) = TextEdit::load_state(ui.ctx(), id) {
                     let all = CCursorRange::two(CCursor::new(0), CCursor::new(typed.chars().count()));
@@ -647,7 +647,7 @@ impl Rows<'_> {
             let was = *on;
             let r = cell.add(Checkbox::without_text(on));
             let name = t(group_name(group)).to_string();
-            r.widget_info(|| WidgetInfo::selected(WidgetType::Checkbox, true, was, name.clone()));
+            r.widget_info(|| WidgetInfo::selected(Role::CheckBox, true, was, name.clone()));
         }
         out
     }
@@ -657,7 +657,7 @@ impl Rows<'_> {
         let named = tf("Edit {}", &[label]);
         self.row(label, include, |ui, _| {
             let r = crate::properties::wide_button(ui, t("Edit…"));
-            r.widget_info(|| WidgetInfo::labeled(WidgetType::Button, true, named.clone()));
+            r.widget_info(|| WidgetInfo::labeled(Role::Button, true, named.clone()));
             r.clicked().then_some(edit)
         })
     }
@@ -737,7 +737,7 @@ fn group_rows(rows: &mut Rows, g: Group, now: &mut ViewTemplate, m: &Model) -> O
 fn range_window(ctx: &Context, d: &mut TemplatesDialog, m: &Model) {
     let Some(mut fields) = d.range.take() else { return };
     let (mut ok, mut cancel) = (false, false);
-    let r = Modal::new(UiId::new("view-template-range"), t("View Range")).width(340.0).show(ctx, |ui| {
+    let r = Modal::new(UiId::unique("view-template-range"), t("View Range")).width(340.0).show(ctx, |ui| {
         crate::popup::body(ui, |ui| {
             egui::Grid::new("view-template-range-fields").num_columns(2).spacing(vec2(12.0, 6.0)).show(ui, |ui| {
                 for (i, (label, hint)) in

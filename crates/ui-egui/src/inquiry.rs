@@ -116,7 +116,7 @@ impl BimApp {
         let (mut ok, mut close) = (false, false);
         let found = inquiry::find(&self.session.model, &d.text);
         let any = !found.ids.is_empty() || !found.library.is_empty();
-        let r = Modal::new(UiId::new("select-by-id"), t("Select by ID")).width(440.0).show(ctx, |ui| {
+        let r = Modal::new(UiId::unique("select-by-id"), t("Select by ID")).width(440.0).show(ctx, |ui| {
             crate::popup::body(ui, |ui| {
                 ui.add_space(6.0);
                 let label = ui.label(t("IDs, GUIDs or IFC GlobalIds, as many as you like:"));
@@ -157,7 +157,7 @@ impl BimApp {
         let Some(d) = self.ids_of_selection.as_mut() else { return };
         let mut close = false;
         let mut copy: Option<(String, String)> = None;
-        let r = Modal::new(UiId::new("ids-of-selection"), t("IDs of Selection")).width(760.0).show(ctx, |ui| {
+        let r = Modal::new(UiId::unique("ids-of-selection"), t("IDs of Selection")).width(760.0).show(ctx, |ui| {
             crate::popup::body(ui, |ui| {
                 ui.add_space(6.0);
                 ScrollArea::vertical().max_height(320.0).show(ui, |ui| {

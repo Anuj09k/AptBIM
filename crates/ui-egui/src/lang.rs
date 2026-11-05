@@ -171,7 +171,7 @@ pub const NO_CHINESE_FONT: &str =
 /// Whether `ctx` has had the CJK fonts put behind its own: [`use_cjk_font`] has looked once, and whether a font with the hanzi
 /// was among them.
 fn cjk_font_tried(ctx: &Context) -> Option<bool> {
-    ctx.data(|d| d.get_temp::<Option<bool>>(Id::new("cjk-font"))).flatten()
+    ctx.data(|d| d.get_temp::<Option<bool>>(Id::unique("cjk-font"))).flatten()
 }
 
 /// Looks for fonts with the hanzi and the Hangul. The app holds one, so that a test can say there is none.
@@ -201,14 +201,14 @@ pub fn use_cjk_font(ctx: &Context, find: FontFinder) -> bool {
         let families = crate::style::families().map(|family| InsertFontFamily { family, priority: FontPriority::Lowest });
         ctx.add_font(FontInsert::new(name, data, families.into()));
     }
-    ctx.data_mut(|d| d.insert_temp(Id::new("cjk-font"), Some(fonts.hanzi)));
+    ctx.data_mut(|d| d.insert_temp(Id::unique("cjk-font"), Some(fonts.hanzi)));
     fonts.hanzi
 }
 
 /// Tests have no say in which fonts a machine has: a window is told it has one.
 #[cfg(test)]
 pub(crate) fn assume_cjk_font(ctx: &Context) {
-    ctx.data_mut(|d| d.insert_temp(Id::new("cjk-font"), Some(true)));
+    ctx.data_mut(|d| d.insert_temp(Id::unique("cjk-font"), Some(true)));
 }
 
 /// `english` in the interface's language.

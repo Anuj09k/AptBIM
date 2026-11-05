@@ -72,7 +72,7 @@ impl BimApp {
         let cam = self.orbit.camera?;
         let rect = self.triad_rect(view)?;
         // Over the view's widget, which senses clicks and drags: both are the triad's here and not the view's.
-        let response = ui.interact(rect, ui.id().with("triad"), Sense::click_and_drag());
+        let response = ui.interact(rect, ui.scope_id().with("triad"), Sense::click_and_drag());
         let placed = triad::layout(&cam);
         let end_at = |at: Pos2| {
             let d = (at - rect.center()) / RADIUS;

@@ -8,7 +8,7 @@ use aptbim_i18n::msg;
 use aptbim_core::model::{Element, Id, MAX_COORD, MIN_SECTION_BOX, Model, SectionBox};
 use aptbim_core::render::View;
 use aptbim_core::view3d::{Camera, P3, box_edges, box_grips};
-use egui::{Painter, Pos2, Rect, Shape, Stroke, StrokeKind, Ui, Vec2, WidgetInfo, WidgetType, pos2, vec2};
+use egui::{Painter, Pos2, Rect, Role, Shape, Stroke, StrokeKind, Ui, Vec2, WidgetInfo, pos2, vec2};
 use serde_json::json;
 
 use crate::dock::VIEW_SIZE;
@@ -70,7 +70,7 @@ impl BimApp {
             let mut on = b.is_some_and(|b| b.on);
             let r = ui.checkbox(&mut on, "");
             // A checkbox without text names itself "" for screen readers: give it its row's name.
-            r.widget_info(|| WidgetInfo::selected(WidgetType::Checkbox, true, on, name));
+            r.widget_info(|| WidgetInfo::selected(Role::CheckBox, true, on, name));
             if r.labelled_by(label.id).on_hover_text(t(TIP)).changed() {
                 set = Some(json!({"on": on}));
             }

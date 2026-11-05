@@ -8,7 +8,7 @@ use aptbim_core::electrical::{EARTHINGS, MATERIALS, MAX_SIZES, MAX_SYSTEMS, MAX_
 use aptbim_core::engine::Session;
 use aptbim_core::model::Model;
 use aptbim_i18n::msg;
-use egui::{Align, Button, ComboBox, Context, DragValue, Grid, Id as UiId, Layout, RichText, TextEdit, Ui, WidgetInfo, WidgetType};
+use egui::{Align, Button, ComboBox, Context, DragValue, Grid, Id as UiId, Layout, RichText, Role, TextEdit, Ui, WidgetInfo};
 use serde_json::{Value, json};
 
 use crate::lang::{t, tf};
@@ -265,19 +265,19 @@ fn material_label(material: &str) -> &str {
 /// A text field of `width`, named `name` for screen readers.
 fn text_field(ui: &mut Ui, text: &mut String, width: f32, name: String) {
     let r = ui.add_sized([width, 22.0], TextEdit::singleline(text));
-    r.widget_info(|| WidgetInfo::labeled(WidgetType::TextEdit, true, name.clone()));
+    r.widget_info(|| WidgetInfo::labeled(Role::TextInput, true, name.clone()));
 }
 
 /// A number field.
 fn number_field(ui: &mut Ui, x: &mut f64, range: std::ops::RangeInclusive<f64>, suffix: &str, name: String) {
     let r = ui.add(DragValue::new(x).range(range).speed(0.5).max_decimals(2).suffix(suffix));
-    r.widget_info(|| WidgetInfo::labeled(WidgetType::DragValue, true, name.clone()));
+    r.widget_info(|| WidgetInfo::labeled(Role::SpinButton, true, name.clone()));
 }
 
 /// A delete button for a row.
 fn delete_button(ui: &mut Ui, name: String) -> bool {
     let r = ui.add(Button::new(t("Delete")).small());
-    r.widget_info(|| WidgetInfo::labeled(WidgetType::Button, true, name.clone()));
+    r.widget_info(|| WidgetInfo::labeled(Role::Button, true, name.clone()));
     r.clicked()
 }
 
@@ -326,7 +326,7 @@ fn voltage_combo(ui: &mut Ui, salt: (&str, u64), name: String, value: &mut Optio
             ui.selectable_value(value, Some(r.key), &r.name);
         }
     });
-    c.response.widget_info(|| WidgetInfo::labeled(WidgetType::ComboBox, true, name.clone()));
+    c.response.widget_info(|| WidgetInfo::labeled(Role::ComboBox, true, name.clone()));
 }
 
 /// The distribution systems: phases and wires, and the voltages each supplies.
@@ -360,9 +360,9 @@ fn systems_tab(ui: &mut Ui, d: &mut ElectricalDialog) {
                         ui.selectable_value(&mut r.value.phases, p, p.to_string());
                     }
                 });
-            c.response.widget_info(|| WidgetInfo::labeled(WidgetType::ComboBox, true, tf("System {} phases", &[&n])));
+            c.response.widget_info(|| WidgetInfo::labeled(Role::ComboBox, true, tf("System {} phases", &[&n])));
             let wires = ui.add(DragValue::new(&mut r.value.wires).range(2..=4).speed(0.1));
-            wires.widget_info(|| WidgetInfo::labeled(WidgetType::DragValue, true, tf("System {} wires", &[&n])));
+            wires.widget_info(|| WidgetInfo::labeled(Role::SpinButton, true, tf("System {} wires", &[&n])));
             voltage_combo(ui, ("system-ll", r.key), tf("System {} line to line", &[&n]), &mut r.value.l_l, voltages);
             voltage_combo(ui, ("system-ln", r.key), tf("System {} line to neutral", &[&n]), &mut r.value.l_n, voltages);
             voltage_combo(ui, ("system-lg", r.key), tf("System {} line to earth", &[&n]), &mut r.value.l_g, voltages);
@@ -373,7 +373,7 @@ fn systems_tab(ui: &mut Ui, d: &mut ElectricalDialog) {
                     ui.selectable_value(&mut r.value.ground, Some(g.to_string()), g);
                 }
             });
-            c.response.widget_info(|| WidgetInfo::labeled(WidgetType::ComboBox, true, tf("System {} earthing", &[&n])));
+            c.response.widget_info(|| WidgetInfo::labeled(Role::ComboBox, true, tf("System {} earthing", &[&n])));
             if delete_button(ui, tf("Delete system {}", &[&n])) {
                 delete = Some(i);
             }
@@ -426,7 +426,7 @@ fn wires_tab(ui: &mut Ui, d: &mut ElectricalDialog) {
                 }
             },
         );
-        c.response.widget_info(|| WidgetInfo::labeled(WidgetType::ComboBox, true, t("Wire material")));
+        c.response.widget_info(|| WidgetInfo::labeled(Role::ComboBox, true, t("Wire material")));
         ui.end_row();
         ui.label(t("Temperature:"));
         number_field(ui, &mut r.value.temperature, 1.0..=250.0, " °C", t("Wire temperature").to_string());
@@ -475,7 +475,7 @@ impl BimApp {
     pub(crate) fn electrical_window(&mut self, ctx: &Context) {
         let Some(mut d) = self.electrical_dialog.take() else { return };
         let (mut ok, mut apply, mut cancel) = (false, false, false);
-        let r = Modal::new(UiId::new("electrical-settings"), t("Electrical Settings")).width(940.0).show(ctx, |ui| {
+        let r = Modal::new(UiId::unique("electrical-settings"), t("Electrical Settings")).width(940.0).show(ctx, |ui| {
             crate::popup::body(ui, |ui| {
                 ui.add_space(6.0);
                 ui.horizontal(|ui| {

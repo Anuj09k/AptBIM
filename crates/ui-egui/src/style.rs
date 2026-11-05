@@ -514,7 +514,7 @@ pub fn follow(ctx: &Context, look: Look) {
     REV.with(|r| r.set(look.profile == Profile::Rev));
     CURRENT.with(|c| c.set(palette(dark(), look)));
     // The widgets' look is the context's, set for both themes: again only when the look changes (the profile, the colours).
-    let styled = egui::Id::new("styled-look");
+    let styled = egui::Id::unique("styled-look");
     if ctx.data(|d| d.get_temp::<Look>(styled)) != Some(look) {
         visuals(ctx, look);
         ctx.data_mut(|d| d.insert_temp(styled, look));

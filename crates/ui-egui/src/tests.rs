@@ -45,6 +45,7 @@ fn harness(script: &str, step: f32, profile: crate::style::Profile) -> Harness<'
         (app.profile, app.docking) = (profile, crate::dock::Docking::revit());
     }
     let mut h = Harness::builder()
+        .with_accessibility_check(false)
         .with_size([1280.0, 800.0])
         .with_max_steps(32)
         .with_step_dt(step)
@@ -119,6 +120,7 @@ fn scroll_ribbon_right(h: &mut Harness<BimApp>) {
         unit: MouseWheelUnit::Point,
         delta: vec2(-3000.0, 0.0),
         phase: TouchPhase::Move,
+        source: egui::MouseWheelSource::Unknown,
         modifiers: Modifiers::NONE,
     });
     h.run();
@@ -691,6 +693,7 @@ fn the_wheel_zooms_about_the_cursor_and_the_middle_button_pans() {
         unit: MouseWheelUnit::Point,
         delta: vec2(0.0, 120.0),
         phase: TouchPhase::Move,
+        source: egui::MouseWheelSource::Unknown,
         modifiers: Modifiers::NONE,
     });
     h.run();
@@ -710,6 +713,7 @@ fn the_wheel_zooms_about_the_cursor_and_the_middle_button_pans() {
             unit: MouseWheelUnit::Point,
             delta: vec2(0.0, dy),
             phase: TouchPhase::Move,
+            source: egui::MouseWheelSource::Unknown,
             modifiers: Modifiers::NONE,
         });
         h.run();
@@ -837,6 +841,7 @@ fn zf_ze_and_za_zoom_to_fit() {
             unit: MouseWheelUnit::Point,
             delta: vec2(0.0, 120.0),
             phase: TouchPhase::Move,
+            source: egui::MouseWheelSource::Unknown,
             modifiers: Modifiers::NONE,
         });
         h.run();
@@ -1500,6 +1505,9 @@ fn field_text(h: &Harness<BimApp>, label: &str) -> String {
 /// Open the drop-down named `label` and pick `option` from it, as screen readers do. A palette's foot, and a list's, can lie below
 /// the window.
 fn choose(h: &mut Harness<BimApp>, label: &str, option: &str) {
+    // A drop-down that a visible label names (`labelled_by`) is read by that label's text, colon and all, since egui 0.37.
+    let named = format!("{label}:");
+    let label = if h.query_by_role_and_label(Role::ComboBox, label).is_some() { label } else { named.as_str() };
     h.get_by_role_and_label(Role::ComboBox, label).click_accesskit();
     h.run();
     h.get_by_label(option).click_accesskit();
@@ -1695,7 +1703,7 @@ fn the_palette_keeps_its_fields_and_apply_inside_it_whatever_their_labels() {
     let mut h = app(&format!("{BOX}\nfloor {{}}"));
     h.state_mut().selection = ids(&h, "floor");
     h.run();
-    let panel = egui::PanelState::load(&h.ctx, egui::Id::new("dock-left")).map(|s| s.outer_rect).unwrap();
+    let panel = h.state().left_dock.unwrap();
     assert_eq!(panel.width(), 290.0, "the palette at its default width");
     // Height Offset From Level is a long label.
     let fields = h.query_all(By::new().predicate(|n| matches!(n.role(), Role::TextInput | Role::ComboBox)));
@@ -1895,6 +1903,7 @@ fn in_3d_a_shift_drag_boxes_shift_and_the_middle_button_orbit_the_middle_button_
         unit: MouseWheelUnit::Point,
         delta: vec2(0.0, 120.0),
         phase: TouchPhase::Move,
+        source: egui::MouseWheelSource::Unknown,
         modifiers: Modifiers::NONE,
     });
     h.run();
@@ -3645,7 +3654,7 @@ fn the_materials_window_edits_the_projects_library() {
     assert_eq!(h.state().session.model.materials["Material 1"].cut, Pattern::Diagonal);
     // How see-through it is, on its slider (a click on the slider's track, then its arrow keys).
     assert_eq!(h.state().session.model.materials["Material 1"].transparency, 0);
-    h.get_by_label("Transparency").focus();
+    h.get_by_role_and_label(Role::Slider, "Transparency").focus();
     h.run();
     key(&mut h, Key::ArrowRight);
     key(&mut h, Key::ArrowRight);

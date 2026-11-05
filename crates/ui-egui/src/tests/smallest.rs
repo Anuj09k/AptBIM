@@ -201,7 +201,7 @@ fn long_note(h: &mut Harness<BimApp>) {
 /// Whether each of `labels` and the dialog `modal` itself lies inside the window.
 fn dialog_fits(h: &Harness<BimApp>, modal: &str, labels: &[&str], said: &str) {
     let w = window(least());
-    let area = h.ctx.memory(|m| m.area_rect(egui::Id::new(modal))).expect("the dialog is open");
+    let area = h.ctx.memory(|m| m.area_rect(egui::Id::unique(modal))).expect("the dialog is open");
     assert!(w.expand(0.5).contains_rect(area), "{said}: the dialog {area:?} runs off the window {w:?}");
     for label in labels {
         // (The ribbon behind the dialog may carry the same word.)
@@ -254,7 +254,7 @@ fn edit_type_scrolls_in_a_window_too_short_for_it_so_its_buttons_stay_in_reach()
     h.state_mut().fill_patterns_dialog = Some(crate::fillpatterns::FillPatternsDialog::edit(&model, "Region 39", Vec::new()));
     h.run();
     h.run();
-    let area = h.ctx.memory(|m| m.area_rect(egui::Id::new("fill-patterns"))).expect("the dialog is open");
+    let area = h.ctx.memory(|m| m.area_rect(egui::Id::unique("fill-patterns"))).expect("the dialog is open");
     assert!(window(short).expand(0.5).contains_rect(area), "the dialog {area:?} runs off the window {short:?}");
     for button in ["OK", "Cancel", "Apply"] {
         // (The ribbon behind the dialog may carry the same word.)

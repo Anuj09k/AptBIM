@@ -3,7 +3,7 @@
 
 use std::cell::{Cell, RefCell};
 
-use egui::{Align2, FontId, Id, Popup, Rect, Response, Sense, Shape, Stroke, StrokeKind, Ui, Vec2, WidgetInfo, WidgetType, pos2, vec2};
+use egui::{Align2, FontId, Id, Popup, Rect, Response, Role, Sense, Shape, Stroke, StrokeKind, Ui, Vec2, WidgetInfo, pos2, vec2};
 
 use crate::lang::t;
 use crate::presets::Scale;
@@ -228,7 +228,7 @@ pub(crate) fn panel(ui: &mut Ui, title: &str, mut add: impl FnMut(&mut Ui)) {
         return;
     }
     let name = t(title);
-    let id = ui.id().with(("ribbon-panel", title));
+    let id = ui.scope_id().with(("ribbon-panel", title));
     let fit = FITS.with(|f| f.borrow().iter().find(|(n, _)| n == title).map(|(_, fit)| *fit));
     let shows = match fit {
         Some(Fit::Show(k)) => k,
@@ -270,7 +270,7 @@ pub(crate) fn panel(ui: &mut Ui, title: &str, mut add: impl FnMut(&mut Ui)) {
             ui.painter().text(r.center() - vec2(5.0, 0.0), Align2::CENTER_CENTER, name, font, pal().muted);
             caret(ui, pos2(r.center().x + text / 2.0 + 3.0, r.center().y), pal().muted);
             let label = format!("{name} ▾");
-            title_row.widget_info(|| WidgetInfo::labeled(WidgetType::Button, true, &label));
+            title_row.widget_info(|| WidgetInfo::labeled(Role::Button, true, &label));
             open_if_asked(ui, &title_row);
             list(&title_row.on_hover_text(name), &mut add);
         });
@@ -339,7 +339,7 @@ fn list(r: &Response, add: &mut impl FnMut(&mut Ui)) {
 fn folded_button(ui: &mut Ui, name: &str) -> Response {
     let (rect, r) = ui.allocate_exact_size(vec2(FOLDED, 76.0), Sense::click());
     let label = format!("{name} ▾");
-    r.widget_info(|| WidgetInfo::labeled(WidgetType::Button, true, &label));
+    r.widget_info(|| WidgetInfo::labeled(Role::Button, true, &label));
     let open = Popup::is_id_open(ui.ctx(), Popup::default_response_id(&r));
     let corner = crate::style::corner(6.0);
     if r.hovered() || open {

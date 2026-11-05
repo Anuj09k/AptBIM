@@ -95,7 +95,7 @@ impl BimApp {
             Target::Template(name) => (tf("View template {}", &[name]), None),
         };
         let (mut ok, mut apply, mut cancel) = (false, false, false);
-        let r = Modal::new(egui::Id::new("background-grid-settings"), t("Background Grids")).width(480.0).show(ctx, |ui| {
+        let r = Modal::new(egui::Id::unique("background-grid-settings"), t("Background Grids")).width(480.0).show(ctx, |ui| {
             crate::popup::body(ui, |ui| {
                 ui.label(&title);
                 if let Some(note) = &controlled {

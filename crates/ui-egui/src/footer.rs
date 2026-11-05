@@ -13,8 +13,8 @@ use aptbim_core::engine::Session;
 use aptbim_core::graphics::{self, ANNOTATION, Detail, Group, MODEL, VisualStyle};
 use aptbim_core::model::{Element, Id, Model};
 use egui::{
-    Color32, FontId, Frame, Key, Margin, Popup, Rect, Response, RichText, Sense, Shape, Stroke, StrokeKind, TextEdit, Ui, UiBuilder,
-    WidgetInfo, WidgetType, pos2, vec2,
+    Color32, FontId, Frame, Key, Margin, Popup, Rect, Response, RichText, Role, Sense, Shape, Stroke, StrokeKind, TextEdit, Ui, UiBuilder,
+    WidgetInfo, pos2, vec2,
 };
 use serde_json::{Value, json};
 
@@ -60,10 +60,7 @@ pub(crate) fn menu_button(ui: &mut Ui, label: &str, shown: &str, tip: &str, set_
     ui.add_enabled_ui(set_by.is_none(), |ui| {
         let (rect, r) = ui.allocate_exact_size(vec2(galley.size().x + 28.0, 25.0), Sense::click());
         let enabled = ui.is_enabled();
-        r.widget_info(|| WidgetInfo {
-            current_text_value: Some(shown.to_string()),
-            ..WidgetInfo::labeled(WidgetType::Button, enabled, label)
-        });
+        r.widget_info(|| WidgetInfo { current_text_value: Some(shown.to_string()), ..WidgetInfo::labeled(Role::Button, enabled, label) });
         let p = ui.painter();
         if r.hovered() {
             p.rect_filled(rect, 4.0, pal().hover_fill);
@@ -354,7 +351,7 @@ impl BimApp {
             true => (card.outer_margin(0), Frame::NONE),
             false => (Frame::NONE, card),
         };
-        let (id, over) = (egui::Id::new(("view-control", self.sheet)), self.view_rect);
+        let (id, over) = (egui::Id::unique(("view-control", self.sheet)), self.view_rect);
         // How tall the card is: a row, or more where the view is narrower than the bar.
         let mut controls = |ui: &mut Ui| {
             card.show(ui, |ui| {
@@ -516,7 +513,7 @@ impl BimApp {
         if crate::style::compact() || self.graphic_view().is_none() {
             return 0.0;
         }
-        let tall = ctx.data(|d| d.get_temp::<f32>(egui::Id::new(("view-control", self.sheet)).with("tall")));
+        let tall = ctx.data(|d| d.get_temp::<f32>(egui::Id::unique(("view-control", self.sheet)).with("tall")));
         tall.unwrap_or(crate::FLOATING_CARD) + f32::from(crate::style::gap())
     }
 

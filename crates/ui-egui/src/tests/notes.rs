@@ -109,7 +109,7 @@ fn edit_type_on_a_note_opens_text_type_properties_where_its_font_and_border_chan
     press(&mut h, "Edit Type");
     assert!(h.state().text_type_dialog.is_some());
     // Where it is from its first frame, so a click lands on the row it was meant for.
-    let at = |h: &Harness<BimApp>| h.ctx.memory(|m| m.area_rect(egui::Id::new("text-type-properties")));
+    let at = |h: &Harness<BimApp>| h.ctx.memory(|m| m.area_rect(egui::Id::unique("text-type-properties")));
     let first = at(&h);
     h.step();
     assert_eq!(at(&h), first, "the dialog doesn't move after it opens");

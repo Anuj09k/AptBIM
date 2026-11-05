@@ -93,8 +93,8 @@ use aptbim_core::{element_json, render, schedule, stairs};
 use egui::containers::menu::{MenuButton, SubMenuButton};
 use egui::{
     Align, Align2, Area, CentralPanel, Color32, ComboBox, Context, CornerRadius, Event, FontId, Frame, Grid, Id as UiId, Key,
-    KeyboardShortcut, Layout, Margin, Modifiers, Order, Panel, Popup, Pos2, Rect, Response, RichText, ScrollArea, Sense, Stroke,
-    StrokeKind, TextEdit, Ui, UiBuilder, ViewportCommand, WidgetInfo, WidgetType, pos2, vec2,
+    KeyboardShortcut, Layout, Margin, Modifiers, Order, Panel, Popup, Pos2, Rect, Response, RichText, Role, ScrollArea, Sense, Stroke,
+    StrokeKind, TextEdit, Ui, UiBuilder, ViewportCommand, WidgetInfo, pos2, vec2,
 };
 use serde_json::{Value, json};
 
@@ -465,6 +465,8 @@ pub struct BimApp {
     /// the views' tab bar and its tabs, and the docked view's drawing, along whose edges palettes dock; and the pointer, last
     /// seen.
     drop_headers: Vec<(dock::Palette, Rect, bool)>,
+    /// Where the left side's palettes were drawn last frame (the panel's outer rectangle), for tests that aim at its edge.
+    pub(crate) left_dock: Option<Rect>,
     tab_bar: Rect,
     /// How far down the view the tabs reach where they float over it (else the view's top): what floats over the view
     /// (the Options Bar) and what docks along it start below.
@@ -857,7 +859,7 @@ fn big_button(ui: &mut Ui, icon: Icon, label: &str, active: bool, tip: &str) -> 
     let width = lines.iter().map(|l| wide(l)).fold(0.0, f32::max) + 12.0;
     let (rect, r) = ui.allocate_exact_size(vec2(width.max(54.0), 60.0), Sense::click());
     let enabled = ui.is_enabled();
-    r.widget_info(|| WidgetInfo::selected(WidgetType::Button, enabled, active, label));
+    r.widget_info(|| WidgetInfo::selected(Role::Button, enabled, active, label));
     let (fill, stroke, ink) = match (active, r.hovered() && enabled) {
         (true, _) => (pal().select_fill, Stroke::new(1.0, pal().accent), pal().accent_ink),
         (false, true) => (pal().hover_fill, Stroke::new(1.0, pal().hover), pal().icon),
@@ -897,7 +899,7 @@ fn small_button(ui: &mut Ui, icon: Icon, label: &str, active: bool, tip: &str) -
     let (label, tip) = (t(label), t(tip));
     let (rect, r) = ui.allocate_exact_size(vec2(30.0, 25.0), Sense::click());
     let enabled = ui.is_enabled();
-    r.widget_info(|| WidgetInfo::selected(WidgetType::Button, enabled, active, label));
+    r.widget_info(|| WidgetInfo::selected(Role::Button, enabled, active, label));
     let (fill, stroke, ink) = match (active, r.hovered() && enabled) {
         (true, _) => (pal().select_fill, Stroke::new(1.0, pal().accent), pal().accent_ink),
         (false, true) => (pal().hover_fill, Stroke::new(1.0, pal().hover), pal().icon),
@@ -923,7 +925,7 @@ fn list_row(ui: &mut Ui, icon: Icon, label: &str, active: bool, tip: &str) -> Re
     let width = if ribbon::in_palette() { ui.available_width() } else { ui.available_width().max(200.0) };
     let (rect, r) = ui.allocate_exact_size(vec2(width, 30.0), Sense::click());
     let enabled = ui.is_enabled();
-    r.widget_info(|| WidgetInfo::selected(WidgetType::Button, enabled, active, label));
+    r.widget_info(|| WidgetInfo::selected(Role::Button, enabled, active, label));
     let fill = match (active, r.hovered() && enabled) {
         (true, _) => pal().select_fill,
         (false, true) => pal().hover_fill,
@@ -950,7 +952,7 @@ fn list_row(ui: &mut Ui, icon: Icon, label: &str, active: bool, tip: &str) -> Re
 fn edit_tool(ui: &Ui, r: Response, rect: Rect, name: &str) -> Response {
     let shown = !ribbon::tool_hidden(name);
     let label = t(name);
-    r.widget_info(|| WidgetInfo::selected(WidgetType::Checkbox, true, shown, label));
+    r.widget_info(|| WidgetInfo::selected(Role::CheckBox, true, shown, label));
     let p = ui.painter();
     if !shown {
         p.rect_filled(rect, style::corner(6.0), pal().panel.gamma_multiply(0.7));
@@ -994,7 +996,7 @@ pub(crate) fn stacked_button(ui: &mut Ui, icon: Icon, label: &str, active: bool,
     let width = ui.painter().layout_no_wrap(label.to_string(), font.clone(), pal().text).size().x + 28.0;
     let (rect, r) = ui.allocate_exact_size(vec2(width, 16.0), Sense::click());
     let enabled = ui.is_enabled();
-    r.widget_info(|| WidgetInfo::selected(WidgetType::Button, enabled, active, label));
+    r.widget_info(|| WidgetInfo::selected(Role::Button, enabled, active, label));
     let fill = match (active, r.hovered() && enabled) {
         (true, _) => pal().select_fill,
         (false, true) => pal().hover_fill,
@@ -1018,7 +1020,7 @@ pub(crate) fn stacked_button(ui: &mut Ui, icon: Icon, label: &str, active: bool,
 fn icon_button(ui: &mut Ui, icon: Icon, label: &str) -> Response {
     let label = t(label);
     let (rect, r) = ui.allocate_exact_size(vec2(26.0, 24.0), Sense::click());
-    r.widget_info(|| WidgetInfo::labeled(WidgetType::Button, true, label));
+    r.widget_info(|| WidgetInfo::labeled(Role::Button, true, label));
     let (ink, hover) = style::icon_inks();
     if r.hovered() {
         ui.painter().rect_filled(rect, style::corner(6.0), hover);
@@ -1055,7 +1057,7 @@ fn tab_button_with(ui: &mut Ui, label: &str, active: bool, contextual: bool, sen
     let font = if active && !style::rev() { style::semibold(13.0) } else { FontId::proportional(13.0) };
     let size = ui.painter().layout_no_wrap(label.to_string(), font.clone(), pal().text).size();
     let (rect, r) = ui.allocate_exact_size(vec2(size.x + 24.0 + room, 24.0), sense);
-    r.widget_info(|| WidgetInfo::selected(WidgetType::Button, true, active, label));
+    r.widget_info(|| WidgetInfo::selected(Role::Button, true, active, label));
     if style::rev() {
         // Square, the open one in the panels' colour and outlined but along its foot, where it opens onto them.
         let (fill, ink) = match (contextual, active, r.hovered()) {
@@ -1118,7 +1120,7 @@ const TABS: [(Tab, &str, Icon); 12] = [
 fn rail_button(ui: &mut Ui, icon: Icon, label: &str, open: bool) -> Response {
     let label = t(label);
     let (rect, r) = ui.allocate_exact_size(vec2(32.0, 30.0), Sense::click());
-    r.widget_info(|| WidgetInfo::selected(WidgetType::Button, true, open, label));
+    r.widget_info(|| WidgetInfo::selected(Role::Button, true, open, label));
     let (fill, ink) = match (open, r.hovered()) {
         (true, _) => (pal().select_fill, pal().accent_ink),
         (false, true) => (pal().hover_fill, pal().icon),
@@ -1156,6 +1158,7 @@ impl BimApp {
             docking: dock::Docking::default(),
             dragging: None,
             drop_headers: Vec::new(),
+            left_dock: None,
             tab_bar: Rect::NOTHING,
             tabs_foot: f32::NEG_INFINITY,
             tab_rects: Vec::new(),
@@ -3170,7 +3173,7 @@ impl BimApp {
         let names: Vec<String> = self.session.steps(redo).into_iter().map(step_name).collect();
         let (rect, arrow) = ui.allocate_exact_size(vec2(12.0, 22.0), Sense::click());
         let label = t(if redo { msg!("Redo History") } else { msg!("Undo History") });
-        arrow.widget_info(|| WidgetInfo::labeled(WidgetType::Button, !names.is_empty(), label));
+        arrow.widget_info(|| WidgetInfo::labeled(Role::Button, !names.is_empty(), label));
         let (icon, hover) = style::icon_inks();
         if arrow.hovered() && !names.is_empty() {
             ui.painter().rect_filled(rect, 3.0, hover);
@@ -3194,7 +3197,7 @@ impl BimApp {
                     .iter()
                     .map(|name| {
                         let (_, row) = ui.allocate_exact_size(vec2(ui.available_width(), 22.0), Sense::click());
-                        row.widget_info(|| WidgetInfo::labeled(WidgetType::Button, true, name));
+                        row.widget_info(|| WidgetInfo::labeled(Role::Button, true, name));
                         row
                     })
                     .collect();
@@ -3251,7 +3254,7 @@ impl BimApp {
                 let room = ui.available_width() - 32.0;
                 // The tab that has just been picked (or a contextual tab that has just come) is brought into view: the row
                 // scrolls in a window too narrow for it, and its last tabs are out of sight.
-                let seen = UiId::new("ribbon-tab-seen");
+                let seen = UiId::unique("ribbon-tab-seen");
                 let now = self.tab as u8;
                 let changed = ui.ctx().data(|d| d.get_temp::<u8>(seen)) != Some(now);
                 ui.ctx().data_mut(|d| d.insert_temp(seen, now));
@@ -3334,7 +3337,7 @@ impl BimApp {
     fn ribbon_peek(&mut self, ctx: &Context) {
         let tool = self.tool.clone();
         let frame = Frame::popup(&ctx.global_style()).fill(pal().surface).inner_margin(0.0);
-        let shown = Area::new(UiId::new("ribbon-peek"))
+        let shown = Area::new(UiId::unique("ribbon-peek"))
             .order(Order::Foreground)
             .fixed_pos(self.ribbon_bottom)
             .show(ctx, |ui| frame.show(ui, |ui| self.ribbon_panels(ui)).response.rect);
@@ -3423,7 +3426,7 @@ impl BimApp {
         frame.show(ui, |ui| {
             // A tab wider than the window folds its last panels; one still too wide scrolls sideways, each tab where it was
             // left.
-            let key = UiId::new(("ribbon-widths", self.tab as u8));
+            let key = UiId::unique(("ribbon-widths", self.tab as u8));
             let room = ui.available_width();
             egui::ScrollArea::horizontal().id_salt(self.tab as u8).auto_shrink([false, true]).show(ui, |ui| {
                 ribbon::tab(ui, key, room, |ui| {
@@ -4451,7 +4454,7 @@ impl BimApp {
         let frame = style::card([false; 4]).inner_margin(Margin::symmetric(10, 3));
         // Below the tabs where they float over the view.
         let top = view.top().max(self.tabs_foot - g + 4.0);
-        let shown = Area::new(UiId::new("options-bar")).order(Order::Middle).fixed_pos(pos2(view.left() + g, top + g)).show(ctx, |ui| {
+        let shown = Area::new(UiId::unique("options-bar")).order(Order::Middle).fixed_pos(pos2(view.left() + g, top + g)).show(ctx, |ui| {
             // Kept short of the view's zoom buttons on the right, as far as its fields wrap (a drop-down doesn't).
             ui.set_max_width((view.width() - 2.0 * g - 60.0).max(200.0));
             frame.show(ui, |ui| self.options(ui));
@@ -4919,7 +4922,7 @@ impl BimApp {
                 ui.label(format!(":{}", self.selection.len()));
                 let (r, funnel) = ui.allocate_exact_size(vec2(16.0, 16.0), Sense::click());
                 icons::paint(ui.painter(), Icon::Filter, r, pal().icon);
-                funnel.widget_info(|| egui::WidgetInfo::labeled(egui::WidgetType::Button, true, t("Filter Selection")));
+                funnel.widget_info(|| egui::WidgetInfo::labeled(egui::Role::Button, true, t("Filter Selection")));
                 if funnel.on_hover_text(t("Filter Selection")).clicked() {
                     self.open_filter();
                 }
@@ -4945,7 +4948,7 @@ impl BimApp {
         }
         let (title, color) = if self.status.error { (t("Error"), pal().error) } else { (t("Note"), pal().accent_ink) };
         let at = self.view_rect.right_bottom() - vec2(16.0, 16.0);
-        Area::new(UiId::new("warning")).order(Order::Middle).fixed_pos(at).pivot(Align2::RIGHT_BOTTOM).show(ctx, |ui| {
+        Area::new(UiId::unique("warning")).order(Order::Middle).fixed_pos(at).pivot(Align2::RIGHT_BOTTOM).show(ctx, |ui| {
             Frame::popup(ui.style()).fill(pal().surface).stroke(Stroke::new(1.0, color)).show(ui, |ui| {
                 ui.set_max_width(380.0);
                 ui.horizontal(|ui| {
@@ -4995,8 +4998,8 @@ impl BimApp {
                 if many {
                     let x = Rect::from_center_size(pos2(r.rect.right() - 16.0, r.rect.center().y), vec2(16.0, 16.0));
                     let label = tf("Close {}", &[&name]);
-                    let c = ui.interact(x, ui.id().with(("close view", sheet)), Sense::click());
-                    c.widget_info(|| WidgetInfo::labeled(WidgetType::Button, true, &label));
+                    let c = ui.interact(x, ui.scope_id().with(("close view", sheet)), Sense::click());
+                    c.widget_info(|| WidgetInfo::labeled(Role::Button, true, &label));
                     if c.hovered() {
                         ui.painter().rect_filled(x, 3.0, pal().hover_fill);
                     }
@@ -5055,7 +5058,7 @@ impl BimApp {
         let mut chosen = None;
         Frame::new().fill(pal().surface).inner_margin(16.0).show(ui, |ui| {
             ui.set_min_size(ui.available_size());
-            let ground = ui.interact(ui.max_rect(), ui.id().with("schedule menu"), egui::Sense::click());
+            let ground = ui.interact(ui.max_rect(), ui.scope_id().with("schedule menu"), egui::Sense::click());
             context::menu(&ground, &groups, &mut chosen);
             let name = self.view_name(self.sheet);
             ui.label(RichText::new(&name).heading());
@@ -5096,7 +5099,7 @@ impl BimApp {
                                     let text = if v.is_number() { text.monospace() } else { text };
                                     let r = ui.add(egui::Label::new(text).sense(egui::Sense::click()));
                                     // Selected or not, for screen readers, as a selectable label says.
-                                    r.widget_info(|| WidgetInfo::selected(WidgetType::SelectableLabel, true, selected, &said));
+                                    r.widget_info(|| WidgetInfo::selected(Role::Button, true, selected, &said));
                                     if r.clicked() {
                                         picked = Some((ids.clone(), ui.input(|i| i.modifiers)));
                                     }
@@ -5186,7 +5189,7 @@ impl BimApp {
         }
         let mut choice = None;
         let name = self.session.model.name.clone();
-        let r = Modal::new(UiId::new("unsaved"), tf("Save changes to {}?", &[&name])).width(580.0).show(ctx, |ui| {
+        let r = Modal::new(UiId::unique("unsaved"), tf("Save changes to {}?", &[&name])).width(580.0).show(ctx, |ui| {
             crate::popup::body(ui, |ui| {
                 ui.label(t("If you don't, the changes since it was last saved are lost."));
             });

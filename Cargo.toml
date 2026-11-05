@@ -30,9 +30,10 @@ aptbim-update = { path = "crates/update" }
 aptbim-rvt = { path = "crates/rvt" }
 # The DWG bridge: MIT OR Apache-2.0 itself, over acadrust (MPL-2.0, unmodified); the core never depends on it.
 aptbim-dwg = { path = "crates/dwg" }
-egui = "0.36"
-eframe = "0.36"
-egui_kittest = "0.36"
+# monochrome_emoji_fonts: egui 0.37 made its emoji font a feature; its own widgets (the colour picker's copy button) draw emoji.
+egui = { version = "0.37", features = ["default_fonts", "monochrome_emoji_fonts"] }
+eframe = "0.37"
+egui_kittest = "0.37"
 rfd = "0.17"
 # The system's language, on Windows and macOS too, where no environment variable says it.
 sys-locale = "0.3"
@@ -74,3 +75,16 @@ opt-level = 2
 opt-level = 2
 [profile.dev.package.cfb]
 opt-level = 2
+
+[patch.crates-io]
+ecolor = { git = "https://github.com/storytold/egui.git", rev = "6d518fc799681571963842f95b55a6b68431b15a" }
+emath = { git = "https://github.com/storytold/egui.git", rev = "6d518fc799681571963842f95b55a6b68431b15a" }
+epaint = { git = "https://github.com/storytold/egui.git", rev = "6d518fc799681571963842f95b55a6b68431b15a" }
+epaint_default_fonts = { git = "https://github.com/storytold/egui.git", rev = "6d518fc799681571963842f95b55a6b68431b15a" }
+egui = { git = "https://github.com/storytold/egui.git", rev = "6d518fc799681571963842f95b55a6b68431b15a" }
+egui-winit = { git = "https://github.com/storytold/egui.git", rev = "6d518fc799681571963842f95b55a6b68431b15a" }
+egui-wgpu = { git = "https://github.com/storytold/egui.git", rev = "6d518fc799681571963842f95b55a6b68431b15a" }
+egui_glow = { git = "https://github.com/storytold/egui.git", rev = "6d518fc799681571963842f95b55a6b68431b15a" }
+egui_kittest = { git = "https://github.com/storytold/egui.git", rev = "6d518fc799681571963842f95b55a6b68431b15a" }
+eframe = { git = "https://github.com/storytold/egui.git", rev = "6d518fc799681571963842f95b55a6b68431b15a" }
+winit = { git = "https://github.com/storytold/winit.git", rev = "a517b3846ee8457d84ee4975110bfda6797c44dc" }

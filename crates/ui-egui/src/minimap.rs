@@ -8,8 +8,8 @@ use aptbim_core::geom::P2;
 use aptbim_core::model::{Id, Model};
 use aptbim_core::render::{self, Drawing, Rgb, View};
 use egui::{
-    CollapsingHeader, Color32, ColorImage, Context, Pos2, Rect, Sense, Stroke, StrokeKind, TextureHandle, TextureOptions, Ui, WidgetInfo,
-    WidgetType, pos2, vec2,
+    CollapsingHeader, Color32, ColorImage, Context, Pos2, Rect, Role, Sense, Stroke, StrokeKind, TextureHandle, TextureOptions, Ui,
+    WidgetInfo, pos2, vec2,
 };
 
 use crate::canvas::{Place, color, paint};
@@ -81,7 +81,7 @@ impl BimApp {
         let k = (ui.available_width() / SIZE.0 as f32).min(ui.available_height() / (3.0 * SIZE.1 as f32)).clamp(0.1, 1.25);
         let size = vec2(SIZE.0 as f32, SIZE.1 as f32) * k;
         let (rect, response) = ui.vertical_centered(|ui| ui.allocate_exact_size(size, Sense::click_and_drag())).inner;
-        response.widget_info(|| WidgetInfo::labeled(WidgetType::Other, true, t("Minimap of the view")));
+        response.widget_info(|| WidgetInfo::labeled(Role::Unknown, true, t("Minimap of the view")));
         self.minimap.at = Some((rect.min, k));
         let Some(mini) = self.minimap.shown.as_ref().map(|s| s.drawing.view) else { return };
         let on_map = |p: P2| {

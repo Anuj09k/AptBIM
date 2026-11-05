@@ -50,7 +50,7 @@ impl BimApp {
         let shaded = self.graphics_shown().style == VisualStyle::Shaded;
         let Some(d) = self.display_dialog.as_mut() else { return };
         let (mut ok, mut apply, mut close) = (false, false, false);
-        let r = Modal::new(UiId::new("graphic-display-options"), t("Graphic Display Options")).width(420.0).show(ctx, |ui| {
+        let r = Modal::new(UiId::unique("graphic-display-options"), t("Graphic Display Options")).width(420.0).show(ctx, |ui| {
             crate::popup::body(ui, |ui| {
                 ui.add_space(4.0);
                 ui.label(RichText::new(t("Model Display")).strong());

@@ -9,7 +9,7 @@ use aptbim_i18n::msg;
 
 use aptbim_core::model::{Element, Id};
 use aptbim_core::units::Units;
-use egui::{Align, ComboBox, Context, Id as UiId, Layout, RichText, TextEdit, Ui, WidgetInfo, WidgetType};
+use egui::{Align, ComboBox, Context, Id as UiId, Layout, RichText, Role, TextEdit, Ui, WidgetInfo};
 use serde_json::{Value, json};
 
 use crate::lang::{category, t, tf};
@@ -391,7 +391,7 @@ fn labelled(ui: &mut Ui, label: &str, text: &mut String, name: String, width: f3
 /// A text field named `name` for screen readers, `width` wide.
 fn edit(ui: &mut Ui, text: &mut String, name: String, width: f32, hint: &str) {
     let r = ui.add(TextEdit::singleline(text).desired_width(width).hint_text(hint));
-    r.widget_info(|| WidgetInfo::labeled(WidgetType::TextEdit, true, name.clone()));
+    r.widget_info(|| WidgetInfo::labeled(Role::TextInput, true, name.clone()));
 }
 
 impl BimApp {
@@ -447,7 +447,7 @@ impl BimApp {
             [one] => tf("Reinforce {} {}", &[&category(d.category, false), &one.to_string()]),
             many => tf("Reinforce {} {}", &[&many.len().to_string(), &category(d.category, true)]),
         };
-        let r = Modal::new(UiId::new("reinforce"), title).width(700.0).show(ctx, |ui| {
+        let r = Modal::new(UiId::unique("reinforce"), title).width(700.0).show(ctx, |ui| {
           popup::body(ui, |ui| {
             ui.add_space(4.0);
             ui.label(t("How many bars, how thick and how far apart is yours to say; a field left empty is not used. A spacing is the most between bars."));

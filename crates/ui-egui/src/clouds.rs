@@ -46,7 +46,7 @@ impl BimApp {
     pub(crate) fn point_cloud_window(&mut self, ctx: &Context) {
         let Some(b) = self.cloud_box.as_mut() else { return };
         let (mut ok, mut close) = (false, false);
-        let r = Modal::new(UiId::new("point-cloud"), t("Point Cloud")).width(440.0).show(ctx, |ui| {
+        let r = Modal::new(UiId::unique("point-cloud"), t("Point Cloud")).width(440.0).show(ctx, |ui| {
             crate::popup::body(ui, |ui| {
                 ui.add_space(6.0);
                 let what = match b.paths.as_slice() {

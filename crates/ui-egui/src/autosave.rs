@@ -283,7 +283,7 @@ impl BimApp {
         }
         let Some(backup) = self.autosave.candidates.first().cloned() else { return };
         let mut choice = None;
-        let response = Modal::new(Id::new("recover-autosave"), t("Recovery copy found")).width(520.0).show(ctx, |ui| {
+        let response = Modal::new(Id::unique("recover-autosave"), t("Recovery copy found")).width(520.0).show(ctx, |ui| {
             crate::popup::body(ui, |ui| {
                 ui.label(
                     backup

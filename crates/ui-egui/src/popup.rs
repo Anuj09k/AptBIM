@@ -1,8 +1,8 @@
 //! Shared dialog frame: a draggable title bar, a corner close button, a scrolling body and a fixed footer.
 
 use egui::{
-    Align2, Area, Context, CursorIcon, Id, Label, ModalResponse, Order, Pos2, RichText, ScrollArea, Sense, Stroke, Ui, UiKind, WidgetInfo,
-    WidgetType, vec2,
+    Align2, Area, Context, CursorIcon, Id, Label, ModalResponse, Order, Pos2, RichText, Role, ScrollArea, Sense, Stroke, Ui, UiKind,
+    WidgetInfo, vec2,
 };
 
 use crate::lang::t;
@@ -86,7 +86,7 @@ impl Modal {
                 ui.painter().line_segment([c + a, c + b], Stroke::new(1.8, ink));
             }
             let label = t("Close dialog");
-            r.widget_info(|| WidgetInfo::labeled(WidgetType::Button, self.closable, label));
+            r.widget_info(|| WidgetInfo::labeled(Role::Button, self.closable, label));
             close = r.on_hover_text(t("Close")).clicked();
             ui.add_space(4.0);
             content(ui)

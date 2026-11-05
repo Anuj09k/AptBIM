@@ -19,8 +19,8 @@ use aptbim_core::snap::Kind as Snap;
 use aptbim_core::texture::{Kind as TextureKind, Texture};
 use aptbim_core::units::Units;
 use egui::{
-    Align, Align2, Button, Checkbox, ComboBox, Context, FontId, Frame, Grid, Id as UiId, Key, Layout, Margin, Popup, Rect, RichText,
-    ScrollArea, Sense, Shape, Slider, Stroke, StrokeKind, TextEdit, TextureHandle, Ui, WidgetInfo, WidgetType, pos2, vec2,
+    Align, Align2, Button, Checkbox, ComboBox, Context, FontId, Frame, Grid, Id as UiId, Key, Layout, Margin, Popup, Rect, RichText, Role,
+    ScrollArea, Sense, Shape, Slider, Stroke, StrokeKind, TextEdit, TextureHandle, Ui, WidgetInfo, pos2, vec2,
 };
 use serde_json::{Value, json};
 
@@ -591,7 +591,7 @@ fn link(ui: &mut Ui, model: &Model, id: Id) -> bool {
     let text = format!("{} {id}", lang::category(category, false));
     let r = ui.link(&text);
     // egui's selectable text gives the link's node a label's role: a link's again, for screen readers.
-    r.widget_info(|| WidgetInfo::labeled(WidgetType::Link, true, &text));
+    r.widget_info(|| WidgetInfo::labeled(Role::Link, true, &text));
     r.clicked()
 }
 
@@ -599,7 +599,7 @@ fn link(ui: &mut Ui, model: &Model, id: Id) -> bool {
 /// Whether it was clicked.
 pub(crate) fn group_header(ui: &mut Ui, group: &str, open: bool) -> bool {
     let (r, response) = ui.allocate_exact_size(vec2(ui.available_width(), 22.0), Sense::click());
-    response.widget_info(|| WidgetInfo::selected(WidgetType::CollapsingHeader, true, open, group));
+    response.widget_info(|| WidgetInfo::selected(Role::DisclosureTriangle, true, open, group));
     let p = ui.painter();
     p.rect_filled(r, 0.0, if response.hovered() { pal().hover_fill } else { pal().bar });
     let font = if crate::style::rev() { crate::style::semibold(13.0) } else { FontId::proportional(13.0) };
@@ -1153,7 +1153,7 @@ impl BimApp {
         let sense = if wall && !ids.is_empty() { Sense::click() } else { Sense::hover() };
         let (rect, r) = ui.allocate_exact_size(vec2(ui.available_width(), if wall { 40.0 } else { 64.0 }), sense);
         let label = t(if wall { msg!("Wall layers") } else { msg!("Layers, top down") });
-        r.widget_info(|| WidgetInfo::labeled(if wall { WidgetType::Button } else { WidgetType::Label }, true, label));
+        r.widget_info(|| WidgetInfo::labeled(if wall { Role::Button } else { Role::Label }, true, label));
         let p = ui.painter();
         let ink = Stroke::new(1.0, pal().icon);
         let mut at = 0.0;
@@ -1213,7 +1213,7 @@ impl BimApp {
             ] {
                 let (rect, r) = ui.allocate_exact_size(vec2(w, 46.0), Sense::click());
                 let on = shared == Some((hand, facing));
-                r.widget_info(|| WidgetInfo::selected(WidgetType::RadioButton, true, on, t(label)));
+                r.widget_info(|| WidgetInfo::selected(Role::RadioButton, true, on, t(label)));
                 let p = ui.painter();
                 let (fill, edge) = if on { (pal().select_fill, pal().accent) } else { (pal().surface, pal().border) };
                 p.rect(rect, crate::style::corner(4.0), fill, Stroke::new(1.0, edge), StrokeKind::Inside);
@@ -1266,7 +1266,7 @@ impl BimApp {
             for (label, c) in SWATCHES {
                 let (rect, r) = ui.allocate_exact_size(vec2(28.0, 22.0), Sense::click());
                 let on = shared == Some(c);
-                r.widget_info(|| WidgetInfo::selected(WidgetType::RadioButton, true, on, t(label)));
+                r.widget_info(|| WidgetInfo::selected(Role::RadioButton, true, on, t(label)));
                 let fill = c.map_or(pal().surface, |[red, green, blue]| egui::Color32::from_rgb(red, green, blue));
                 let edge = if on { Stroke::new(2.0, pal().accent_ink) } else { Stroke::new(1.0, pal().border) };
                 ui.painter().rect(rect, crate::style::corner(4.0), fill, edge, StrokeKind::Inside);
@@ -1281,7 +1281,9 @@ impl BimApp {
                 }
             }
             let mut rgb = shared.flatten().unwrap_or([239, 227, 200]);
-            if ui.color_edit_button_srgb(&mut rgb).on_hover_text(t("Another colour")).changed() {
+            let other = ui.color_edit_button_srgb(&mut rgb);
+            other.widget_info(|| egui::WidgetInfo::labeled(egui::Role::ColorWell, true, t("Another colour")));
+            if other.on_hover_text(t("Another colour")).changed() {
                 pick = Some(Some(rgb));
             }
         });
@@ -1316,7 +1318,7 @@ impl BimApp {
         if shared {
             let said = format!("{}° ({}%)", text(&json!(slope)), text(&json!(slope.to_radians().tan() * 100.0)));
             let (rect, r) = ui.allocate_exact_size(vec2(ui.available_width(), 48.0), Sense::hover());
-            r.widget_info(|| WidgetInfo::labeled(WidgetType::Label, true, tf("Floor slope: {}", &[&said])));
+            r.widget_info(|| WidgetInfo::labeled(Role::Label, true, tf("Floor slope: {}", &[&said])));
             // The slab's top from the arrow's tail, rising (or falling) at its angle, as long as the picture holds; its
             // thickness square to it.
             let (thick, room) = (8.0, rect.shrink(8.0));
@@ -1439,7 +1441,7 @@ impl BimApp {
         };
         let enabled = !names.is_empty();
         let (rect, r) = ui.allocate_exact_size(vec2(ui.available_width(), 50.0), if enabled { Sense::click() } else { Sense::hover() });
-        r.widget_info(|| WidgetInfo::labeled(WidgetType::ComboBox, enabled, t("Type Selector")));
+        r.widget_info(|| WidgetInfo::labeled(Role::ComboBox, enabled, t("Type Selector")));
         let p = ui.painter();
         p.rect(
             rect,
@@ -1609,7 +1611,7 @@ impl BimApp {
                         Crop => {
                             let mut on = !val.is_null();
                             let r = ui.checkbox(&mut on, "");
-                            r.widget_info(|| WidgetInfo::selected(WidgetType::Checkbox, true, on, label));
+                            r.widget_info(|| WidgetInfo::selected(Role::CheckBox, true, on, label));
                             if r.labelled_by(name.id).changed() {
                                 crop = Some(on);
                             }
@@ -1618,7 +1620,7 @@ impl BimApp {
                             let mut on = val.as_bool().unwrap_or(false);
                             let r = ui.checkbox(&mut on, "");
                             // A checkbox without text names itself "" for screen readers: give it its row's name.
-                            r.widget_info(|| WidgetInfo::selected(WidgetType::Checkbox, true, on, label));
+                            r.widget_info(|| WidgetInfo::selected(Role::CheckBox, true, on, label));
                             if r.labelled_by(name.id).changed() {
                                 change = Some((key, Ok(json!(on))));
                             }
@@ -1701,7 +1703,7 @@ impl BimApp {
                             ui.horizontal(|ui| {
                                 let mut on = !val.is_null();
                                 let r = ui.add_enabled(false, Checkbox::new(&mut on, ""));
-                                r.widget_info(|| WidgetInfo::selected(WidgetType::Checkbox, false, on, label));
+                                r.widget_info(|| WidgetInfo::selected(Role::CheckBox, false, on, label));
                                 r.labelled_by(name.id);
                                 if let Some(other) = id_of(val)
                                     && link(ui, model, other)
@@ -1869,7 +1871,7 @@ impl BimApp {
                             Holds::YesNo => {
                                 let mut on = val.as_f64().is_some_and(|x| x != 0.0);
                                 let r = ui.checkbox(&mut on, "");
-                                r.widget_info(|| WidgetInfo::selected(WidgetType::Checkbox, true, on, &p.name));
+                                r.widget_info(|| WidgetInfo::selected(Role::CheckBox, true, on, &p.name));
                                 if r.labelled_by(name.id).changed() {
                                     change = Some((p.name.clone(), Ok(json!(on))));
                                 }
@@ -1938,7 +1940,7 @@ impl BimApp {
                     ParameterKind::YesNo => {
                         let mut on = val.as_bool().unwrap_or(false);
                         let r = ui.checkbox(&mut on, "");
-                        r.widget_info(|| WidgetInfo::selected(WidgetType::Checkbox, true, on, name.as_str()));
+                        r.widget_info(|| WidgetInfo::selected(Role::CheckBox, true, on, name.as_str()));
                         if r.labelled_by(label.id).changed() {
                             change = Some((name.to_string(), Ok(json!(on))));
                         }
@@ -2003,7 +2005,7 @@ impl BimApp {
                     ui.label(t(label));
                     let r = wide_button(ui, t("Edit…"));
                     // Named for what it edits, for screen readers.
-                    r.widget_info(|| WidgetInfo::labeled(WidgetType::Button, true, tf("Edit {}", &[t(label)])));
+                    r.widget_info(|| WidgetInfo::labeled(Role::Button, true, tf("Edit {}", &[t(label)])));
                     if r.clicked() {
                         open = Some(tab);
                     }
@@ -2034,7 +2036,7 @@ impl BimApp {
         let model = Arc::clone(&self.session.model);
         let names: Vec<String> = model.type_names(d.category).into_iter().map(String::from).collect();
         let (mut ok, mut cancel, mut apply, mut asked) = (false, false, false, None);
-        let r = Modal::new(UiId::new("type-properties"), t("Type Properties")).width(crate::typeprops::WIDTH).show(ctx, |ui| {
+        let r = Modal::new(UiId::unique("type-properties"), t("Type Properties")).width(crate::typeprops::WIDTH).show(ctx, |ui| {
             crate::popup::body(ui, |ui| {
                 let family = tf("System Family: {}", &[&lang::category(d.category, true)]);
                 asked = typeprops::head(ui, "type", &family, &names, &d.name, &mut d.naming, true);
@@ -2162,7 +2164,7 @@ impl BimApp {
         // The material that asked for a picture for its texture.
         let mut picture: Option<String> = None;
         let released = ctx.input(|i| !i.pointer.any_down());
-        let r = Modal::new(UiId::new("materials"), t("Materials")).width(440.0).show(ctx, |ui| {
+        let r = Modal::new(UiId::unique("materials"), t("Materials")).width(440.0).show(ctx, |ui| {
             crate::popup::body(ui, |ui| {
                 ui.add_space(6.0);
                 Grid::new("material-head").num_columns(2).spacing(vec2(12.0, 6.0)).show(ui, |ui| {
@@ -2507,7 +2509,7 @@ impl BimApp {
         let names: Vec<String> = model.families.get(&d.family).map(|f| f.types.keys().cloned().collect()).unwrap_or_default();
         let materials: Vec<String> = model.materials.keys().cloned().collect();
         let (mut ok, mut cancel, mut apply, mut asked) = (false, false, false, None);
-        let r = Modal::new(UiId::new("family-type-properties"), t("Type Properties")).width(crate::typeprops::WIDTH).show(ctx, |ui| {
+        let r = Modal::new(UiId::unique("family-type-properties"), t("Type Properties")).width(crate::typeprops::WIDTH).show(ctx, |ui| {
             crate::popup::body(ui, |ui| {
                 asked = typeprops::head(ui, "family-type", &d.family, &names, &d.name, &mut d.naming, true);
                 let below = typeprops::foot_height(ui, d.error.is_some());
@@ -2614,7 +2616,7 @@ impl BimApp {
             return;
         }
         let mut close = false;
-        let r = Modal::new(UiId::new("snaps"), t("Snaps")).width(380.0).show(ctx, |ui| {
+        let r = Modal::new(UiId::unique("snaps"), t("Snaps")).width(380.0).show(ctx, |ui| {
             crate::popup::body(ui, |ui| {
                 ui.add_space(6.0);
                 ui.label(RichText::new(t("Object Snaps")).strong());
@@ -2721,7 +2723,7 @@ impl BimApp {
                         }
                     }
                 });
-                c.response.widget_info(|| WidgetInfo::labeled(WidgetType::ComboBox, true, t("Comparison")));
+                c.response.widget_info(|| WidgetInfo::labeled(Role::ComboBox, true, t("Comparison")));
                 match (f.op, kind) {
                     (Op::HasValue | Op::HasNoValue, _) => {
                         ui.label("");
@@ -2884,7 +2886,7 @@ impl BimApp {
         let Some(mut d) = self.parameters_dialog.take() else { return };
         let model = Arc::clone(&self.session.model);
         let (mut close, mut run, mut picked): (bool, Option<Value>, Option<String>) = (false, None, None);
-        let r = Modal::new(UiId::new("project-parameters"), t("Project Parameters")).width(460.0).show(ctx, |ui| {
+        let r = Modal::new(UiId::unique("project-parameters"), t("Project Parameters")).width(460.0).show(ctx, |ui| {
             crate::popup::body(ui, |ui| {
                 ui.add_space(6.0);
                 Grid::new("parameter-head").num_columns(2).spacing(vec2(12.0, 6.0)).show(ui, |ui| {
@@ -2984,7 +2986,7 @@ impl BimApp {
         let Some(mut d) = self.new_schedule.take() else { return };
         let (mut ok, mut cancel) = (false, false);
         let model = Arc::clone(&self.session.model);
-        let r = Modal::new(UiId::new("new-schedule"), t("New Schedule")).width(340.0).show(ctx, |ui| {
+        let r = Modal::new(UiId::unique("new-schedule"), t("New Schedule")).width(340.0).show(ctx, |ui| {
             crate::popup::body(ui, |ui| {
                 ui.add_space(6.0);
                 ui.label(t("Category:"));
@@ -3060,7 +3062,7 @@ impl BimApp {
         let key = made.unwrap_or(0);
         let mut change: Option<Value> = None;
         let mut close = false;
-        let r = Modal::new(UiId::new("schedule-properties"), tf("Schedule Properties: {}", &[&sc.name])).width(620.0).show(ctx, |ui| {
+        let r = Modal::new(UiId::unique("schedule-properties"), tf("Schedule Properties: {}", &[&sc.name])).width(620.0).show(ctx, |ui| {
             crate::popup::body(ui, |ui| {
                 ui.add_space(6.0);
                 ui.horizontal(|ui| {
@@ -3165,7 +3167,7 @@ impl BimApp {
                                     let l = ui.label(t("Calculate totals"));
                                     let mut on = fields[i].total;
                                     let r = ui.checkbox(&mut on, "");
-                                    r.widget_info(|| WidgetInfo::selected(WidgetType::Checkbox, true, on, t("Calculate totals")));
+                                    r.widget_info(|| WidgetInfo::selected(Role::CheckBox, true, on, t("Calculate totals")));
                                     if r.labelled_by(l.id).changed() {
                                         fields[i].total = on;
                                         change = Some(json!({"fields": fields}));
@@ -3255,7 +3257,7 @@ impl BimApp {
                                         }
                                     }
                                 });
-                                c.response.widget_info(|| WidgetInfo::labeled(WidgetType::ComboBox, true, t("Order")));
+                                c.response.widget_info(|| WidgetInfo::labeled(Role::ComboBox, true, t("Order")));
                                 if ui.button(t("Remove")).clicked() {
                                     gone = Some(i);
                                 }

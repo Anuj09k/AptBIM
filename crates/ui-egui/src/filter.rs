@@ -65,7 +65,7 @@ impl BimApp {
     pub(crate) fn selection_filter_window(&mut self, ctx: &Context) {
         let Some(d) = self.selection_filter.as_mut() else { return };
         let (mut ok, mut close, mut by) = (false, false, None);
-        let r = Modal::new(UiId::new("selection-filter"), t("Filter")).width(380.0).show(ctx, |ui| {
+        let r = Modal::new(UiId::unique("selection-filter"), t("Filter")).width(380.0).show(ctx, |ui| {
             crate::popup::body(ui, |ui| {
                 ui.add_space(6.0);
                 ui.horizontal(|ui| {

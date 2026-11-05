@@ -9,7 +9,7 @@ use aptbim_core::graphics::MODEL;
 use aptbim_core::model::Model;
 use aptbim_core::pen::{MAX_PEN, Pen};
 use aptbim_core::styles::{ObjectStyle, default_of};
-use egui::{Align, ComboBox, Context, Grid, Id as UiId, Layout, RichText, ScrollArea, Ui, WidgetInfo, WidgetType};
+use egui::{Align, ComboBox, Context, Grid, Id as UiId, Layout, RichText, Role, ScrollArea, Ui, WidgetInfo};
 use serde_json::{Value, json};
 
 use crate::BimApp;
@@ -35,7 +35,7 @@ fn pen_field(ui: &mut Ui, pen: &mut Pen, name: String) {
             ui.selectable_value(pen, each, pen_name(each));
         }
     });
-    c.response.widget_info(|| WidgetInfo::labeled(WidgetType::ComboBox, true, name.clone()));
+    c.response.widget_info(|| WidgetInfo::labeled(Role::ComboBox, true, name.clone()));
 }
 
 impl BimApp {
@@ -43,7 +43,7 @@ impl BimApp {
     pub(crate) fn object_styles_window(&mut self, ctx: &Context) {
         let Some(mut d) = self.object_styles_dialog.take() else { return };
         let (mut ok, mut apply, mut cancel) = (false, false, false);
-        let r = Modal::new(UiId::new("object-styles"), t("Object Styles")).width(520.0).show(ctx, |ui| {
+        let r = Modal::new(UiId::unique("object-styles"), t("Object Styles")).width(520.0).show(ctx, |ui| {
             crate::popup::body(ui, |ui| {
                 ui.add_space(6.0);
                 ui.label(t(

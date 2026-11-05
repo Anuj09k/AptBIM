@@ -377,7 +377,7 @@ impl BimApp {
     pub(crate) fn settings_window(&mut self, ctx: &Context) {
         let Some(mut page) = self.settings_page else { return };
         let mut close = false;
-        let r = Modal::new(UiId::new("settings"), t("Settings")).width(660.0).show(ctx, |ui| {
+        let r = Modal::new(UiId::unique("settings"), t("Settings")).width(660.0).show(ctx, |ui| {
             crate::popup::body(ui, |ui| {
                 ui.add_space(6.0);
                 // A fixed size, so the window doesn't grow or move under the pointer from one frame or page to the next.
@@ -643,8 +643,8 @@ impl BimApp {
 fn graphics_later(ui: &mut Ui) {
     let (mut color, mut hover, mut ground) = (pal().accent, true, 0);
     ui.horizontal(|ui| {
-        ui.label(t("Selection colour"));
-        ui.color_edit_button_srgba(&mut color);
+        let label = ui.label(t("Selection colour"));
+        ui.color_edit_button_srgba(&mut color).labelled_by(label.id);
     });
     ui.checkbox(&mut hover, t("Highlight what's under the cursor"));
     ui.horizontal(|ui| {

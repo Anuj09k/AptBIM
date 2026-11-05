@@ -14,8 +14,8 @@ use aptbim_core::view3d::{AZIMUTH, ELEVATION, Scene};
 use aptbim_update::State;
 use egui::epaint::{Mesh, Shadow};
 use egui::{
-    Align, Align2, Color32, ColorImage, Context, CornerRadius, FontId, Frame, Layout, OpenUrl, Panel, Rect, Response, RichText, ScrollArea,
-    Sense, Shape, Stroke, StrokeKind, TextureHandle, TextureOptions, Ui, UiBuilder, WidgetInfo, WidgetType, pos2, vec2,
+    Align, Align2, Color32, ColorImage, Context, CornerRadius, FontId, Frame, Layout, OpenUrl, Panel, Rect, Response, RichText, Role,
+    ScrollArea, Sense, Shape, Stroke, StrokeKind, TextureHandle, TextureOptions, Ui, UiBuilder, WidgetInfo, pos2, vec2,
 };
 
 use crate::icons::{self, Icon};
@@ -100,7 +100,7 @@ fn back(ui: &mut Ui) -> Response {
     let font = FontId::proportional(14.0);
     let text = ui.painter().layout_no_wrap(label.to_string(), font.clone(), pal().text).size();
     let (rect, r) = ui.allocate_exact_size(vec2(text.x + 46.0, 32.0), Sense::click());
-    r.widget_info(|| WidgetInfo::labeled(WidgetType::Button, true, label));
+    r.widget_info(|| WidgetInfo::labeled(Role::Button, true, label));
     let fill = if r.hovered() { pal().hover_fill } else { pal().surface };
     ui.painter().rect(rect, 6.0, fill, Stroke::new(1.0, pal().border), StrokeKind::Inside);
     let icon = Rect::from_center_size(pos2(rect.left() + 20.0, rect.center().y), vec2(18.0, 18.0));
@@ -369,7 +369,7 @@ impl BimApp {
         let thumb_h = THUMB[1] as f32;
         let (rect, r) = ui.allocate_exact_size(vec2(TILE, thumb_h + 62.0), Sense::click());
         let missing = !path.exists();
-        r.widget_info(|| WidgetInfo::labeled(WidgetType::Button, true, label));
+        r.widget_info(|| WidgetInfo::labeled(Role::Button, true, label));
         let r = r.on_hover_text(path.to_string_lossy());
         let hot = r.hovered() || r.has_focus();
         let rect = if hot { rect.translate(vec2(0.0, -2.0)) } else { rect };
@@ -508,7 +508,7 @@ fn heading(ui: &mut Ui, text: &str) {
 fn action(ui: &mut Ui, icon: Icon, title: &str, hint: &str, keys: &str) -> Response {
     let title = t(title).to_string();
     let (rect, r) = ui.allocate_exact_size(vec2(ui.available_width(), 72.0), Sense::click());
-    r.widget_info(|| WidgetInfo::labeled(WidgetType::Button, true, &title));
+    r.widget_info(|| WidgetInfo::labeled(Role::Button, true, &title));
     let hot = r.hovered() || r.has_focus();
     let p = ui.painter();
     let round = CornerRadius::same(12);
@@ -591,7 +591,7 @@ fn dashed(ui: &Ui, r: Rect) {
 /// AptBIM's logo (`assets/app-icon/aptbim-256.png`), drawn into `r`. Decoded once and kept as a texture.
 fn logo(ui: &Ui, r: Rect) {
     const PNG: &[u8] = include_bytes!("../../../assets/app-icon/aptbim-256.png");
-    let id = egui::Id::new("aptbim-logo");
+    let id = egui::Id::unique("aptbim-logo");
     let ctx = ui.ctx();
     let texture = ctx.data_mut(|d| d.get_temp::<TextureHandle>(id)).or_else(|| {
         let icon = eframe::icon_data::from_png_bytes(PNG).ok()?;

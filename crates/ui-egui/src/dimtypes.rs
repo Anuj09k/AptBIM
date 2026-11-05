@@ -86,111 +86,115 @@ impl BimApp {
         let names: Vec<String> = model.dimension_types.keys().cloned().collect();
         let fonts = aptbim_core::text::families();
         let (mut ok, mut cancel, mut apply, mut asked) = (false, false, false, None);
-        let r = Modal::new(UiId::new("dimension-type-properties"), t("Type Properties")).width(crate::typeprops::WIDTH).show(ctx, |ui| {
-            crate::popup::body(ui, |ui| {
-                asked = typeprops::head(
-                    ui,
-                    "dimension-type",
-                    &tf("System Family: {}", &[t("Dimension")]),
-                    &names,
-                    &d.name,
-                    &mut d.naming,
-                    true,
-                );
-                let below = typeprops::foot_height(ui, d.error.is_some());
-                typeprops::table(ui, "dimension-type", below, |tb| {
-                    tb.group("Graphics");
-                    choice(
-                        tb,
-                        t("Dimension String Type"),
-                        &mut d.t.string,
-                        &[
-                            (DimString::Continuous, msg!("Continuous")),
-                            (DimString::Baseline, msg!("Baseline")),
-                            (DimString::Ordinate, msg!("Ordinate")),
-                        ],
+        let r =
+            Modal::new(UiId::unique("dimension-type-properties"), t("Type Properties")).width(crate::typeprops::WIDTH).show(ctx, |ui| {
+                crate::popup::body(ui, |ui| {
+                    asked = typeprops::head(
+                        ui,
+                        "dimension-type",
+                        &tf("System Family: {}", &[t("Dimension")]),
+                        &names,
+                        &d.name,
+                        &mut d.naming,
+                        true,
                     );
-                    choice(
-                        tb,
-                        t("Tick Mark"),
-                        &mut d.t.tick,
-                        &[
-                            (Tick::Diagonal, msg!("Diagonal")),
-                            (Tick::Arrow, msg!("Arrow")),
-                            (Tick::OpenArrow, msg!("Open Arrow")),
-                            (Tick::Dot, msg!("Dot")),
-                            (Tick::None, msg!("None")),
-                        ],
-                    );
-                    tb.drag(t("Tick Mark Size"), mm(&mut d.t.tick_size));
-                    tb.drag(t("Line Weight"), DragValue::new(&mut d.t.line_pen.0).range(0..=aptbim_core::pen::MAX_PEN));
-                    tb.drag(t("Tick Mark Line Weight"), DragValue::new(&mut d.t.tick_pen.0).range(0..=aptbim_core::pen::MAX_PEN));
-                    tb.drag(t("Dimension Line Extension"), mm(&mut d.t.line_extension));
-                    choice(
-                        tb,
-                        t("Witness Line Control"),
-                        &mut d.t.witness,
-                        &[(Witness::GapToElement, msg!("Gap to Element")), (Witness::Fixed, msg!("Fixed to Dimension Line"))],
-                    );
-                    tb.drag(t("Witness Line Length"), mm(&mut d.t.witness_length));
-                    tb.drag(t("Witness Line Gap to Element"), mm(&mut d.t.witness_gap));
-                    tb.drag(t("Witness Line Extension"), mm(&mut d.t.witness_extension));
-                    tb.drag(t("Baseline Spacing"), mm(&mut d.t.baseline_spacing));
-                    tb.check(t("Center Marks"), &mut d.t.centre_mark);
-                    tb.color(t("Color"), &mut d.t.color);
-                    tb.group("Text");
-                    let font = &mut d.t.font;
-                    let find = &mut d.find;
-                    tb.row(t("Text Font"), |ui, l| {
-                        ComboBox::from_id_salt("dimension-type-font")
-                            .selected_text(font.as_str())
-                            .width(ui.available_width())
-                            .height(320.0)
-                            .show_ui(ui, |ui| {
-                                ui.add(TextEdit::singleline(find).hint_text(t("Search fonts")).desired_width(180.0));
-                                let find = find.trim().to_lowercase();
-                                for f in fonts.iter().filter(|f| f.to_lowercase().contains(&find)) {
-                                    ui.selectable_value(font, f.clone(), f);
-                                }
-                            })
-                            .response
-                            .labelled_by(l)
+                    let below = typeprops::foot_height(ui, d.error.is_some());
+                    typeprops::table(ui, "dimension-type", below, |tb| {
+                        tb.group("Graphics");
+                        choice(
+                            tb,
+                            t("Dimension String Type"),
+                            &mut d.t.string,
+                            &[
+                                (DimString::Continuous, msg!("Continuous")),
+                                (DimString::Baseline, msg!("Baseline")),
+                                (DimString::Ordinate, msg!("Ordinate")),
+                            ],
+                        );
+                        choice(
+                            tb,
+                            t("Tick Mark"),
+                            &mut d.t.tick,
+                            &[
+                                (Tick::Diagonal, msg!("Diagonal")),
+                                (Tick::Arrow, msg!("Arrow")),
+                                (Tick::OpenArrow, msg!("Open Arrow")),
+                                (Tick::Dot, msg!("Dot")),
+                                (Tick::None, msg!("None")),
+                            ],
+                        );
+                        tb.drag(t("Tick Mark Size"), mm(&mut d.t.tick_size));
+                        tb.drag(t("Line Weight"), DragValue::new(&mut d.t.line_pen.0).range(0..=aptbim_core::pen::MAX_PEN));
+                        tb.drag(t("Tick Mark Line Weight"), DragValue::new(&mut d.t.tick_pen.0).range(0..=aptbim_core::pen::MAX_PEN));
+                        tb.drag(t("Dimension Line Extension"), mm(&mut d.t.line_extension));
+                        choice(
+                            tb,
+                            t("Witness Line Control"),
+                            &mut d.t.witness,
+                            &[(Witness::GapToElement, msg!("Gap to Element")), (Witness::Fixed, msg!("Fixed to Dimension Line"))],
+                        );
+                        tb.drag(t("Witness Line Length"), mm(&mut d.t.witness_length));
+                        tb.drag(t("Witness Line Gap to Element"), mm(&mut d.t.witness_gap));
+                        tb.drag(t("Witness Line Extension"), mm(&mut d.t.witness_extension));
+                        tb.drag(t("Baseline Spacing"), mm(&mut d.t.baseline_spacing));
+                        tb.check(t("Center Marks"), &mut d.t.centre_mark);
+                        tb.color(t("Color"), &mut d.t.color);
+                        tb.group("Text");
+                        let font = &mut d.t.font;
+                        let find = &mut d.find;
+                        tb.row(t("Text Font"), |ui, l| {
+                            ComboBox::from_id_salt("dimension-type-font")
+                                .selected_text(font.as_str())
+                                .width(ui.available_width())
+                                .height(320.0)
+                                .show_ui(ui, |ui| {
+                                    ui.add(TextEdit::singleline(find).hint_text(t("Search fonts")).desired_width(180.0));
+                                    let find = find.trim().to_lowercase();
+                                    for f in fonts.iter().filter(|f| f.to_lowercase().contains(&find)) {
+                                        ui.selectable_value(font, f.clone(), f);
+                                    }
+                                })
+                                .response
+                                .labelled_by(l)
+                        });
+                        tb.drag(
+                            t("Text Size"),
+                            DragValue::new(&mut d.t.text_size).range(0.1..=100.0).speed(0.1).max_decimals(2).suffix(" mm"),
+                        );
+                        tb.drag(t("Text Offset"), mm(&mut d.t.text_offset));
+                        tb.check(t("Bold"), &mut d.t.bold);
+                        tb.check(t("Italic"), &mut d.t.italic);
+                        tb.check(t("Underline"), &mut d.t.underline);
+                        tb.drag(t("Width Factor"), DragValue::new(&mut d.t.width_factor).range(0.1..=10.0).speed(0.01).max_decimals(2));
+                        choice(
+                            tb,
+                            t("Text Background"),
+                            &mut d.t.background,
+                            &[(Background::Opaque, msg!("Opaque")), (Background::Transparent, msg!("Transparent"))],
+                        );
+                        choice(
+                            tb,
+                            t("Read Convention"),
+                            &mut d.t.read,
+                            &[(Read::UpThenLeft, msg!("Up, then Left")), (Read::UpThenRight, msg!("Up, then Right"))],
+                        );
+                        let mut units: Vec<(Option<Units>, &str)> = vec![(None, msg!("Use Project Settings"))];
+                        units.extend(Units::ALL.iter().map(|u| (Some(*u), u.label())));
+                        choice(tb, t("Units Format"), &mut d.t.units, &units);
+                        let mut places: Vec<(Option<u8>, String)> = vec![(None, t("As the units show").to_string())];
+                        places.extend((0..=6u8).map(|n| (Some(n), n.to_string())));
+                        let options: Vec<(Option<u8>, &str)> = places.iter().map(|(v, l)| (*v, l.as_str())).collect();
+                        choice(tb, t("Decimal Places"), &mut d.t.decimals, &options);
+                        tb.text(t("Radius Symbol"), &mut d.t.radius_symbol, "R");
+                        tb.text(t("Diameter Symbol"), &mut d.t.diameter_symbol, "Ø");
+                        tb.text(t("Equality Text"), &mut d.t.equality_text, "EQ");
                     });
-                    tb.drag(t("Text Size"), DragValue::new(&mut d.t.text_size).range(0.1..=100.0).speed(0.1).max_decimals(2).suffix(" mm"));
-                    tb.drag(t("Text Offset"), mm(&mut d.t.text_offset));
-                    tb.check(t("Bold"), &mut d.t.bold);
-                    tb.check(t("Italic"), &mut d.t.italic);
-                    tb.check(t("Underline"), &mut d.t.underline);
-                    tb.drag(t("Width Factor"), DragValue::new(&mut d.t.width_factor).range(0.1..=10.0).speed(0.01).max_decimals(2));
-                    choice(
-                        tb,
-                        t("Text Background"),
-                        &mut d.t.background,
-                        &[(Background::Opaque, msg!("Opaque")), (Background::Transparent, msg!("Transparent"))],
-                    );
-                    choice(
-                        tb,
-                        t("Read Convention"),
-                        &mut d.t.read,
-                        &[(Read::UpThenLeft, msg!("Up, then Left")), (Read::UpThenRight, msg!("Up, then Right"))],
-                    );
-                    let mut units: Vec<(Option<Units>, &str)> = vec![(None, msg!("Use Project Settings"))];
-                    units.extend(Units::ALL.iter().map(|u| (Some(*u), u.label())));
-                    choice(tb, t("Units Format"), &mut d.t.units, &units);
-                    let mut places: Vec<(Option<u8>, String)> = vec![(None, t("As the units show").to_string())];
-                    places.extend((0..=6u8).map(|n| (Some(n), n.to_string())));
-                    let options: Vec<(Option<u8>, &str)> = places.iter().map(|(v, l)| (*v, l.as_str())).collect();
-                    choice(tb, t("Decimal Places"), &mut d.t.decimals, &options);
-                    tb.text(t("Radius Symbol"), &mut d.t.radius_symbol, "R");
-                    tb.text(t("Diameter Symbol"), &mut d.t.diameter_symbol, "Ø");
-                    tb.text(t("Equality Text"), &mut d.t.equality_text, "EQ");
+                    typeprops::error(ui, d.error.as_deref());
                 });
-                typeprops::error(ui, d.error.as_deref());
+                crate::popup::footer(ui, |ui| {
+                    (ok, cancel, apply) = typeprops::foot(ui);
+                });
             });
-            crate::popup::footer(ui, |ui| {
-                (ok, cancel, apply) = typeprops::foot(ui);
-            });
-        });
         if cancel || r.should_close() {
             return;
         }
@@ -297,7 +301,7 @@ impl BimApp {
     pub(crate) fn dimension_text_window(&mut self, ctx: &Context) {
         let Some(mut d) = self.dimension_text_dialog.take() else { return };
         let (mut ok, mut cancel) = (false, false);
-        let r = Modal::new(UiId::new("dimension-text"), t("Dimension Text")).width(580.0).show(ctx, |ui| {
+        let r = Modal::new(UiId::unique("dimension-text"), t("Dimension Text")).width(580.0).show(ctx, |ui| {
             crate::popup::body(ui, |ui| {
                 if let Some(i) = d.segment {
                     ui.label(tf("Segment {}", &[&(i + 1).to_string()]));

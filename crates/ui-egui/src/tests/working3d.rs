@@ -65,6 +65,7 @@ fn in_perspective_the_wheel_zooms_toward_the_point_under_the_cursor() {
             unit: MouseWheelUnit::Point,
             delta: vec2(0.0, 120.0),
             phase: TouchPhase::Move,
+            source: egui::MouseWheelSource::Unknown,
             modifiers: Modifiers::NONE,
         });
         h.run();

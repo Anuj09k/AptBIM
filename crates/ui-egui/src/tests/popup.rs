@@ -2,7 +2,7 @@
 use super::*;
 
 fn area(h: &Harness<BimApp>, id: &str) -> egui::Rect {
-    h.ctx.memory(|m| m.area_rect(egui::Id::new(id))).expect("open dialog")
+    h.ctx.memory(|m| m.area_rect(egui::Id::unique(id))).expect("open dialog")
 }
 
 fn action(h: &Harness<BimApp>, id: &str, label: &str) -> egui::Rect {

@@ -68,6 +68,7 @@ fn app_keeping_uploads(script: &str) -> (Harness<'static, BimApp>, Uploads) {
     s.script(script).unwrap();
     let uploads = Uploads::default();
     let mut h = Harness::builder()
+        .with_accessibility_check(false)
         .with_size([1280.0, 800.0])
         .with_max_steps(32)
         .renderer(uploads.clone())

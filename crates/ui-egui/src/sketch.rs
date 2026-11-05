@@ -851,7 +851,7 @@ impl BimApp {
                 ui.selectable_value(&mut sk.region.1, Some(n.clone()), n);
             }
         });
-        c.response.widget_info(|| egui::WidgetInfo::labeled(egui::WidgetType::ComboBox, true, t("Line Style")));
+        c.response.widget_info(|| egui::WidgetInfo::labeled(egui::Role::ComboBox, true, t("Line Style")));
         c.response.labelled_by(l.id);
         // A style picked restyles the lines picked.
         if sk.region.1 != was {
@@ -954,7 +954,7 @@ impl BimApp {
             return;
         }
         let mut pick = None;
-        egui::Area::new(egui::Id::new("edge-palette")).order(egui::Order::Middle).fixed_pos(at).show(ctx, |ui| {
+        egui::Area::new(egui::Id::unique("edge-palette")).order(egui::Order::Middle).fixed_pos(at).show(ctx, |ui| {
             egui::Frame::popup(ui.style()).fill(crate::style::pal().surface).show(ui, |ui| {
                 ui.horizontal(|ui| {
                     for (icon, label, tool) in [

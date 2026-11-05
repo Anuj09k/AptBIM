@@ -208,7 +208,7 @@ impl BimApp {
     /// replaces this one.
     pub(crate) fn importing_box(&self, ctx: &Context) {
         let Some(job) = &self.revit_job else { return };
-        Modal::new(Id::new("revit-import"), t("Opening")).width(580.0).closable(false).show(ctx, |ui| {
+        Modal::new(Id::unique("revit-import"), t("Opening")).width(580.0).closable(false).show(ctx, |ui| {
             crate::popup::body(ui, |ui| {
                 ui.horizontal(|ui| {
                     ui.spinner();
@@ -228,7 +228,7 @@ impl BimApp {
         let (mut close, mut copy) = (false, false);
         // As tall as the window allows, so that a long list is read without scrolling where it can be.
         let height = (ctx.content_rect().height() * 0.65).max(200.0);
-        let r = Modal::new(Id::new("revit-report"), t("Revit import report")).width(560.0).show(ctx, |ui| {
+        let r = Modal::new(Id::unique("revit-report"), t("Revit import report")).width(560.0).show(ctx, |ui| {
             crate::popup::body(ui, |ui| {
                 ui.label(RichText::new(format!("{} · {}", report.file, report.schema)).color(pal().muted));
                 ui.add_space(6.0);

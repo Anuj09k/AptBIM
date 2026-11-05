@@ -6,7 +6,7 @@ use std::sync::Arc;
 use aptbim_core::geom::P2;
 use aptbim_core::groups::{DetailGroup, RepeatingDetail};
 use aptbim_core::model::{Element, Id, Model};
-use egui::{ComboBox, Ui, WidgetInfo, WidgetType};
+use egui::{ComboBox, Role, Ui, WidgetInfo};
 use serde_json::json;
 
 use crate::lang::{t, tf};
@@ -69,7 +69,7 @@ impl BimApp {
                 ui.selectable_value(&mut chosen, n.clone(), n);
             }
         });
-        c.response.widget_info(|| WidgetInfo::labeled(WidgetType::ComboBox, true, t("Group")));
+        c.response.widget_info(|| WidgetInfo::labeled(Role::ComboBox, true, t("Group")));
         c.response.labelled_by(l.id);
         self.group_type = chosen;
     }

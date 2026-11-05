@@ -6,8 +6,8 @@
 use aptbim_i18n::msg;
 use egui::text::{CCursor, CCursorRange};
 use egui::{
-    Align, Button, DragValue, Frame, Grid, Id as UiId, Key, Label, Layout, Margin, Rect, RichText, ScrollArea, Sense, Stroke, TextEdit, Ui,
-    UiBuilder, WidgetInfo, WidgetType, pos2, vec2,
+    Align, Button, DragValue, Frame, Grid, Id as UiId, Key, Label, Layout, Margin, Rect, RichText, Role, ScrollArea, Sense, Stroke,
+    TextEdit, Ui, UiBuilder, WidgetInfo, pos2, vec2,
 };
 
 use crate::lang::t;
@@ -63,7 +63,7 @@ pub(crate) fn head(
     rename: bool,
 ) -> Option<Head> {
     let mut asked = None;
-    let focus = UiId::new((salt, "naming-focus"));
+    let focus = UiId::unique((salt, "naming-focus"));
     let field = (WIDTH - SIDE - 90.0).max(160.0);
     Grid::new((salt, "head")).num_columns(3).spacing(vec2(10.0, 6.0)).min_col_width(60.0).show(ui, |ui| {
         ui.label(t("Family:"));
@@ -105,10 +105,10 @@ pub(crate) fn head(
         let done = match typed {
             Some(typed) => {
                 ui.horizontal(|ui| {
-                    let id = UiId::new((salt, "naming"));
+                    let id = UiId::unique((salt, "naming"));
                     let r = ui.add(TextEdit::singleline(typed).id(id).desired_width(field - 80.0));
                     let name = t(accessible).to_string();
-                    r.widget_info(|| WidgetInfo::labeled(WidgetType::TextEdit, true, name.clone()));
+                    r.widget_info(|| WidgetInfo::labeled(Role::TextInput, true, name.clone()));
                     // Open, the field has the keyboard and its name selected, to type over.
                     if ui.data_mut(|d| d.remove_temp::<bool>(focus)).is_some() {
                         r.request_focus();
@@ -172,7 +172,7 @@ pub(crate) fn table(ui: &mut Ui, salt: &str, below: f32, add: impl FnOnce(&mut T
             |ui| {
                 ui.spacing_mut().item_spacing.y = 0.0;
                 let top = ui.cursor().top();
-                let mut table = Table { ui, salt: UiId::new((salt, "table")), split, open: true, rows: Vec::new() };
+                let mut table = Table { ui, salt: UiId::unique((salt, "table")), split, open: true, rows: Vec::new() };
                 add(&mut table);
                 let Table { ui, rows, .. } = table;
                 // The column's rule runs down through the empty rows under the last.
@@ -262,7 +262,7 @@ impl Table<'_> {
             let r = ui.checkbox(on, "");
             let now = *on;
             // A checkbox without text names itself "" for screen readers: give it its row's name.
-            r.widget_info(|| WidgetInfo::selected(WidgetType::Checkbox, true, now, label));
+            r.widget_info(|| WidgetInfo::selected(Role::CheckBox, true, now, label));
             r.labelled_by(l)
         });
     }

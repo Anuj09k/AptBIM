@@ -12,9 +12,7 @@ use aptbim_core::engine::Session;
 use aptbim_core::lines::{LinePattern, LineStyle, SOLID, Segment};
 use aptbim_core::model::Model;
 use aptbim_core::pen::{MAX_PEN, Pen};
-use egui::{
-    Align, Button, ComboBox, Context, Grid, Id as UiId, Layout, RichText, ScrollArea, Sense, TextEdit, Ui, WidgetInfo, WidgetType, vec2,
-};
+use egui::{Align, Button, ComboBox, Context, Grid, Id as UiId, Layout, RichText, Role, ScrollArea, Sense, TextEdit, Ui, WidgetInfo, vec2};
 use serde_json::{Value, json};
 
 use crate::graphics::pen_name;
@@ -115,25 +113,26 @@ fn fresh(base: &str, taken: &[&str]) -> String {
 }
 
 /// A drop-down of the pens, named `name` for screen readers.
-fn pen_field(ui: &mut Ui, pen: &mut Pen, name: String) {
-    let c = ComboBox::from_id_salt(&name).selected_text(pen_name(*pen)).width(120.0).show_ui(ui, |ui| {
+/// The drop-down is keyed by the row (`row`), not by `name`: two styles may share a name while it is being typed.
+fn pen_field(ui: &mut Ui, pen: &mut Pen, row: usize, name: String) {
+    let c = ComboBox::from_id_salt(("line-style-pen", row)).selected_text(pen_name(*pen)).width(120.0).show_ui(ui, |ui| {
         for each in (0..=MAX_PEN).map(Pen) {
             ui.selectable_value(pen, each, pen_name(each));
         }
     });
-    c.response.widget_info(|| WidgetInfo::labeled(WidgetType::ComboBox, true, name.clone()));
+    c.response.widget_info(|| WidgetInfo::labeled(Role::ComboBox, true, name.clone()));
 }
 
 /// A text field named `name` for screen readers.
 fn name_field(ui: &mut Ui, text: &mut String, name: String) {
     let r = ui.add_sized(vec2(150.0, 20.0), TextEdit::singleline(text));
-    r.widget_info(|| WidgetInfo::labeled(WidgetType::TextEdit, true, name.clone()));
+    r.widget_info(|| WidgetInfo::labeled(Role::TextInput, true, name.clone()));
 }
 
 /// A small button named `name` for screen readers, showing `text`.
 fn named_button(ui: &mut Ui, text: &str, name: String) -> bool {
     let r = ui.add(Button::new(text).small());
-    r.widget_info(|| WidgetInfo::labeled(WidgetType::Button, true, name.clone()));
+    r.widget_info(|| WidgetInfo::labeled(Role::Button, true, name.clone()));
     r.clicked()
 }
 
@@ -159,10 +158,10 @@ fn styles_tab(ui: &mut Ui, d: &mut LineStylesDialog, below: f32) {
             for (i, s) in d.styles.iter_mut().enumerate() {
                 let who = s.name.clone();
                 name_field(ui, &mut s.name, tf("{}: Name", &[&who]));
-                pen_field(ui, &mut s.pen, tf("{}: Line Weight", &[&who]));
+                pen_field(ui, &mut s.pen, i, tf("{}: Line Weight", &[&who]));
                 // Red, green and blue only: the alpha slider of an RGBA button premultiplies them and darkens the colour.
                 let r = ui.color_edit_button_srgb(&mut s.color);
-                r.widget_info(|| WidgetInfo::labeled(WidgetType::ColorButton, true, tf("{}: Colour", &[&who])));
+                r.widget_info(|| WidgetInfo::labeled(Role::ColorWell, true, tf("{}: Colour", &[&who])));
                 let shown =
                     s.pattern.and_then(|p| names.iter().find(|(i, _)| *i == p)).map_or_else(|| t(SOLID).to_string(), |(_, n)| n.clone());
                 let label = tf("{}: Pattern", &[&who]);
@@ -172,7 +171,7 @@ fn styles_tab(ui: &mut Ui, d: &mut LineStylesDialog, below: f32) {
                         ui.selectable_value(&mut s.pattern, Some(*p), n);
                     }
                 });
-                c.response.widget_info(|| WidgetInfo::labeled(WidgetType::ComboBox, true, label.clone()));
+                c.response.widget_info(|| WidgetInfo::labeled(Role::ComboBox, true, label.clone()));
                 if named_button(ui, t("Delete"), tf("{}: Delete", &[&who])) {
                     delete = Some(i);
                 }
@@ -275,7 +274,7 @@ impl BimApp {
         let Some(mut d) = self.line_styles_dialog.take() else { return };
         let (mut ok, mut apply, mut cancel) = (false, false, false);
         let editing = d.creator.is_some();
-        let r = Modal::new(UiId::new("line-styles"), t("Line Styles")).width(640.0).show(ctx, |ui| {
+        let r = Modal::new(UiId::unique("line-styles"), t("Line Styles")).width(640.0).show(ctx, |ui| {
             crate::popup::body(ui, |ui| {
                 if editing {
                     ui.disable();
@@ -367,7 +366,7 @@ impl BimApp {
                 ui.selectable_value(&mut self.linework_style, n.clone(), t(n));
             }
         });
-        c.response.widget_info(|| WidgetInfo::labeled(WidgetType::ComboBox, true, t("Line Style")));
+        c.response.widget_info(|| WidgetInfo::labeled(Role::ComboBox, true, t("Line Style")));
         c.response.labelled_by(l.id);
     }
 
@@ -383,7 +382,7 @@ impl BimApp {
                 ui.selectable_value(&mut self.line_style, n.clone(), n);
             }
         });
-        c.response.widget_info(|| WidgetInfo::labeled(WidgetType::ComboBox, true, t("Line Style")));
+        c.response.widget_info(|| WidgetInfo::labeled(Role::ComboBox, true, t("Line Style")));
         c.response.labelled_by(l.id);
         self.insulation_options(ui);
         if self.shape().chains() {

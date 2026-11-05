@@ -11,7 +11,7 @@ filled_region {"sketch": [[[1000,4000],[2000,4000]],[[2000,4000],[2000,5000]],[[
 
 /// The dialog `id` is open, where on the screen.
 fn area(h: &Harness<BimApp>, id: &str) -> egui::Rect {
-    h.ctx.memory(|m| m.area_rect(egui::Id::new(id))).unwrap_or_else(|| panic!("{id} is not open"))
+    h.ctx.memory(|m| m.area_rect(egui::Id::unique(id))).unwrap_or_else(|| panic!("{id} is not open"))
 }
 
 #[test]

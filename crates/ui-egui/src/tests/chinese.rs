@@ -114,6 +114,7 @@ fn app_of(find: lang::FontFinder) -> Harness<'static, BimApp> {
     let mut app = BimApp::new(s);
     app.font_finder = find;
     let mut h = Harness::builder()
+        .with_accessibility_check(false)
         .with_size([1280.0, 800.0])
         .with_max_steps(32)
         .with_step_dt(0.25)

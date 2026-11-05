@@ -76,7 +76,7 @@ impl BimApp {
         let plan = matches!(self.sheet, crate::Sheet::Plan(_));
         let Some(b) = self.cad_box.as_mut() else { return };
         let (mut ok, mut close) = (false, false);
-        let r = Modal::new(UiId::new("import-cad"), t(if b.link { "Link CAD" } else { "Import CAD" })).width(440.0).show(ctx, |ui| {
+        let r = Modal::new(UiId::unique("import-cad"), t(if b.link { "Link CAD" } else { "Import CAD" })).width(440.0).show(ctx, |ui| {
             crate::popup::body(ui, |ui| {
                 ui.add_space(6.0);
                 ui.label(b.path.file_name().map(|n| n.to_string_lossy().into_owned()).unwrap_or_default());

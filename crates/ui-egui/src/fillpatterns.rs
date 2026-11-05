@@ -19,8 +19,8 @@ use aptbim_core::geom::P2;
 use aptbim_core::model::{Element, Id, Model};
 use aptbim_core::render::{PAPER, Rgb};
 use egui::{
-    Align, Button, Color32, ComboBox, Context, DragValue, Grid, Id as UiId, Layout, RichText, ScrollArea, Sense, Shape, Stroke, TextEdit,
-    Ui, WidgetInfo, WidgetType, pos2, vec2,
+    Align, Button, Color32, ComboBox, Context, DragValue, Grid, Id as UiId, Layout, RichText, Role, ScrollArea, Sense, Shape, Stroke,
+    TextEdit, Ui, WidgetInfo, pos2, vec2,
 };
 use serde_json::{Value, json};
 
@@ -292,27 +292,27 @@ fn fresh(base: &str, taken: &[&str]) -> String {
 /// A text field named `name` for screen readers.
 fn name_field(ui: &mut Ui, text: &mut String, name: String) {
     let r = ui.add_sized(vec2(150.0, 20.0), TextEdit::singleline(text));
-    r.widget_info(|| WidgetInfo::labeled(WidgetType::TextEdit, true, name.clone()));
+    r.widget_info(|| WidgetInfo::labeled(Role::TextInput, true, name.clone()));
 }
 
 /// A button of a row of the list, `width` wide, named `name` for screen readers, showing `text`, saying `tip`.
 fn row_button(ui: &mut Ui, text: &str, name: String, tip: &str, width: f32) -> bool {
     let r = ui.add(Button::new(text).small().min_size(vec2(width, 0.0)));
-    r.widget_info(|| WidgetInfo::labeled(WidgetType::Button, true, name.clone()));
+    r.widget_info(|| WidgetInfo::labeled(Role::Button, true, name.clone()));
     r.on_hover_text(tip).clicked()
 }
 
 /// A small button named `name` for screen readers, showing `text`.
 fn named_button(ui: &mut Ui, text: &str, name: String) -> bool {
     let r = ui.add(Button::new(text).small());
-    r.widget_info(|| WidgetInfo::labeled(WidgetType::Button, true, name.clone()));
+    r.widget_info(|| WidgetInfo::labeled(Role::Button, true, name.clone()));
     r.clicked()
 }
 
 /// A colour button named `name`: red, green and blue only, since the alpha slider of an RGBA button premultiplies them.
 fn colour_field(ui: &mut Ui, rgb: &mut [u8; 3], name: String) {
     let r = ui.color_edit_button_srgb(rgb);
-    r.widget_info(|| WidgetInfo::labeled(WidgetType::ColorButton, true, name.clone()));
+    r.widget_info(|| WidgetInfo::labeled(Role::ColorWell, true, name.clone()));
 }
 
 /// A swatch of `p`, `width` x 22 px, in `colour`: a drafting pattern at 5 px to its mm, a model one at a tenth of a px. A
@@ -361,7 +361,7 @@ fn pattern_pick(ui: &mut Ui, row: &mut Option<usize>, names: &[(usize, String)],
             ui.selectable_value(row, Some(*p), n);
         }
     });
-    c.response.widget_info(|| WidgetInfo::labeled(WidgetType::ComboBox, true, label.clone()));
+    c.response.widget_info(|| WidgetInfo::labeled(Role::ComboBox, true, label.clone()));
 }
 
 /// The lines of pattern `d.editing`, one a row: its angle, origin and spacing; Delete; Add Line and Done, and a gap under them.
@@ -393,7 +393,7 @@ fn families(ui: &mut Ui, d: &mut FillPatternsDialog, room: f32) {
                 ] {
                     let label = name(what);
                     let r = ui.add(DragValue::new(v).range(range).speed(0.1).max_decimals(3));
-                    r.widget_info(|| WidgetInfo::labeled(WidgetType::DragValue, true, label.clone()));
+                    r.widget_info(|| WidgetInfo::labeled(Role::SpinButton, true, label.clone()));
                 }
                 if named_button(ui, t("Delete"), name("Delete")) {
                     delete = Some(k);
@@ -547,7 +547,7 @@ fn patterns_tab(ui: &mut Ui, d: &mut FillPatternsDialog, below: f32) -> Option<F
                     ui.selectable_value(&mut r.pattern.target, Target::Drafting, t("Drafting"));
                     ui.selectable_value(&mut r.pattern.target, Target::Model, t("Model"));
                 });
-                c.response.widget_info(|| WidgetInfo::labeled(WidgetType::ComboBox, true, label.clone()));
+                c.response.widget_info(|| WidgetInfo::labeled(Role::ComboBox, true, label.clone()));
                 // One made of lines is rescaled: drafting, it is the drawing on paper at its view's scale.
                 if r.pattern.target != target {
                     let to = r.pattern.target;
@@ -561,7 +561,7 @@ fn patterns_tab(ui: &mut Ui, d: &mut FillPatternsDialog, below: f32) -> Option<F
                 };
                 // The swatch says what it is to screen readers, and in its tip.
                 let sample = ui.scope(|ui| swatch(ui, Some(&r.pattern), 110.0, ink, None)).response;
-                sample.widget_info(|| WidgetInfo::labeled(WidgetType::Image, true, tip.clone()));
+                sample.widget_info(|| WidgetInfo::labeled(Role::Image, true, tip.clone()));
                 sample.on_hover_text(tip);
                 // Whole lines are edited line by line; one made of lines drawn is made again from lines picked; another (dashed,
                 // imported or a starter's) is kept as it came.
@@ -703,7 +703,7 @@ impl BimApp {
         let (mut ok, mut apply, mut cancel, mut ask, mut step) = (false, false, false, None, None);
         let width = if editing && d.tab == 0 && d.made.is_none() { typeprops::WIDTH } else { WIDTH };
         let units = self.session.model.units;
-        let r = Modal::new(UiId::new("fill-patterns"), t(if editing { "Type Properties" } else { msg!("Fill Patterns") }))
+        let r = Modal::new(UiId::unique("fill-patterns"), t(if editing { "Type Properties" } else { msg!("Fill Patterns") }))
             .width(width)
             .show(ctx, |ui| {
                 crate::popup::body(ui, |ui| {
@@ -949,7 +949,7 @@ fn made_preview(ui: &mut Ui, made: &Made, of: Option<&str>, units: aptbim_core::
     ui.label(tf("{} line families, repeating a tile {} × {} (outlined).", &[&families, &w, &h]));
     ui.add_space(4.0);
     let (rect, r) = ui.allocate_exact_size(vec2(ui.available_width(), MADE_HEIGHT), Sense::hover());
-    r.widget_info(|| WidgetInfo::labeled(WidgetType::Image, true, t("Pattern preview")));
+    r.widget_info(|| WidgetInfo::labeled(Role::Image, true, t("Pattern preview")));
     let (paper, ink) = (crate::canvas::color(PAPER), crate::canvas::color(Rgb(0, 0, 0)));
     let painter = ui.painter_at(rect);
     painter.rect_filled(rect, 0.0, paper);

@@ -13,8 +13,8 @@ use std::collections::{BTreeMap, BTreeSet};
 use std::f32::consts::FRAC_PI_2;
 
 use egui::{
-    Align, Align2, Context, CornerRadius, FontId, Frame, Id as UiId, Layout, Order, Panel, Popup, Pos2, Rect, Sense, Stroke, StrokeKind,
-    Ui, UiBuilder, Vec2, WidgetInfo, WidgetType, pos2, vec2,
+    Align, Align2, Context, CornerRadius, FontId, Frame, Id as UiId, Layout, Order, Panel, Popup, Pos2, Rect, Role, Sense, Stroke,
+    StrokeKind, Ui, UiBuilder, Vec2, WidgetInfo, pos2, vec2,
 };
 use serde_json::{Value, json};
 
@@ -435,7 +435,11 @@ impl BimApp {
                 Side::Right => Panel::right("dock-right").default_size(width + RIGHT_EXTRA),
                 Side::Bottom => Panel::bottom("dock-bottom").default_size(240.0),
             };
-            panel.frame(frame).show_separator_line(false).resizable(true).min_size(140.0).show(ui, |ui| self.dock_side(ui, side));
+            let shown =
+                panel.frame(frame).show_separator_line(false).resizable(true).min_size(140.0).show(ui, |ui| self.dock_side(ui, side));
+            if side == Side::Left {
+                self.left_dock = Some(shown.response.rect);
+            }
         }
     }
 
@@ -464,7 +468,7 @@ impl BimApp {
                 continue;
             }
             // Named for the palette it holds, so a stack keeps its size while the others come and go.
-            let id = UiId::new(("dock", side, stack.tabs[0]));
+            let id = UiId::unique(("dock", side, stack.tabs[0]));
             // An even share of what's left, but of the last two the first takes a little more (Properties over the
             // Project Browser, as they start).
             let share = if n - i == 2 { 0.55 } else { 1.0 / (n - i) as f32 };
@@ -489,7 +493,7 @@ impl BimApp {
             let Some(first) = f.stack.tabs.first().copied() else { continue };
             let frame = Frame::window(&ctx.global_style()).fill(pal().panel).inner_margin(0.0);
             let shown = egui::Window::new(t(first.name()))
-                .id(UiId::new(("palette-window", first)))
+                .id(UiId::unique(("palette-window", first)))
                 .title_bar(false)
                 .resizable(true)
                 .current_pos(f.at)
@@ -520,7 +524,7 @@ impl BimApp {
         let lone = stack.tabs.len() == 1;
         if lone {
             let title = self.palette_title(shown);
-            back.widget_info(|| WidgetInfo::labeled(WidgetType::Label, true, &title));
+            back.widget_info(|| WidgetInfo::labeled(Role::Label, true, &title));
             let at = rect.left_center() + vec2(12.0, 0.0);
             ui.painter().text(at, Align2::LEFT_CENTER, title, crate::style::semibold(13.0), pal().text);
         }
@@ -654,7 +658,7 @@ impl BimApp {
             let frame = Frame::window(&ctx.global_style()).fill(pal().surface).inner_margin(0.0);
             let name = self.view_name(f.sheet);
             let shown = egui::Window::new(&name)
-                .id(UiId::new(("view-window", f.sheet)))
+                .id(UiId::unique(("view-window", f.sheet)))
                 .title_bar(false)
                 .resizable(true)
                 .current_pos(f.at)
@@ -665,7 +669,7 @@ impl BimApp {
                     ui.set_min_size(ui.available_size());
                     let (rect, back) = ui.allocate_exact_size(vec2(ui.available_width(), 26.0), Sense::click_and_drag());
                     let title = self.view_title(f.sheet);
-                    back.widget_info(|| WidgetInfo::labeled(WidgetType::Label, true, &title));
+                    back.widget_info(|| WidgetInfo::labeled(Role::Label, true, &title));
                     let active = f.sheet == self.sheet;
                     let p = ui.painter();
                     p.rect_filled(rect, CornerRadius { nw: 6, ne: 6, sw: 0, se: 0 }, if active { pal().select_fill } else { pal().bar });
@@ -729,7 +733,7 @@ impl BimApp {
             });
             self.passive = false;
             (self.sheet, self.canvas, self.view_rect) = (active, canvas, view_rect);
-            if ui.interact(rect, ui.id().with("activate"), Sense::click()).clicked() {
+            if ui.interact(rect, ui.scope_id().with("activate"), Sense::click()).clicked() {
                 self.open_sheet(sheet);
             }
         });
@@ -790,7 +794,7 @@ impl BimApp {
         let at = self.pointer;
         let landings = self.landings(drag);
         let hit = landings.iter().find(|(land, r, _)| reach(*land, *r).contains(at)).map(|(l, _, _)| *l);
-        let p = ctx.layer_painter(egui::LayerId::new(Order::Tooltip, UiId::new("dock-drop")));
+        let p = ctx.layer_painter(egui::LayerId::new(Order::Tooltip, UiId::unique("dock-drop")));
         let accent = pal().accent;
         for (land, r, label) in &landings {
             let on = hit == Some(*land);
@@ -867,7 +871,7 @@ fn palette_tab(ui: &mut Ui, label: &str, active: bool) -> egui::Response {
     let font = FontId::proportional(12.5);
     let size = ui.painter().layout_no_wrap(label.to_string(), font.clone(), pal().text).size();
     let (rect, r) = ui.allocate_exact_size(vec2(size.x + 18.0, 22.0), Sense::click_and_drag());
-    r.widget_info(|| WidgetInfo::selected(WidgetType::Button, true, active, label));
+    r.widget_info(|| WidgetInfo::selected(Role::Button, true, active, label));
     let fill = match (active, r.hovered()) {
         (true, _) => pal().panel,
         (false, true) => pal().hover_fill,

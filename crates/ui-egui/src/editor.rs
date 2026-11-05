@@ -17,8 +17,8 @@ use aptbim_core::family::{
 use aptbim_core::model::{Model, Operation};
 use aptbim_core::view3d::{AZIMUTH, ELEVATION, Scene};
 use egui::{
-    Align, CollapsingHeader, Color32, ColorImage, ComboBox, Context, Grid, Id as UiId, Layout, PointerButton, Rect, RichText, ScrollArea,
-    Sense, Stroke, StrokeKind, TextEdit, TextureHandle, TextureOptions, Ui, WidgetInfo, WidgetType, pos2, vec2,
+    Align, CollapsingHeader, Color32, ColorImage, ComboBox, Context, Grid, Id as UiId, Layout, PointerButton, Rect, RichText, Role,
+    ScrollArea, Sense, Stroke, StrokeKind, TextEdit, TextureHandle, TextureOptions, Ui, WidgetInfo, pos2, vec2,
 };
 use serde_json::{Value, json};
 
@@ -599,7 +599,7 @@ pub(crate) fn category_label(c: Category) -> String {
 /// column is as wide as its cell was a frame before, and a field that only wants to be wider would stay clamped to it.
 fn field(ui: &mut Ui, label: String, text: &mut String, width: f32) {
     let r = ui.add_sized([width, ui.spacing().interact_size.y], TextEdit::singleline(text).id_salt(&label));
-    r.widget_info(|| WidgetInfo::labeled(WidgetType::TextEdit, true, label.as_str()));
+    r.widget_info(|| WidgetInfo::labeled(Role::TextInput, true, label.as_str()));
 }
 
 /// A drop-down of `options` for `current`, named `label`: what was picked, if it was.
@@ -613,7 +613,7 @@ fn pick(ui: &mut Ui, label: String, current: &str, options: &[String]) -> Option
             }
         }
     });
-    c.response.widget_info(|| WidgetInfo::labeled(WidgetType::ComboBox, true, label.as_str()));
+    c.response.widget_info(|| WidgetInfo::labeled(Role::ComboBox, true, label.as_str()));
     picked
 }
 
@@ -638,12 +638,12 @@ fn parameters_tab(ed: &mut FamilyEditor, ui: &mut Ui, materials: &[String]) {
                 }
             });
             let r = ui.checkbox(&mut p.instance, "");
-            r.widget_info(|| WidgetInfo::selected(WidgetType::Checkbox, true, p.instance, format!("{} {n}", t("Parameter Instance"))));
+            r.widget_info(|| WidgetInfo::selected(Role::CheckBox, true, p.instance, format!("{} {n}", t("Parameter Instance"))));
             match p.kind {
                 Holds::YesNo => {
                     let mut on = p.value == "1";
                     let r = ui.checkbox(&mut on, "");
-                    r.widget_info(|| WidgetInfo::selected(WidgetType::Checkbox, true, on, format!("{} {n}", t("Parameter Value"))));
+                    r.widget_info(|| WidgetInfo::selected(Role::CheckBox, true, on, format!("{} {n}", t("Parameter Value"))));
                     p.value = (if on { "1" } else { "0" }).into();
                 }
                 Holds::Material => {
@@ -714,7 +714,7 @@ fn types_tab(ed: &mut FamilyEditor, ui: &mut Ui, materials: &[String]) {
                     // Blank is the family's; a tick or a clear is the type's own.
                     let mut on = text == "1";
                     let r = ui.checkbox(&mut on, "");
-                    r.widget_info(|| WidgetInfo::selected(WidgetType::Checkbox, true, on, label.as_str()));
+                    r.widget_info(|| WidgetInfo::selected(Role::CheckBox, true, on, label.as_str()));
                     if r.changed() {
                         *text = (if on { "1" } else { "0" }).into();
                     }
@@ -766,7 +766,7 @@ fn form_fields(ui: &mut Ui, f: &mut FormText, i: usize, options: &[String]) {
             if f.shape == Shape::Profile {
                 ui.label(t("Corners"));
                 let r = ui.add(TextEdit::multiline(&mut f.profile).desired_rows(4).desired_width(300.0).id_salt(("fe-profile", i)));
-                r.widget_info(|| WidgetInfo::labeled(WidgetType::TextEdit, true, format!("{} {n}", t("Form Corners"))));
+                r.widget_info(|| WidgetInfo::labeled(Role::TextInput, true, format!("{} {n}", t("Form Corners"))));
             } else {
                 ui.label(t("Circle centre and radius"));
                 ui.horizontal(|ui| {
@@ -807,7 +807,7 @@ fn form_fields(ui: &mut Ui, f: &mut FormText, i: usize, options: &[String]) {
         ui.end_row();
         ui.label(t("Void"));
         let r = ui.checkbox(&mut f.void, t("cuts the forms listed above it"));
-        r.widget_info(|| WidgetInfo::selected(WidgetType::Checkbox, true, f.void, format!("{} {n}", t("Form Void"))));
+        r.widget_info(|| WidgetInfo::selected(Role::CheckBox, true, f.void, format!("{} {n}", t("Form Void"))));
         ui.end_row();
     });
 }
@@ -881,7 +881,7 @@ fn symbols_tab(ed: &mut FamilyEditor, ui: &mut Ui) {
                 if y.part == Part::Line {
                     ui.label(t("Points"));
                     let r = ui.add(TextEdit::multiline(&mut y.line).desired_rows(3).desired_width(300.0).id_salt(("fe-symbol-line", i)));
-                    r.widget_info(|| WidgetInfo::labeled(WidgetType::TextEdit, true, format!("{} {n}", t("Symbol Points"))));
+                    r.widget_info(|| WidgetInfo::labeled(Role::TextInput, true, format!("{} {n}", t("Symbol Points"))));
                     ui.end_row();
                 } else {
                     ui.label(t(if y.part == Part::Text { msg!("Middle of the text") } else { msg!("Centre") }));
@@ -979,7 +979,7 @@ impl BimApp {
         ed.refresh(ctx, &base);
         let materials: Vec<String> = base.materials.keys().cloned().collect();
         let (mut apply, mut ok, mut cancel, mut save, mut favorite, mut load) = (false, false, false, false, false, false);
-        let r = Modal::new(UiId::new("family-editor"), t("Family Editor")).width(1000.0).show(ctx, |ui| {
+        let r = Modal::new(UiId::unique("family-editor"), t("Family Editor")).width(1000.0).show(ctx, |ui| {
             crate::popup::body(ui, |ui| {
                 ui.add_space(4.0);
                 Grid::new("fe-head").num_columns(4).spacing(vec2(12.0, 6.0)).show(ui, |ui| {

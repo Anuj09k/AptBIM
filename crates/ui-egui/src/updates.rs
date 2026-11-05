@@ -69,7 +69,7 @@ impl BimApp {
     pub(crate) fn installing_box(&self, ctx: &Context) {
         let Some(State::Installing { release, .. }) = self.updates.as_ref().map(|u| u.state()) else { return };
         let text = tf("Installing AptBIM {}…", &[&release.version.to_string()]);
-        Modal::new(Id::new("installing"), t("Updates")).width(580.0).closable(false).show(ctx, |ui| {
+        Modal::new(Id::unique("installing"), t("Updates")).width(580.0).closable(false).show(ctx, |ui| {
             crate::popup::body(ui, |ui| {
                 ui.horizontal(|ui| {
                     ui.spinner();

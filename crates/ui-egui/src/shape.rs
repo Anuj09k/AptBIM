@@ -8,7 +8,7 @@ use serde_json::{Value, json};
 
 use aptbim_core::geom;
 use aptbim_core::view3d::{P3, shape_handles};
-use egui::{Align, Align2, FontId, Key, Painter, Pos2, Rect, Sense, Stroke, TextEdit, Ui, WidgetInfo, WidgetType, vec2};
+use egui::{Align2, FontId, Key, Painter, Pos2, Rect, Role, Sense, Stroke, TextEdit, Ui, WidgetInfo, vec2};
 
 use crate::lang::{t, tf};
 use crate::style::pal;
@@ -338,11 +338,11 @@ impl BimApp {
     /// in (as the Options Bar's Elevation reads it); Enter sets it, Esc or leaving it unchanged keeps it. Where it is.
     pub(crate) fn shape_label(&mut self, ui: &mut Ui, anchor: Pos2, q: P2, ends: &[P2], text: &str) -> Rect {
         let at = label_rect(ui, anchor, text);
-        let field = ui.id().with(("shape height", (q.0.to_bits(), q.1.to_bits())));
+        let field = ui.scope_id().with(("shape height", (q.0.to_bits(), q.1.to_bits())));
         let mut done = None;
         match &mut self.shape_label_edit {
             Some((p, typed)) if p.dist(q) <= TOL => {
-                let edit = ui.put(at.expand2(vec2(18.0, 2.0)), TextEdit::singleline(typed).id(field).horizontal_align(Align::Center));
+                let edit = ui.put(at.expand2(vec2(18.0, 2.0)), TextEdit::singleline(typed).id(field).align(Align2::CENTER_TOP));
                 if edit.lost_focus() {
                     done = Some(ui.input(|i| !i.key_pressed(Key::Escape)).then(|| typed.clone()));
                 } else if !edit.has_focus() {
@@ -351,7 +351,7 @@ impl BimApp {
             }
             _ => {
                 let r = ui.interact(at, field, Sense::click());
-                r.widget_info(|| WidgetInfo::labeled(WidgetType::Button, true, tf("Point height {}", &[text])));
+                r.widget_info(|| WidgetInfo::labeled(Role::Button, true, tf("Point height {}", &[text])));
                 let p = ui.painter();
                 p.rect_filled(at, 2.0, if r.hovered() { pal().accent } else { pal().surface.gamma_multiply(0.85) });
                 p.text(

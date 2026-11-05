@@ -109,7 +109,7 @@ impl BimApp {
                 }
             }
         }
-        let r = Modal::new(UiId::new("favorites"), t("Favorites")).width(540.0).show(ctx, |ui| {
+        let r = Modal::new(UiId::unique("favorites"), t("Favorites")).width(540.0).show(ctx, |ui| {
             crate::popup::body(ui, |ui| {
                 ui.label(RichText::new(t("Kept for every project: add one to this project with a click.")).color(pal().muted));
                 ui.add_space(6.0);

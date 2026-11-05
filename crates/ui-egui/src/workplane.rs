@@ -193,7 +193,7 @@ impl BimApp {
         let m = std::sync::Arc::clone(&self.session.model);
         let Some(d) = self.work_plane.as_mut().filter(|d| d.picking.is_none()) else { return };
         let (mut ok, mut close, mut pick) = (false, false, None);
-        let r = Modal::new(UiId::new("work-plane")).show(ctx, |ui| {
+        let r = Modal::new(UiId::unique("work-plane")).show(ctx, |ui| {
             ui.set_width(420.0);
             ui.label(RichText::new(t("Work Plane")).heading());
             ui.label(t("What the 3D view sketches on."));

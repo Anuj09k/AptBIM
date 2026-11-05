@@ -3,7 +3,7 @@
 
 use aptbim_core::model::Model;
 use aptbim_core::standards::TechnicalStandard;
-use egui::{Align, ComboBox, Context, Grid, Id as UiId, Layout, RichText, ScrollArea, Ui, WidgetInfo, WidgetType};
+use egui::{Align, ComboBox, Context, Grid, Id as UiId, Layout, RichText, Role, ScrollArea, Ui, WidgetInfo};
 
 use crate::popup::{self, Modal};
 use serde_json::json;
@@ -268,7 +268,7 @@ impl BimApp {
         let Some(mut d) = self.standards_dialog.take() else { return };
         let (mut ok, mut apply, mut cancel) = (false, false, false);
 
-        let r = Modal::new(UiId::new("technical-standards-dialog"), t("Technical Standards")).width(740.0).show(ctx, |ui| {
+        let r = Modal::new(UiId::unique("technical-standards-dialog"), t("Technical Standards")).width(740.0).show(ctx, |ui| {
           popup::body(ui, |ui| {
             ui.add_space(4.0);
             ui.label(t(
@@ -290,7 +290,7 @@ impl BimApp {
                             }
                         }
                     });
-                c.response.widget_info(|| WidgetInfo::labeled(WidgetType::ComboBox, true, t("Standard Preset")));
+                c.response.widget_info(|| WidgetInfo::labeled(Role::ComboBox, true, t("Standard Preset")));
             });
 
             ui.add_space(8.0);

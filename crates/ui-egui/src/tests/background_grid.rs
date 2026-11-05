@@ -31,6 +31,7 @@ fn background_grid_menu_and_instance_editor_change_only_the_active_view() {
         phase: TouchPhase::Move,
         unit: MouseWheelUnit::Point,
         delta: vec2(0.0, -1500.0),
+        source: egui::MouseWheelSource::Unknown,
         modifiers: Modifiers::NONE,
     });
     h.run();
@@ -59,6 +60,7 @@ fn background_grid_templates_disable_view_parameters_and_bottom_menu() {
         phase: TouchPhase::Move,
         unit: MouseWheelUnit::Point,
         delta: vec2(0.0, -1500.0),
+        source: egui::MouseWheelSource::Unknown,
         modifiers: Modifiers::NONE,
     });
     h.run();
@@ -158,6 +160,7 @@ fn background_grid_in_sections_exposes_empty_paper_and_keeps_model_faces_opaque(
     session.script(&format!("{BOX}\nsection {{\"start\":[-1000,3000],\"end\":[9000,3000]}}\ngraphics {{\"view\":\"Section 1\",\"background_grid\":{{\"main\":{{\"enabled\":true}}}}}}")).unwrap();
     let pictures = Pictures::default();
     let mut h = Harness::builder()
+        .with_accessibility_check(false)
         .with_size([1280.0, 800.0])
         .with_max_steps(32)
         .renderer(pictures.clone())

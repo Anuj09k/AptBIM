@@ -22,8 +22,7 @@ use aptbim_core::styles::ObjectStyle;
 use aptbim_core::units::Units;
 use egui::{
     Align, Align2, Button, Checkbox, Color32, ComboBox, Context, DragValue, FontId, Grid, Id as UiId, Layout, Painter, Rect, RichText,
-    ScrollArea, Sense, Shape, Slider, Stroke, StrokeKind, TextEdit, TextStyle, TextWrapMode, Ui, UiBuilder, WidgetInfo, WidgetType, pos2,
-    vec2,
+    Role, ScrollArea, Sense, Shape, Slider, Stroke, StrokeKind, TextEdit, TextStyle, TextWrapMode, Ui, UiBuilder, WidgetInfo, pos2, vec2,
 };
 use serde_json::{Value, json};
 
@@ -323,7 +322,7 @@ impl BimApp {
         let (mut ok, mut cancel, mut apply, mut styles) = (false, false, false, false);
         // A cell's dialog over it has its own OK and Cancel.
         let over = d.cell.is_some();
-        let r = Modal::new(UiId::new("visibility-graphics"), tf("Visibility/Graphics Overrides for {}", &[&d.title]))
+        let r = Modal::new(UiId::unique("visibility-graphics"), tf("Visibility/Graphics Overrides for {}", &[&d.title]))
             .width(800.0)
             .min_height(500.0)
             .closable(!over)
@@ -433,7 +432,7 @@ impl BimApp {
         let model = Arc::clone(&self.session.model);
         let units = model.units;
         let (mut close, mut run, mut picked) = (false, None::<Value>, None::<String>);
-        let r = Modal::new(UiId::new("view-filters"), t("Filters")).width(660.0).show(ctx, |ui| {
+        let r = Modal::new(UiId::unique("view-filters"), t("Filters")).width(660.0).show(ctx, |ui| {
             crate::popup::body(ui, |ui| {
                 ui.add_space(6.0);
                 ui.horizontal(|ui| {
@@ -592,7 +591,7 @@ impl BimApp {
                 let note = self.grid_controlled(id);
                 ui.add_enabled(note.is_none(), egui::Label::new(t("Background Grids")));
                 let r = ui.add_enabled_ui(note.is_none(), |ui| crate::properties::wide_button(ui, t("Edit…"))).inner;
-                r.widget_info(|| WidgetInfo::labeled(WidgetType::Button, note.is_none(), t("Edit Background Grids")));
+                r.widget_info(|| WidgetInfo::labeled(Role::Button, note.is_none(), t("Edit Background Grids")));
                 if r.clicked() {
                     self.open_background_grid();
                 }
@@ -606,7 +605,7 @@ impl BimApp {
             let now = own.template.clone().unwrap_or_else(|| t("<None>").to_string());
             let r = crate::properties::wide_button(ui, &now);
             r.widget_info(|| {
-                let mut info = WidgetInfo::labeled(WidgetType::Button, true, t("View Template"));
+                let mut info = WidgetInfo::labeled(Role::Button, true, t("View Template"));
                 info.current_text_value = Some(now.clone());
                 info
             });
@@ -614,7 +613,7 @@ impl BimApp {
             crate::properties::end_row(ui);
             ui.label(t("Visibility/Graphics Overrides"));
             let r = crate::properties::wide_button(ui, t("Edit…"));
-            r.widget_info(|| WidgetInfo::labeled(WidgetType::Button, true, tf("Edit {}", &[t("Visibility/Graphics Overrides")])));
+            r.widget_info(|| WidgetInfo::labeled(Role::Button, true, tf("Edit {}", &[t("Visibility/Graphics Overrides")])));
             edit |= r.clicked();
             crate::properties::end_row(ui);
         });
@@ -852,10 +851,10 @@ fn table(ui: &mut Ui, d: &mut VgDialog, model: &Model, rows: &[Row], cols: &Colu
             // A small triangle, pointing right while folded, turning 90° down as it opens.
             if let (Some(open), Pick::Category(cat)) = (row.fold, &row.pick) {
                 let arrow = c.add(Button::new("").frame(false).min_size(vec2(14.0, 14.0)));
-                let openness = c.ctx().animate_bool(c.id().with(("folding", cat)), open);
+                let openness = c.ctx().animate_bool(c.scope_id().with(("folding", cat)), open);
                 fold_arrow(c.painter(), arrow.rect.center(), openness);
                 let what = if open { t("Fold") } else { t("Unfold") };
-                arrow.widget_info(|| WidgetInfo::labeled(WidgetType::Button, true, format!("{}: {what}", row.name)));
+                arrow.widget_info(|| WidgetInfo::labeled(Role::Button, true, format!("{}: {what}", row.name)));
                 if arrow.clicked() && !d.unfolded.remove(cat) {
                     d.unfolded.insert(cat.clone());
                 }
@@ -873,7 +872,7 @@ fn table(ui: &mut Ui, d: &mut VgDialog, model: &Model, rows: &[Row], cols: &Colu
                 let name = format!("{}: {}", row.name, t(k.name()));
                 let mut c = child(ui, at.shrink(2.0), Layout::centered_and_justified(egui::Direction::LeftToRight));
                 let b = c.add_enabled(enabled, Button::new(if picked { t("Override…") } else { "" }).frame(picked));
-                b.widget_info(|| WidgetInfo::labeled(WidgetType::Button, enabled, name.clone()));
+                b.widget_info(|| WidgetInfo::labeled(Role::Button, enabled, name.clone()));
                 if b.clicked() {
                     d.pick = Some(row.pick.clone());
                     d.cell = Some(CellEdit {
@@ -895,7 +894,7 @@ fn table(ui: &mut Ui, d: &mut VgDialog, model: &Model, rows: &[Row], cols: &Colu
             let mut c = child(ui, cell(x, HALFTONE_W), Layout::centered_and_justified(egui::Direction::LeftToRight));
             let name = format!("{}: {}", row.name, t("Halftone"));
             let h = c.add_enabled(enabled, Checkbox::without_text(&mut half));
-            h.widget_info(|| WidgetInfo::selected(WidgetType::Checkbox, enabled, half, name.clone()));
+            h.widget_info(|| WidgetInfo::selected(Role::CheckBox, enabled, half, name.clone()));
             if h.changed() {
                 edits.push((row.pick.clone(), Override { halftone: half, ..row.over.clone() }));
             }
@@ -959,7 +958,7 @@ fn paint_cell(ui: &Ui, p: &Painter, r: Rect, cell: Cell, o: &Override, ink: Colo
 fn cell_window(ctx: &Context, d: &mut VgDialog, model: &Model) {
     let Some(mut e) = d.cell.take() else { return };
     let (mut ok, mut cancel) = (false, false);
-    let r = Modal::new(UiId::new("vg-cell"), t(e.cell.title()))
+    let r = Modal::new(UiId::unique("vg-cell"), t(e.cell.title()))
         .width(if matches!(e.cell, Cell::ProjectionPatterns | Cell::CutPatterns) { 440.0 } else { 360.0 })
         .show(ctx, |ui| {
             crate::popup::body(ui, |ui| {
@@ -1332,7 +1331,7 @@ fn override_box(ui: &mut Ui, section: &str, what: &str, on: &mut bool) -> bool {
     let name = format!("{}: {}", t(section), t(what));
     let r = ui.checkbox(on, t(what));
     let ticked = *on;
-    r.widget_info(|| WidgetInfo::selected(WidgetType::Checkbox, true, ticked, name.clone()));
+    r.widget_info(|| WidgetInfo::selected(Role::CheckBox, true, ticked, name.clone()));
     r.changed()
 }
 
@@ -1345,7 +1344,7 @@ fn colour_row(ui: &mut Ui, section: &str, what: &str, value: &mut Option<[u8; 3]
     if let Some(rgb) = value {
         let name = format!("{}: {}", t(section), t(what));
         let c = ui.color_edit_button_srgb(rgb);
-        c.widget_info(|| WidgetInfo::labeled(WidgetType::Button, true, name.clone()));
+        c.widget_info(|| WidgetInfo::labeled(Role::Button, true, name.clone()));
     } else {
         ui.label("");
     }
@@ -1366,7 +1365,7 @@ fn line_rows(ui: &mut Ui, section: &str, s: &mut Style, weight: Pen) {
                 ui.selectable_value(w, each, pen_name(each));
             }
         });
-        c.response.widget_info(|| WidgetInfo::labeled(WidgetType::ComboBox, true, name.clone()));
+        c.response.widget_info(|| WidgetInfo::labeled(Role::ComboBox, true, name.clone()));
     } else {
         ui.label("");
     }
@@ -1382,7 +1381,7 @@ fn line_rows(ui: &mut Ui, section: &str, s: &mut Style, weight: Pen) {
                 ui.selectable_value(k, each, t(dash_name(each)));
             }
         });
-        c.response.widget_info(|| WidgetInfo::labeled(WidgetType::ComboBox, true, name.clone()));
+        c.response.widget_info(|| WidgetInfo::labeled(Role::ComboBox, true, name.clone()));
     } else {
         ui.label("");
     }
@@ -1417,10 +1416,10 @@ fn pattern_rows(ui: &mut Ui, section: &str, s: &mut Style, model: &Model) {
                         ui.selectable_value(&mut layer.pattern, Some(name.clone()), name);
                     }
                 });
-                c.response.widget_info(|| WidgetInfo::labeled(WidgetType::ComboBox, on, name.clone()));
+                c.response.widget_info(|| WidgetInfo::labeled(Role::ComboBox, on, name.clone()));
                 let name = format!("{}: {}", t(section), t(color_label));
                 let c = ui.color_edit_button_srgb(&mut layer.color);
-                c.widget_info(|| WidgetInfo::labeled(WidgetType::ColorButton, on, name.clone()));
+                c.widget_info(|| WidgetInfo::labeled(Role::ColorWell, on, name.clone()));
             });
         });
         ui.end_row();

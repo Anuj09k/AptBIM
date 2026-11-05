@@ -498,7 +498,7 @@ impl BimApp {
         let names: Vec<String> = model.text_types.keys().cloned().collect();
         let fonts = text::families();
         let (mut ok, mut cancel, mut apply, mut asked) = (false, false, false, None);
-        let r = Modal::new(UiId::new("text-type-properties"), t("Type Properties")).width(crate::typeprops::WIDTH).show(ctx, |ui| {
+        let r = Modal::new(UiId::unique("text-type-properties"), t("Type Properties")).width(crate::typeprops::WIDTH).show(ctx, |ui| {
             crate::popup::body(ui, |ui| {
                 asked = typeprops::head(ui, "text-type", &tf("System Family: {}", &[t("Text")]), &names, &d.name, &mut d.naming, true);
                 let below = typeprops::foot_height(ui, d.error.is_some());

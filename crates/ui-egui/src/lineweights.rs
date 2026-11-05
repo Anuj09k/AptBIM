@@ -8,7 +8,7 @@ use aptbim_i18n::msg;
 use aptbim_core::model::Model;
 use aptbim_core::pen::{LineWeights, MAX_PEN, MAX_SCALES, ScalePens, WIDTH_RANGE};
 use aptbim_core::units::Units;
-use egui::{Align, ComboBox, Context, DragValue, Grid, Id as UiId, Layout, RichText, ScrollArea, Ui, WidgetInfo, WidgetType};
+use egui::{Align, ComboBox, Context, DragValue, Grid, Id as UiId, Layout, RichText, Role, ScrollArea, Ui, WidgetInfo};
 use serde_json::json;
 
 use crate::BimApp;
@@ -33,7 +33,7 @@ impl LineWeightsDialog {
 /// A pen's width, in mm on paper, in a field named `name` for screen readers.
 fn width_field(ui: &mut Ui, w: &mut f64, name: String) {
     let r = ui.add(DragValue::new(w).range(WIDTH_RANGE).speed(0.005).fixed_decimals(2));
-    r.widget_info(|| WidgetInfo::labeled(WidgetType::DragValue, true, name.clone()));
+    r.widget_info(|| WidgetInfo::labeled(Role::SpinButton, true, name.clone()));
 }
 
 /// The model's pens: a column for each scale, finest first, each with its Delete; then Add Scale, which copies the column
@@ -53,7 +53,7 @@ fn model_tab(ui: &mut Ui, d: &mut LineWeightsDialog, units: Units) {
                 ui.vertical(|ui| {
                     ui.label(RichText::new(&name).strong());
                     let r = ui.add_enabled(!last, egui::Button::new(t("Delete")).small().wrap_mode(egui::TextWrapMode::Extend));
-                    r.widget_info(|| WidgetInfo::labeled(WidgetType::Button, !last, tf("Delete {}", &[&name])));
+                    r.widget_info(|| WidgetInfo::labeled(Role::Button, !last, tf("Delete {}", &[&name])));
                     if r.clicked() {
                         delete = Some(i);
                     }
@@ -125,7 +125,7 @@ impl BimApp {
         let Some(mut d) = self.line_weights_dialog.take() else { return };
         let units = self.session.model.units;
         let (mut ok, mut apply, mut cancel) = (false, false, false);
-        let r = Modal::new(UiId::new("line-weights"), t("Line Weights")).width(760.0).show(ctx, |ui| {
+        let r = Modal::new(UiId::unique("line-weights"), t("Line Weights")).width(760.0).show(ctx, |ui| {
             crate::popup::body(ui, |ui| {
                 ui.add_space(6.0);
                 ui.horizontal(|ui| {

@@ -45,7 +45,7 @@ impl BimApp {
     pub(crate) fn purge_window(&mut self, ctx: &Context) {
         let Some(mut d) = self.purge_dialog.take() else { return };
         let (mut close, mut purge, mut changed) = (false, false, false);
-        let r = Modal::new(UiId::new("purge-unused"), t("Purge Unused")).width(520.0).show(ctx, |ui| {
+        let r = Modal::new(UiId::unique("purge-unused"), t("Purge Unused")).width(520.0).show(ctx, |ui| {
             crate::popup::body(ui, |ui| {
                 ui.add_space(4.0);
                 ui.label(

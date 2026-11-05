@@ -387,7 +387,7 @@ impl BimApp {
         let mut close = false;
         let mut load_asked = false;
 
-        let r = Modal::new(UiId::new("shortcuts"), t("Keyboard Shortcuts")).width(580.0).show(ctx, |ui| {
+        let r = Modal::new(UiId::unique("shortcuts"), t("Keyboard Shortcuts")).width(580.0).show(ctx, |ui| {
             crate::popup::body(ui, |ui| {
                 ui.add_space(4.0);
 

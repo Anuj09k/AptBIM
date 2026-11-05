@@ -325,6 +325,7 @@ fn a_still_section_keeps_its_drawing_and_a_zoom_draws_it_again() {
         unit: MouseWheelUnit::Point,
         delta: vec2(0.0, 120.0),
         phase: TouchPhase::Move,
+        source: egui::MouseWheelSource::Unknown,
         modifiers: Modifiers::NONE,
     });
     h.run();
@@ -358,6 +359,7 @@ fn a_pan_or_a_zoom_of_a_section_with_a_region_over_it_draws_the_picture_once_a_f
         unit: MouseWheelUnit::Point,
         delta: vec2(0.0, 120.0),
         phase: TouchPhase::Move,
+        source: egui::MouseWheelSource::Unknown,
         modifiers: Modifiers::NONE,
     });
     let mut zoom = Vec::new();
@@ -535,7 +537,7 @@ fn the_annotation_settings_list_and_the_fill_patterns_window_are_no_wider_than_w
     press(&mut h, "Annotation Settings");
     assert!(h.get_by_label("Fill Patterns").rect().width() <= 220.0, "{:?}", h.get_by_label("Fill Patterns").rect());
     press(&mut h, "Fill Patterns");
-    let r = h.ctx.memory(|m| m.area_rect(egui::Id::new("fill-patterns"))).unwrap();
+    let r = h.ctx.memory(|m| m.area_rect(egui::Id::unique("fill-patterns"))).unwrap();
     assert!(r.width() <= 760.0, "{r:?}");
     // Import and Export at the right, with what an import does with a name the list has.
     let (import, new) = (h.get_by_label("Import...").rect(), h.get_by_label("New Pattern").rect());

@@ -7,7 +7,7 @@
 use aptbim_i18n::msg;
 
 use egui::{Color32, CursorIcon, Id, LayerId, Order, PointerButton, Rect, ResizeDirection, Sense, Stroke, StrokeKind, Ui, ViewportCommand};
-use egui::{WidgetInfo, WidgetType, pos2, vec2};
+use egui::{Role, WidgetInfo, pos2, vec2};
 
 use crate::BimApp;
 use crate::lang::t;
@@ -55,7 +55,7 @@ impl BimApp {
 /// what is on the bar, so its buttons keep their presses.
 pub(crate) fn drag_area(ui: &Ui, rect: Rect) {
     let ctx = ui.ctx();
-    let r = ui.interact(rect, Id::new("title-bar"), Sense::CLICK | Sense::DRAG);
+    let r = ui.interact(rect, Id::unique("title-bar"), Sense::CLICK | Sense::DRAG);
     // egui hands a drag that starts on a button to the ground under it: remember whether the press landed on bare ground.
     if ctx.input(|i| i.pointer.any_pressed()) {
         let bare = ctx.viewport(|v| v.hits.click.is_some_and(|w| w.id == r.id));
@@ -76,7 +76,7 @@ pub(crate) fn caption_buttons(ui: &mut Ui, bar: Rect) {
     let ctx = ui.ctx().clone();
     let max = maximized(&ctx);
     let cluster = Rect::from_min_max(pos2(bar.right() - 3.0 * BUTTON_WIDTH, bar.top()), bar.right_bottom());
-    ctx.data_mut(|d| d.insert_temp(Id::new(CAPTIONS_AT), cluster));
+    ctx.data_mut(|d| d.insert_temp(Id::unique(CAPTIONS_AT), cluster));
     for (i, c) in CAPTIONS.into_iter().enumerate() {
         let rect = Rect::from_min_size(pos2(bar.right() - (3 - i) as f32 * BUTTON_WIDTH, bar.top()), vec2(BUTTON_WIDTH, bar.height()));
         let label = t(match c {
@@ -85,8 +85,8 @@ pub(crate) fn caption_buttons(ui: &mut Ui, bar: Rect) {
             Caption::Maximize => msg!("Maximize"),
             Caption::Close => "Close",
         });
-        let r = ui.interact(rect, Id::new(("caption", c as u8)), Sense::click());
-        r.widget_info(|| WidgetInfo::labeled(WidgetType::Button, true, label));
+        let r = ui.interact(rect, Id::unique(("caption", c as u8)), Sense::click());
+        r.widget_info(|| WidgetInfo::labeled(Role::Button, true, label));
         let hot = r.hovered() || r.has_focus();
         let (fill, ink) = match (c, hot) {
             (Caption::Close, true) => (CLOSE_HOVER, Color32::WHITE),
@@ -167,12 +167,12 @@ pub(crate) fn frame(ui: &mut Ui) {
         return;
     }
     let w = ctx.content_rect();
-    let layer = LayerId::new(Order::Foreground, Id::new("window-frame"));
+    let layer = LayerId::new(Order::Foreground, Id::unique("window-frame"));
     let top = ui.new_child(egui::UiBuilder::new().layer_id(layer).max_rect(w));
     top.painter().rect_stroke(w, 0.0, Stroke::new(1.0, pal().border), StrokeKind::Inside);
-    let captions = ctx.data(|d| d.get_temp::<Rect>(Id::new(CAPTIONS_AT)));
+    let captions = ctx.data(|d| d.get_temp::<Rect>(Id::unique(CAPTIONS_AT)));
     for (i, (r, dir, cursor)) in zones(w, EDGE, captions).into_iter().enumerate() {
-        let resp = top.interact(r, Id::new(("window-edge", i)), Sense::DRAG).on_hover_cursor(cursor);
+        let resp = top.interact(r, Id::unique(("window-edge", i)), Sense::DRAG).on_hover_cursor(cursor);
         if resp.drag_started_by(PointerButton::Primary) {
             ctx.send_viewport_cmd(ViewportCommand::BeginResize(dir));
         }

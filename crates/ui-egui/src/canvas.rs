@@ -18,8 +18,8 @@ use aptbim_core::view3d::shape_snap_plan;
 use aptbim_core::walls::{self, Axis};
 use aptbim_core::{floor_outline, opening_of, roof_footprint};
 use egui::{
-    Align, Align2, Color32, ColorImage, Event, FontId, Key, Layout, Mesh, Modifiers, Painter, PointerButton, Pos2, Rect, Response, Sense,
-    Shape, Stroke, StrokeKind, TextEdit, TextureHandle, TextureId, TextureOptions, Ui, UiBuilder, Vec2, WidgetInfo, WidgetType, pos2, vec2,
+    Align, Align2, Color32, ColorImage, Event, FontId, Key, Layout, Mesh, Modifiers, Painter, PointerButton, Pos2, Rect, Response, Role,
+    Sense, Shape, Stroke, StrokeKind, TextEdit, TextureHandle, TextureId, TextureOptions, Ui, UiBuilder, Vec2, WidgetInfo, pos2, vec2,
 };
 use serde_json::{Value, json};
 
@@ -3170,10 +3170,10 @@ impl BimApp {
             let anchor = if start { a - u * 32.0 } else { b + u * 32.0 };
             let size = p.layout_no_wrap(text.clone(), font.clone(), pal().accent).size() + vec2(10.0, 4.0);
             let at = Rect::from_center_size(anchor, size);
-            let field = ui.id().with(("wall angle", id, start));
+            let field = ui.scope_id().with(("wall angle", id, start));
             match &mut self.angle_edit {
                 Some((wall, which, typed)) if *wall == id && *which == start => {
-                    let edit = ui.put(at.expand2(vec2(18.0, 2.0)), TextEdit::singleline(typed).id(field).horizontal_align(Align::Center));
+                    let edit = ui.put(at.expand2(vec2(18.0, 2.0)), TextEdit::singleline(typed).id(field).align(egui::Align2::CENTER_TOP));
                     if edit.lost_focus() {
                         done = Some((start, ui.input(|i| !i.key_pressed(Key::Escape)).then(|| typed.clone())));
                     } else if !edit.has_focus() {
@@ -3183,7 +3183,7 @@ impl BimApp {
                 _ => {
                     let r = ui.interact(at, field, Sense::click());
                     let which = t(if start { "start" } else { "end" });
-                    r.widget_info(|| WidgetInfo::labeled(WidgetType::Button, true, tf("Turn the wall about its {}: {}", &[which, &text])));
+                    r.widget_info(|| WidgetInfo::labeled(Role::Button, true, tf("Turn the wall about its {}: {}", &[which, &text])));
                     p.rect_filled(at, 2.0, pal().surface);
                     p.text(at.center(), Align2::CENTER_CENTER, &text, font.clone(), if r.hovered() { pal().hover } else { pal().accent });
                     if r.clicked() {
@@ -3225,11 +3225,11 @@ impl BimApp {
     /// in it) for the screen reader.
     fn number_field(&mut self, ui: &mut Ui, at: Rect, key: (Id, usize), text: &str, name: &str) -> Option<Option<String>> {
         let font = FontId::proportional(12.0);
-        let field = ui.id().with(("temporary dimension", key));
+        let field = ui.scope_id().with(("temporary dimension", key));
         let (mut done, mut start) = (None, false);
         match &mut self.dim_edit {
             Some((id, n, typed)) if (*id, *n) == key => {
-                let edit = ui.put(at.expand2(vec2(18.0, 2.0)), TextEdit::singleline(typed).id(field).horizontal_align(Align::Center));
+                let edit = ui.put(at.expand2(vec2(18.0, 2.0)), TextEdit::singleline(typed).id(field).align(egui::Align2::CENTER_TOP));
                 if edit.lost_focus() {
                     done = Some(ui.input(|i| !i.key_pressed(Key::Escape)).then(|| typed.clone()));
                 } else if !edit.has_focus() {
@@ -3238,7 +3238,7 @@ impl BimApp {
             }
             _ => {
                 let r = ui.interact(at, field.with("number"), Sense::click());
-                r.widget_info(|| WidgetInfo::labeled(WidgetType::Button, true, tf(name, &[text])));
+                r.widget_info(|| WidgetInfo::labeled(Role::Button, true, tf(name, &[text])));
                 ui.painter().rect_filled(at, 2.0, pal().surface);
                 ui.painter().text(at.center(), Align2::CENTER_CENTER, text, font, if r.hovered() { pal().hover } else { pal().accent });
                 start = r.clicked();
@@ -3275,9 +3275,10 @@ impl BimApp {
             let [(s0, _), (s1, _)] = pair else { continue };
             let at = on((s0 + s1) / 2.0) + side * 14.0;
             let locked = d.locked.iter().any(|l| l.segment == i);
-            let r = ui.interact(Rect::from_center_size(at, vec2(16.0, 18.0)), ui.id().with(("dimension lock", id, i)), Sense::click());
+            let r =
+                ui.interact(Rect::from_center_size(at, vec2(16.0, 18.0)), ui.scope_id().with(("dimension lock", id, i)), Sense::click());
             let name = tf("Lock segment {}", &[&(i + 1).to_string()]);
-            r.widget_info(|| WidgetInfo::selected(WidgetType::Checkbox, true, locked, name.clone()));
+            r.widget_info(|| WidgetInfo::selected(Role::CheckBox, true, locked, name.clone()));
             let ink = if r.hovered() {
                 pal().hover
             } else if locked {
@@ -3312,8 +3313,8 @@ impl BimApp {
         }
         if cross.len() > 2 {
             let at = on(last.max(first)) + along * 22.0;
-            let r = ui.interact(Rect::from_center_size(at, vec2(26.0, 18.0)), ui.id().with(("dimension equal", id)), Sense::click());
-            r.widget_info(|| WidgetInfo::selected(WidgetType::Checkbox, true, d.equal, t("Equal")));
+            let r = ui.interact(Rect::from_center_size(at, vec2(26.0, 18.0)), ui.scope_id().with(("dimension equal", id)), Sense::click());
+            r.widget_info(|| WidgetInfo::selected(Role::CheckBox, true, d.equal, t("Equal")));
             let ink = if r.hovered() {
                 pal().hover
             } else if d.equal {
@@ -3351,8 +3352,9 @@ impl BimApp {
             }
             if d.alignment {
                 let at = screen(d.at) + vec2(12.0, -12.0);
-                let r = ui.interact(Rect::from_center_size(at, vec2(16.0, 18.0)), ui.id().with(("alignment lock", id)), Sense::click());
-                r.widget_info(|| WidgetInfo::selected(WidgetType::Checkbox, true, true, t("Unlock alignment")));
+                let r =
+                    ui.interact(Rect::from_center_size(at, vec2(16.0, 18.0)), ui.scope_id().with(("alignment lock", id)), Sense::click());
+                r.widget_info(|| WidgetInfo::selected(Role::CheckBox, true, true, t("Unlock alignment")));
                 padlock(&p, at, true, if r.hovered() { pal().hover } else { pal().accent });
                 if r.clicked() {
                     unlock = Some(id);
@@ -3366,8 +3368,12 @@ impl BimApp {
                 let [(s0, _), (s1, _)] = pair else { continue };
                 if d.locked.iter().any(|l| l.segment == i) {
                     let at = on((s0 + s1) / 2.0) + side * 14.0;
-                    let r = ui.interact(Rect::from_center_size(at, vec2(16.0, 18.0)), ui.id().with(("shown lock", id, i)), Sense::hover());
-                    r.widget_info(|| WidgetInfo::labeled(WidgetType::Label, true, tf("Locked segment {}", &[&(i + 1).to_string()])));
+                    let r = ui.interact(
+                        Rect::from_center_size(at, vec2(16.0, 18.0)),
+                        ui.scope_id().with(("shown lock", id, i)),
+                        Sense::hover(),
+                    );
+                    r.widget_info(|| WidgetInfo::labeled(Role::Label, true, tf("Locked segment {}", &[&(i + 1).to_string()])));
                     padlock(&p, at, true, pal().muted);
                 }
             }
@@ -3378,8 +3384,8 @@ impl BimApp {
         // Align's offer, while its tool is on.
         let Some(lock) = self.drawing.align_lock.filter(|_| matches!(self.tool, Tool::Align(_))) else { return };
         let at = screen((lock.line.0 + lock.line.1) * 0.5) + vec2(12.0, -12.0);
-        let r = ui.interact(Rect::from_center_size(at, vec2(16.0, 18.0)), ui.id().with("align lock"), Sense::click());
-        r.widget_info(|| WidgetInfo::selected(WidgetType::Checkbox, true, false, t("Lock alignment")));
+        let r = ui.interact(Rect::from_center_size(at, vec2(16.0, 18.0)), ui.scope_id().with("align lock"), Sense::click());
+        r.widget_info(|| WidgetInfo::selected(Role::CheckBox, true, false, t("Lock alignment")));
         padlock(&p, at, false, if r.hovered() { pal().hover } else { pal().accent });
         if r.clicked() {
             let (a, b) = (lock.reference, lock.line);

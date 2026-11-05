@@ -87,13 +87,13 @@ fn replacement(index: usize, length: f64) -> Segment {
 }
 fn number(ui: &mut Ui, value: &mut f64, label: String, min: f64, max: f64, suffix: &str) {
     let r = ui.add(DragValue::new(value).range(min..=max).speed(0.05).suffix(suffix));
-    r.widget_info(|| WidgetInfo::labeled(WidgetType::DragValue, true, label.clone()));
+    r.widget_info(|| WidgetInfo::labeled(Role::SpinButton, true, label.clone()));
 }
 
 pub(super) fn window(ctx: &Context, d: &mut LineStylesDialog) {
     let Some(mut editor) = d.creator.take() else { return };
     let (mut save, mut cancel) = (false, false);
-    let response = Modal::new(UiId::new("line-pattern-creator"), t("Line Pattern Creator")).width(680.0).show(ctx, |ui| {
+    let response = Modal::new(UiId::unique("line-pattern-creator"), t("Line Pattern Creator")).width(680.0).show(ctx, |ui| {
         crate::popup::body(ui, |ui| {
             ui.horizontal(|ui| {
                 let label = ui.label(t("Pattern Name"));
@@ -128,8 +128,7 @@ pub(super) fn window(ctx: &Context, d: &mut LineStylesDialog) {
                                     ui.selectable_value(&mut next, k, t(n));
                                 }
                             });
-                            c.response
-                                .widget_info(|| WidgetInfo::labeled(WidgetType::ComboBox, true, tf("Segment {}", &[&(i + 1).to_string()])));
+                            c.response.widget_info(|| WidgetInfo::labeled(Role::ComboBox, true, tf("Segment {}", &[&(i + 1).to_string()])));
                             if next != old {
                                 *s = replacement(next, s.length().max(MIN_SEGMENT));
                             }
@@ -177,7 +176,7 @@ pub(super) fn window(ctx: &Context, d: &mut LineStylesDialog) {
                                 Segment::Offset { count, distance, .. } => {
                                     ui.label(t("Count"));
                                     let r = ui.add(DragValue::new(count).range(2..=9));
-                                    r.widget_info(|| WidgetInfo::labeled(WidgetType::DragValue, true, tf("Segment {} Count", &[&n])));
+                                    r.widget_info(|| WidgetInfo::labeled(Role::SpinButton, true, tf("Segment {} Count", &[&n])));
                                     ui.label(t("Spacing"));
                                     number(ui, distance, tf("Segment {} Spacing", &[&n]), MIN_SEGMENT, MAX_SEGMENT, " mm");
                                 }
@@ -191,7 +190,7 @@ pub(super) fn window(ctx: &Context, d: &mut LineStylesDialog) {
                                     ui.label(t("Size"));
                                     number(ui, size, tf("Segment {} Size", &[&n]), MIN_SEGMENT, MAX_SEGMENT, " mm");
                                     let r = ui.add_sized([240.0, 24.0], TextEdit::singleline(text).char_limit(256));
-                                    r.widget_info(|| WidgetInfo::labeled(WidgetType::TextEdit, true, tf("Segment {} Text", &[&n])));
+                                    r.widget_info(|| WidgetInfo::labeled(Role::TextInput, true, tf("Segment {} Text", &[&n])));
                                 }
                                 _ => {}
                             }

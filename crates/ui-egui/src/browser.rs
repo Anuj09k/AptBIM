@@ -7,7 +7,7 @@
 use aptbim_i18n::msg;
 
 use egui::text::{LayoutJob, TextFormat};
-use egui::{Align, CollapsingHeader, Layout, Rect, Sense, Stroke, StrokeKind, TextEdit, TextStyle, Ui, WidgetInfo, WidgetType, vec2};
+use egui::{Align, CollapsingHeader, Layout, Rect, Role, Sense, Stroke, StrokeKind, TextEdit, TextStyle, Ui, WidgetInfo, vec2};
 
 use aptbim_core::model::{Element, Id};
 use aptbim_core::schedule;
@@ -210,7 +210,7 @@ impl BimApp {
                 let width = 26.0 + text.as_ref().map_or(0.0, |g| g.size().x + 6.0);
                 let sense = if tab.ready() { Sense::click() } else { Sense::hover() };
                 let (rect, r) = ui.allocate_exact_size(vec2(width, 24.0), sense);
-                r.widget_info(|| WidgetInfo::selected(WidgetType::Button, tab.ready(), on, &what));
+                r.widget_info(|| WidgetInfo::selected(Role::Button, tab.ready(), on, &what));
                 let p = ui.painter();
                 let fill = if on {
                     pal().select_fill
@@ -268,7 +268,7 @@ impl BimApp {
                         .frame(egui::Frame::NONE)
                         .char_limit(MAX_FIND)
                         .desired_width(ui.available_width());
-                    ui.add(edit).widget_info(|| WidgetInfo::labeled(WidgetType::TextEdit, true, t("Search the Project Browser")));
+                    ui.add(edit).widget_info(|| WidgetInfo::labeled(Role::TextInput, true, t("Search the Project Browser")));
                 });
             });
         });

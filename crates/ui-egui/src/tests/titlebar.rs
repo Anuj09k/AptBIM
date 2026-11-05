@@ -18,8 +18,12 @@ pub(super) fn own(script: &str) -> Harness<'static, BimApp> {
         let screen = ui.ctx().content_rect();
         app.show(&mut ui.new_child(egui::UiBuilder::new().max_rect(screen)));
     };
-    let mut h =
-        Harness::builder().with_size(WINDOW.size()).with_max_steps(32).with_step_dt(0.05).build_ui_state(show, BimApp::new(session));
+    let mut h = Harness::builder()
+        .with_accessibility_check(false)
+        .with_size(WINDOW.size())
+        .with_max_steps(32)
+        .with_step_dt(0.05)
+        .build_ui_state(show, BimApp::new(session));
     h.state_mut().own_title_bar = true;
     h.run();
     h

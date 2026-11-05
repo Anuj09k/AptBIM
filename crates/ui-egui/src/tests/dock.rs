@@ -35,7 +35,7 @@ fn two_plans() -> (Harness<'static, BimApp>, Sheet, Sheet) {
 #[test]
 fn the_project_browser_scrolls_from_anywhere_across_its_palette() {
     let mut h = app(BOX);
-    let panel = egui::PanelState::load(&h.ctx, egui::Id::new("dock-left")).map(|s| s.outer_rect).unwrap();
+    let panel = h.state().left_dock.unwrap();
     let before = h.get_by_label("Views (all)").rect().top();
     // The wheel by the palette's right edge, where its scroll bar is, not past the end of the longest name.
     let at = pos2(panel.right() - 12.0, h.get_by_label("Views (all)").rect().bottom() + 60.0);
@@ -44,6 +44,7 @@ fn the_project_browser_scrolls_from_anywhere_across_its_palette() {
         unit: MouseWheelUnit::Point,
         delta: vec2(0.0, -120.0),
         phase: TouchPhase::Move,
+        source: egui::MouseWheelSource::Unknown,
         modifiers: Modifiers::NONE,
     });
     h.run();

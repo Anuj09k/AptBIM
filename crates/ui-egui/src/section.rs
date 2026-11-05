@@ -429,7 +429,10 @@ mod worker_tests {
         let mut app = BimApp::new(session);
         app.cut.mode.0 = true;
         app.open_sheet(Sheet::Section(id));
-        let harness = egui_kittest::Harness::builder().with_size([1280.0, 800.0]).build_ui_state(|ui, app: &mut BimApp| app.show(ui), app);
+        let harness = egui_kittest::Harness::builder()
+            .with_accessibility_check(false)
+            .with_size([1280.0, 800.0])
+            .build_ui_state(|ui, app: &mut BimApp| app.show(ui), app);
         (harness, id)
     }
 

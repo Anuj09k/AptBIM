@@ -339,7 +339,7 @@ impl BimApp {
         if matches!(shape, Shape::Inscribed | Shape::Circumscribed | Shape::Circle | Shape::Fillet) {
             ui.checkbox(&mut self.drawing.radius_on, t("Radius:"));
             let r = ui.add_enabled(self.drawing.radius_on, field(&mut self.drawing.radius, 70.0, bad == Some(Field::Radius)));
-            r.widget_info(|| egui::WidgetInfo::labeled(egui::WidgetType::TextEdit, true, t("Radius")));
+            r.widget_info(|| egui::WidgetInfo::labeled(egui::Role::TextInput, true, t("Radius")));
         }
         // A detail arc or circle can mark its centre, as Revit's Center Mark Visible.
         let round = matches!(shape, Shape::Circle | Shape::Arc | Shape::CentreArc | Shape::TangentArc);
