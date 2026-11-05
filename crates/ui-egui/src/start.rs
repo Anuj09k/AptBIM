@@ -12,10 +12,10 @@ use std::time::{Duration, SystemTime};
 use aptbim_core::model::Model;
 use aptbim_core::view3d::{AZIMUTH, ELEVATION, Scene};
 use aptbim_update::State;
-use egui::epaint::{Mesh, PathShape, Shadow};
+use egui::epaint::{Mesh, Shadow};
 use egui::{
-    Align, Align2, Color32, ColorImage, Context, CornerRadius, FontId, Frame, Layout, OpenUrl, Panel, Pos2, Rect, Response, RichText,
-    ScrollArea, Sense, Shape, Stroke, StrokeKind, TextureHandle, TextureOptions, Ui, UiBuilder, WidgetInfo, WidgetType, pos2, vec2,
+    Align, Align2, Color32, ColorImage, Context, CornerRadius, FontId, Frame, Layout, OpenUrl, Panel, Rect, Response, RichText, ScrollArea,
+    Sense, Shape, Stroke, StrokeKind, TextureHandle, TextureOptions, Ui, UiBuilder, WidgetInfo, WidgetType, pos2, vec2,
 };
 
 use crate::icons::{self, Icon};
@@ -292,7 +292,7 @@ impl BimApp {
             ui.vertical(|ui| {
                 ui.add_space(4.0);
                 ui.label(RichText::new("AptBIM").font(FontId::proportional(34.0)).strong().color(pal().text));
-                ui.label(RichText::new(t("Building information modelling, open and free.")).size(15.0).color(pal().muted));
+                ui.label(RichText::new(t("Integrated BIM & design solution, by Aptimizer.")).size(15.0).color(pal().muted));
             });
         });
     }
@@ -588,36 +588,21 @@ fn dashed(ui: &Ui, r: Rect) {
     }
 }
 
-/// AptBIM's logo (`assets/app-icon/aptbim.svg`), drawn into `r`.
+/// AptBIM's logo (`assets/app-icon/aptbim-256.png`), drawn into `r`. Decoded once and kept as a texture.
 fn logo(ui: &Ui, r: Rect) {
-    let k = r.width() / 256.0;
-    let at = |x: f32, y: f32| r.min + vec2(x, y) * k;
-    let p = ui.painter();
-    let tile = Rect::from_min_max(at(8.0, 8.0), at(248.0, 248.0));
-    p.rect_filled(tile, CornerRadius::same((52.0 * k).round() as u8), Color32::from_rgb(0x1F, 0x9D, 0x7F));
-    let lines = p.with_clip_rect(tile.shrink(6.0 * k));
-    let faint = Stroke::new((2.5 * k).max(0.6), Color32::from_white_alpha(80));
-    for i in 0..10 {
-        let v = 20.0 + 24.0 * i as f32;
-        lines.line_segment([at(v, 0.0), at(v, 256.0)], faint);
-        lines.line_segment([at(0.0, v), at(256.0, v)], faint);
+    const PNG: &[u8] = include_bytes!("../../../assets/app-icon/aptbim-256.png");
+    let id = egui::Id::new("aptbim-logo");
+    let ctx = ui.ctx();
+    let texture = ctx.data_mut(|d| d.get_temp::<TextureHandle>(id)).or_else(|| {
+        let icon = eframe::icon_data::from_png_bytes(PNG).ok()?;
+        let image = ColorImage::from_rgba_unmultiplied([icon.width as usize, icon.height as usize], &icon.rgba);
+        let texture = ctx.load_texture("aptbim-logo", image, TextureOptions::LINEAR);
+        ctx.data_mut(|d| d.insert_temp(id, texture.clone()));
+        Some(texture)
+    });
+    if let Some(texture) = texture {
+        ui.painter().image(texture.id(), r, Rect::from_min_max(pos2(0.0, 0.0), pos2(1.0, 1.0)), Color32::WHITE);
     }
-    let ink = Color32::from_rgb(0x17, 0x19, 0x1C);
-    let (orange, cream, teal) =
-        (Color32::from_rgb(0xF0, 0x7A, 0x3A), Color32::from_rgb(0xF4, 0xEC, 0xD8), Color32::from_rgb(0x1F, 0x9D, 0x7F));
-    let poly = |pts: &[(f32, f32)], fill: Color32, w: f32| {
-        let pts: Vec<Pos2> = pts.iter().map(|&(x, y)| at(x, y)).collect();
-        p.add(PathShape::convex_polygon(pts, fill, Stroke::new(w * k, ink)));
-    };
-    p.line_segment([at(138.0, 62.0), at(200.0, 62.0)], Stroke::new(7.0 * k, ink));
-    poly(&[(187.0, 37.0), (213.0, 37.0), (200.0, 59.0)], orange, 6.0);
-    poly(&[(63.0, 71.3), (157.0, 125.6), (190.0, 137.0), (96.0, 82.7)], orange, 7.0);
-    poly(&[(123.3, 228.7), (180.1, 195.9), (180.1, 132.4), (151.7, 122.5), (123.3, 165.2)], cream, 7.0);
-    poly(&[(39.9, 180.5), (123.3, 228.7), (123.3, 165.2), (39.9, 117.1)], cream, 7.0);
-    poly(&[(63.0, 71.3), (157.0, 125.6), (124.0, 175.1), (30.0, 120.8)], orange, 7.0);
-    poly(&[(52.2, 187.7), (69.2, 197.5), (69.2, 159.2), (52.2, 149.3)], teal, 6.0);
-    poly(&[(83.5, 187.1), (108.1, 201.3), (108.1, 181.6), (83.5, 167.4)], teal, 6.0);
-    poly(&[(162.1, 187.7), (141.3, 199.7), (141.3, 180.0), (162.1, 167.9)], teal, 6.0);
 }
 
 #[cfg(test)]
