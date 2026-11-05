@@ -1505,6 +1505,15 @@ impl BimApp {
         format!("{}: {}", t(kind), self.view_name(sheet))
     }
 
+    /// Apply AptBIM's fonts and look again on the next frame, even when they have not changed. A host that shares the egui
+    /// context with another app (Aptimizer Studio's AptCAD mode) calls this when it hands the window back to AptBIM, since the
+    /// other app sets the context's fonts and style to its own.
+    pub fn restyle(&mut self, ctx: &Context) {
+        self.styled = false;
+        style::forget(ctx);
+        lang::forget_cjk_font(ctx);
+    }
+
     /// The whole window.
     pub fn show(&mut self, ui: &mut Ui) {
         let ctx = ui.ctx().clone();

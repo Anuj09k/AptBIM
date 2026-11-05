@@ -503,6 +503,11 @@ pub struct Look {
     pub text_colour: Option<[u8; 3]>,
 }
 
+/// Forget the look applied to `ctx`, so the next [`follow`] applies it again (see [`crate::BimApp::restyle`]).
+pub fn forget(ctx: &Context) {
+    ctx.data_mut(|d| d.remove::<Look>(egui::Id::unique("styled-look")));
+}
+
 /// Draw this frame in the theme egui shows: the system's, unless the user picked one; in the look the user kept.
 pub fn follow(ctx: &Context, look: Look) {
     DARK_ON.with(|d| d.set(ctx.theme() == Theme::Dark));

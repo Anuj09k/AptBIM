@@ -205,6 +205,12 @@ pub fn use_cjk_font(ctx: &Context, find: FontFinder) -> bool {
     fonts.hanzi
 }
 
+/// Forget that the hanzi and Hangul fonts were put behind the window's, so [`use_cjk_font`] puts them back (a host that shares
+/// the context with another app, which replaced its fonts: [`crate::BimApp::restyle`]).
+pub(crate) fn forget_cjk_font(ctx: &Context) {
+    ctx.data_mut(|d| d.remove::<Option<bool>>(Id::unique("cjk-font")));
+}
+
 /// Tests have no say in which fonts a machine has: a window is told it has one.
 #[cfg(test)]
 pub(crate) fn assume_cjk_font(ctx: &Context) {

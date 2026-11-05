@@ -6679,3 +6679,21 @@ fn room_area_computation_is_set_from_manage_and_undone() {
 }
 
 mod background_grid;
+
+/// Another app sharing the context (Aptimizer Studio's AptCAD mode) replaces its fonts and style; `restyle` puts AptBIM's back on
+/// the next frame, where without it nothing changed would.
+#[test]
+fn restyle_puts_aptbims_look_back_after_another_app_changed_the_context() {
+    let mut h = app(BOX);
+    let ours = h.ctx.style_of(egui::Theme::Light).visuals.panel_fill;
+    let fonts = h.ctx.fonts(|f| f.definitions().font_data.len());
+    h.ctx.set_visuals_of(egui::Theme::Light, egui::Visuals::dark());
+    h.ctx.set_fonts(egui::FontDefinitions::default());
+    h.run();
+    assert_ne!(h.ctx.style_of(egui::Theme::Light).visuals.panel_fill, ours, "unchanged settings are not applied again on their own");
+    let ctx = h.ctx.clone();
+    h.state_mut().restyle(&ctx);
+    h.run();
+    assert_eq!(h.ctx.style_of(egui::Theme::Light).visuals.panel_fill, ours);
+    assert_eq!(h.ctx.fonts(|f| f.definitions().font_data.len()), fonts);
+}
