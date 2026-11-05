@@ -173,7 +173,7 @@ pub static ALL: &[Command] = &[
         &[],
         "{id, hide?: [layer, …], show?: [layer, …], view?} a CAD import's layers, each with its colour and linetype and whether \
          it's shown; `hide` and `show` change which it shows in every view, or with `view` in that view only (its \
-         Visibility/Graphics, by the drawing's name)",
+         View Visibility, by the drawing's name)",
         cad_layers,
     ),
     edit(
@@ -430,7 +430,7 @@ pub static ALL: &[Command] = &[
     .menu("Architecture > Room"),
     edit(
         "room_separator",
-        "Room Boundary Line",
+        "Room Divider",
         &[],
         "{points: [[x,y],…], level?, closed?} room separation lines along `points`, one per segment (`closed` joins the last \
          to the first): they bound rooms as walls do, to split an open space (a living room and its corridor) into rooms, \
@@ -1480,8 +1480,8 @@ pub static ALL: &[Command] = &[
         "Category Styles",
         &[],
         "{categories?: {category: {projection?: pen, cut?: pen}, …}, reset?: true} the project's object styles, as Revit's \
-         Manage > Object Styles: the pen (0, a hairline, to 16) each model category draws its lines in where it is seen \
-         (`projection`) and where a view cuts it (`cut`), in every plan and section; a view's Visibility/Graphics overrides \
+         Manage > Category Styles: the pen (0, a hairline, to 16) each model category draws its lines in where it is seen \
+         (`projection`) and where a view cuts it (`cut`), in every plan and section; a view's View Visibility overrides \
          them. A category given keeps the pen it isn't given. The rest of an element's lines keep their own: a compound \
          wall's layers, a door's jambs, a stair's walk line. `reset` goes back to what a project starts with (cut pen 10 and \
          seen pen 4; a door's and a window's cut 6, a railing seen 6, a mass 4 both). Without either, it says each model \

@@ -3791,8 +3791,8 @@ msgid "High Contrast Point Clouds"
 msgstr "Punktwolken mit hohem Kontrast"
 
 #: crates/ui-egui/src/footer.rs:466
-msgid "High Contrast Point Clouds: draw this view's scans in one strong colour, so what they show reads; again for their own colours. A scan given a colour of its own in Visibility/Graphics keeps it."
-msgstr ""
+msgid "High Contrast Point Clouds: draw this view's scans in one strong colour, so what they show reads; again for their own colours. A scan given a colour of its own in View Visibility keeps it."
+msgstr "Punktwolken mit hohem Kontrast: die Scans dieser Ansicht in einer kräftigen Farbe zeichnen, damit lesbar wird, was sie zeigen; erneut für ihre eigenen Farben. Ein Scan mit eigener Farbe unter Sichtbarkeit/Grafik behält sie."
 
 #: crates/ui-egui/src/settings.rs:650
 msgid "High contrast colour"
@@ -6728,14 +6728,14 @@ msgstr "Raumflächenberechnung"
 msgid "Room Area Computation: where room areas are measured; now {}"
 msgstr "Raumflächenberechnung: wo Raumflächen gemessen werden; aktuell {}"
 
-#: crates/ui-egui/src/lib.rs:3693
-msgid "Room Boundary Line: lines that bound rooms as walls do, to split an open space; click from point to point"
-msgstr "Raumtrennlinie: Linien, die Räume wie Wände begrenzen, um einen offenen Raum zu teilen; von Punkt zu Punkt klicken"
-
 #: crates/ui-egui/src/properties.rs:137
 #: crates/ui-egui/src/properties.rs:294
 msgid "Room Bounding"
 msgstr "Raumbegrenzung"
+
+#: crates/ui-egui/src/lib.rs:3693
+msgid "Room Divider: lines that bound rooms as walls do, to split an open space; click from point to point"
+msgstr "Raumtrennlinie: Linien, die Räume wie Wände begrenzen, um einen offenen Raum zu teilen; von Punkt zu Punkt klicken"
 
 #: crates/core/src/schedule.rs:118
 msgid "Room Schedule"
@@ -10213,7 +10213,7 @@ msgstr "Raum"
 
 #: crates/ui-egui/src/lang.rs:296
 msgctxt "category"
-msgid "Room Boundary Line"
+msgid "Room Divider"
 msgstr "Raumtrennlinie"
 
 #: crates/ui-egui/src/lang.rs:312
@@ -10528,7 +10528,7 @@ msgstr "Dächer"
 
 #: crates/ui-egui/src/lang.rs:296
 msgctxt "category-plural"
-msgid "Room Boundary Lines"
+msgid "Room Dividers"
 msgstr "Raumtrennlinien"
 
 #: crates/ui-egui/src/lang.rs:258
@@ -10655,6 +10655,9 @@ msgstr "Oben"
 #: crates/ui-egui/src/fillpatterns.rs:343
 #~ msgid "Background"
 #~ msgstr "Hintergrund"
+#: crates/ui-egui/src/lib.rs:4503
+#~ msgid "Click to select. Drag to orbit (or Shift and the middle button), the middle button pans, the wheel zooms."
+#~ msgstr "Klicken zum Auswählen. Ziehen zum Umkreisen (oder Umschalt und mittlere Taste), mittlere Taste verschiebt, das Rad zoomt."
 #: crates/ui-egui/src/graphics.rs:554
 #~ msgid "Create from This View"
 #~ msgstr "Aus dieser Ansicht erstellen"
@@ -10664,6 +10667,9 @@ msgstr "Oben"
 #: crates/ui-egui/src/graphics.rs:524
 #~ msgid "Detail Level:"
 #~ msgstr "Detailgrad:"
+#: crates/ui-egui/src/settings.rs:600
+#~ msgid "Faster for large models. Hidden line and wireframe are still drawn on the processor, and so is everything if the card fails"
+#~ msgstr "Schneller bei großen Modellen. Verdeckte Linien und Drahtmodell werden weiterhin auf dem Prozessor gezeichnet, ebenso alles, wenn die Karte ausfällt"
 #: crates/ui-egui/src/lib.rs:3472
 #~ msgid "Fill Patterns: the patterns filled regions fill with, and the filled region types"
 #~ msgstr "Füllmuster: die Muster, mit denen Gefüllte Bereiche gefüllt werden, und die Typen Gefüllter Bereiche"
@@ -10688,6 +10694,9 @@ msgstr "Oben"
 #: crates/ui-egui/src/graphics.rs:545
 #~ msgid "No view templates yet: Create from This View makes one."
 #~ msgstr "Noch keine Ansichtsvorlagen: Aus dieser Ansicht erstellen legt eine an."
+#: crates/ui-egui/src/dock.rs:555
+#~ msgid "Project Browser · {}"
+#~ msgstr "Projektbrowser · {}"
 #: crates/ui-egui/src/fillpatterns.rs:220
 #~ msgid "Region Type"
 #~ msgstr "Bereichstyp"
@@ -10703,6 +10712,9 @@ msgstr "Oben"
 #: crates/ui-egui/src/graphics.rs:538
 #~ msgid "Stop Following in This View"
 #~ msgstr "In dieser Ansicht nicht mehr folgen"
+#: crates/ui-egui/src/editor.rs:811
+#~ msgid "Symbols are the lines a door's or a window's plan draws; this family isn't one."
+#~ msgstr "Symbole sind die Linien, die der Grundriss einer Tür oder eines Fensters zeichnet; diese Familie ist keine."
 #: crates/ui-egui/src/graphics.rs:490
 #~ msgid "Template:"
 #~ msgstr "Vorlage:"
@@ -10718,6 +10730,9 @@ msgstr "Oben"
 #: crates/ui-egui/src/fillpatterns.rs:336
 #~ msgid "What filled regions are filled with: a foreground pattern over a background one, over the paper when it masks."
 #~ msgstr "Womit gefüllte Bereiche gefüllt werden: ein Vordergrundmuster über einem Hintergrundmuster, bei Maskierung über dem Papier."
+#: crates/ui-egui/src/orbit.rs:835
+#~ msgid "in the 3D view this tool draws on a level face: the top of a floor, a flat roof or a level"
+#~ msgstr ""
 #: crates/ui-egui/src/fillpatterns.rs:415
 #~ msgid "whole"
 #~ msgstr "Ganz"
@@ -10739,21 +10754,6 @@ msgstr "Oben"
 #: crates/ui-egui/src/fillpatterns.rs:354
 #~ msgid "{}: {} Colour"
 #~ msgstr "{}: {} Farbe"
-#: crates/ui-egui/src/editor.rs:811
-#~ msgid "Symbols are the lines a door's or a window's plan draws; this family isn't one."
-#~ msgstr "Symbole sind die Linien, die der Grundriss einer Tür oder eines Fensters zeichnet; diese Familie ist keine."
-#: crates/ui-egui/src/dock.rs:555
-#~ msgid "Project Browser · {}"
-#~ msgstr "Projektbrowser · {}"
-#: crates/ui-egui/src/lib.rs:4503
-#~ msgid "Click to select. Drag to orbit (or Shift and the middle button), the middle button pans, the wheel zooms."
-#~ msgstr "Klicken zum Auswählen. Ziehen zum Umkreisen (oder Umschalt und mittlere Taste), mittlere Taste verschiebt, das Rad zoomt."
-#: crates/ui-egui/src/orbit.rs:835
-#~ msgid "in the 3D view this tool draws on a level face: the top of a floor, a flat roof or a level"
+#: crates/ui-egui/src/footer.rs:466
+#~ msgid "High Contrast Point Clouds: draw this view's scans in one strong colour, so what they show reads; again for their own colours. A scan given a colour of its own in Visibility/Graphics keeps it."
 #~ msgstr ""
-#: crates/ui-egui/src/settings.rs:600
-#~ msgid "Faster for large models. Hidden line and wireframe are still drawn on the processor, and so is everything if the card fails"
-#~ msgstr "Schneller bei großen Modellen. Verdeckte Linien und Drahtmodell werden weiterhin auf dem Prozessor gezeichnet, ebenso alles, wenn die Karte ausfällt"
-#: crates/ui-egui/src/footer.rs:468
-#~ msgid "High Contrast Point Clouds: draw this view's scans in one strong colour, so what they show reads; again for their own colours. A scan given a colour of its own in View Visibility keeps it."
-#~ msgstr "Punktwolken mit hohem Kontrast: die Scans dieser Ansicht in einer kräftigen Farbe zeichnen, damit lesbar wird, was sie zeigen; erneut für ihre eigenen Farben. Ein Scan mit eigener Farbe unter Sichtbarkeit/Grafik behält sie."

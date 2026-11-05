@@ -3792,7 +3792,7 @@ msgid "High Contrast Point Clouds"
 msgstr ""
 
 #: crates/ui-egui/src/footer.rs:466
-msgid "High Contrast Point Clouds: draw this view's scans in one strong colour, so what they show reads; again for their own colours. A scan given a colour of its own in Visibility/Graphics keeps it."
+msgid "High Contrast Point Clouds: draw this view's scans in one strong colour, so what they show reads; again for their own colours. A scan given a colour of its own in View Visibility keeps it."
 msgstr ""
 
 #: crates/ui-egui/src/settings.rs:650
@@ -6729,13 +6729,13 @@ msgstr ""
 msgid "Room Area Computation: where room areas are measured; now {}"
 msgstr ""
 
-#: crates/ui-egui/src/lib.rs:3693
-msgid "Room Boundary Line: lines that bound rooms as walls do, to split an open space; click from point to point"
-msgstr ""
-
 #: crates/ui-egui/src/properties.rs:137
 #: crates/ui-egui/src/properties.rs:294
 msgid "Room Bounding"
+msgstr ""
+
+#: crates/ui-egui/src/lib.rs:3693
+msgid "Room Divider: lines that bound rooms as walls do, to split an open space; click from point to point"
 msgstr ""
 
 #: crates/core/src/schedule.rs:118
@@ -10214,7 +10214,7 @@ msgstr ""
 
 #: crates/ui-egui/src/lang.rs:296
 msgctxt "category"
-msgid "Room Boundary Line"
+msgid "Room Divider"
 msgstr ""
 
 #: crates/ui-egui/src/lang.rs:312
@@ -10529,7 +10529,7 @@ msgstr ""
 
 #: crates/ui-egui/src/lang.rs:296
 msgctxt "category-plural"
-msgid "Room Boundary Lines"
+msgid "Room Dividers"
 msgstr ""
 
 #: crates/ui-egui/src/lang.rs:258

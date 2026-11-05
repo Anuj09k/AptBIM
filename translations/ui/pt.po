@@ -3792,8 +3792,8 @@ msgid "High Contrast Point Clouds"
 msgstr "Nuvens de pontos em alto contraste"
 
 #: crates/ui-egui/src/footer.rs:466
-msgid "High Contrast Point Clouds: draw this view's scans in one strong colour, so what they show reads; again for their own colours. A scan given a colour of its own in Visibility/Graphics keeps it."
-msgstr ""
+msgid "High Contrast Point Clouds: draw this view's scans in one strong colour, so what they show reads; again for their own colours. A scan given a colour of its own in View Visibility keeps it."
+msgstr "Nuvens de pontos em alto contraste: desenha as nuvens desta vista em uma só cor forte, para que se leia o que mostram; de novo para as suas próprias cores. Uma nuvem com cor própria em Visibilidade/Gráficos a mantém."
 
 #: crates/ui-egui/src/settings.rs:650
 msgid "High contrast colour"
@@ -6729,14 +6729,14 @@ msgstr "Cálculo de área do ambiente"
 msgid "Room Area Computation: where room areas are measured; now {}"
 msgstr "Cálculo de área do ambiente: onde a área dos ambientes é medida; agora {}"
 
-#: crates/ui-egui/src/lib.rs:3693
-msgid "Room Boundary Line: lines that bound rooms as walls do, to split an open space; click from point to point"
-msgstr "Separador de ambientes: linhas que delimitam ambientes como as paredes, para dividir um espaço aberto; clique de ponto em ponto"
-
 #: crates/ui-egui/src/properties.rs:137
 #: crates/ui-egui/src/properties.rs:294
 msgid "Room Bounding"
 msgstr "Delimitação de ambiente"
+
+#: crates/ui-egui/src/lib.rs:3693
+msgid "Room Divider: lines that bound rooms as walls do, to split an open space; click from point to point"
+msgstr "Separador de ambientes: linhas que delimitam ambientes como as paredes, para dividir um espaço aberto; clique de ponto em ponto"
 
 #: crates/core/src/schedule.rs:118
 msgid "Room Schedule"
@@ -10214,7 +10214,7 @@ msgstr "Ambiente"
 
 #: crates/ui-egui/src/lang.rs:296
 msgctxt "category"
-msgid "Room Boundary Line"
+msgid "Room Divider"
 msgstr "Separador de ambientes"
 
 #: crates/ui-egui/src/lang.rs:312
@@ -10529,7 +10529,7 @@ msgstr "Telhados"
 
 #: crates/ui-egui/src/lang.rs:296
 msgctxt "category-plural"
-msgid "Room Boundary Lines"
+msgid "Room Dividers"
 msgstr "Separadores de ambientes"
 
 #: crates/ui-egui/src/lang.rs:258
@@ -10647,6 +10647,18 @@ msgctxt "side"
 msgid "Top"
 msgstr "Superior"
 
+#: crates/ui-egui/src/fillpatterns.rs:634
+#~ msgid "A pattern of the file replaces the one of its name in this list; else it is left out"
+#~ msgstr "Um padrão do arquivo substitui o de mesmo nome nesta lista; senão, é deixado de fora"
+#: crates/ui-egui/src/fillpatterns.rs:437
+#~ msgid "Add Family"
+#~ msgstr "Adicionar família"
+#: crates/ui-egui/src/lib.rs:3052
+#~ msgid "Aligned Dimension (DI): pick parallel wall faces, wall ends, doors, windows or grids, then click where the dimension line goes"
+#~ msgstr "Cota alinhada (DI): selecione faces e extremidades de paredes, portas, janelas ou eixos paralelos e clique onde vai a linha de cota"
+#: crates/ui-egui/src/fillpatterns.rs:343
+#~ msgid "Background"
+#~ msgstr "Fundo"
 #: crates/ui-egui/src/lib.rs:3433
 #~ msgid "Click a point the arc passes through: it sets the radius. Esc cancels."
 #~ msgstr "Clique num ponto por onde o arco passa: ele define o raio. Esc cancela."
@@ -10656,105 +10668,33 @@ msgstr "Superior"
 #: crates/ui-egui/src/lib.rs:3432
 #~ msgid "Click to enter the arc's end point."
 #~ msgstr "Clique para indicar o ponto final do arco."
-#: crates/ui-egui/src/lib.rs:2756
-#~ msgid "Dark Mode: the window and the views light on dark; sheets stay paper. It starts as your system's theme"
-#~ msgstr "Modo escuro: a janela e as vistas claras sobre fundo escuro; as folhas continuam papel. Começa no tema do sistema"
-#: crates/ui-egui/src/lib.rs:3116
-#~ msgid "Line: a wall along each step between the points clicked"
-#~ msgstr "Linha: uma parede em cada trecho entre os pontos clicados"
-#: crates/ui-egui/src/lib.rs:3076
-#~ msgid "Offset (OF): pick a wall; a copy goes to the cursor's side"
-#~ msgstr "Deslocamento (OF): selecione uma parede; uma cópia vai para o lado do cursor"
-#: crates/ui-egui/src/lib.rs:3454
-#~ msgid "Pick the first wall, on the part to keep."
-#~ msgstr "Selecione a primeira parede, na parte a manter."
-#: crates/ui-egui/src/lib.rs:3455
-#~ msgid "Pick the second wall, on the part to keep."
-#~ msgstr "Selecione a segunda parede, na parte a manter."
-#: crates/ui-egui/src/lib.rs:3457
-#~ msgid "Point to a wall: the offset goes to the cursor's side. Click to place it."
-#~ msgstr "Aponte para uma parede: o deslocamento vai para o lado do cursor. Clique para inseri-lo."
-#: crates/ui-egui/src/lib.rs:3091
-#~ msgid "Split Element (SL): click a wall where to split it"
-#~ msgstr "Dividir elemento (SL): clique numa parede onde dividi-la"
-#: crates/ui-egui/src/lib.rs:3106
-#~ msgid "Trim/Extend to Corner (TR): pick two walls, on the parts to keep"
-#~ msgstr "Aparar/estender para canto (TR): selecione duas paredes, nas partes a manter"
-#: crates/ui-egui/src/lib.rs:3957
-#~ msgid "Pick a reference line: a grid, or a wall's face or centre line."
-#~ msgstr "Selecione uma linha de referência: um eixo, ou a face ou a linha de centro de uma parede."
-#: crates/ui-egui/src/lib.rs:3958
-#~ msgid "Pick the wall or grid to line up with the reference."
-#~ msgstr "Selecione a parede ou o eixo a alinhar com a referência."
-#: crates/ui-egui/src/canvas.rs:2060
-#~ msgid "align: the lines aren't parallel"
-#~ msgstr "alinhar: as linhas não são paralelas"
-#: crates/ui-egui/src/properties.rs:196
-#~ msgid "Text Size (mm)"
-#~ msgstr "Tamanho do texto (mm)"
-#: crates/ui-egui/src/canvas.rs:2064
-#~ msgid "text: type what the note says in the Options Bar first"
-#~ msgstr "texto: digite primeiro na Barra de opções o que a nota diz"
-#: crates/ui-egui/src/linestyles.rs:212
-#~ msgid "Dashes, dots and spaces, mm on paper, so a pattern reads the same at any scale."
-#~ msgstr "Traços, pontos e espaços, em mm no papel, para que um padrão se leia igual em qualquer escala."
-#: crates/ui-egui/src/linestyles.rs:257
-#~ msgid "Segments of {}"
-#~ msgstr "Segmentos de {}"
-#: crates/ui-egui/src/linestyles.rs:280
-#~ msgid "Space"
-#~ msgstr "Espaço"
-#: crates/ui-egui/src/structure.rs:98
-#~ msgid "Reinforce (RB): bars by rules for the selected beam, column, footing or floor"
-#~ msgstr "Armar (RB): barras por regras para a viga, o pilar, a sapata ou a laje selecionados"
+#: crates/ui-egui/src/lib.rs:4503
+#~ msgid "Click to select. Drag to orbit (or Shift and the middle button), the middle button pans, the wheel zooms."
+#~ msgstr "Clique para selecionar. Arraste para orbitar (ou Shift e o botão do meio); o botão do meio move a vista, a roda aproxima."
 #: crates/ui-egui/src/lib.rs:4069
 #~ msgid "Click where the dimension's arc goes. Esc cancels."
 #~ msgstr "Clique onde fica o arco da cota. Esc cancela."
-#: crates/ui-egui/src/lib.rs:3052
-#~ msgid "Aligned Dimension (DI): pick parallel wall faces, wall ends, doors, windows or grids, then click where the dimension line goes"
-#~ msgstr "Cota alinhada (DI): selecione faces e extremidades de paredes, portas, janelas ou eixos paralelos e clique onde vai a linha de cota"
-#: crates/ui-egui/src/lib.rs:4026
-#~ msgid "Pick a round column."
-#~ msgstr "Selecione um pilar redondo."
-#: crates/ui-egui/src/lib.rs:4017
-#~ msgid "Pick a wall face, centre line or end, a door, a window or a grid to measure from."
-#~ msgstr "Selecione a face, a linha de centro ou a extremidade de uma parede, uma porta, uma janela ou um eixo para medir."
-#: crates/ui-egui/src/lib.rs:4020
-#~ msgid "Pick more references, or click away from them where the dimension line goes. Esc cancels."
-#~ msgstr "Selecione mais referências, ou clique longe delas onde vai a linha de cota. Esc cancela."
-#: crates/ui-egui/src/lib.rs:4019
-#~ msgid "Pick the next reference, parallel to the first."
-#~ msgstr "Selecione a próxima referência, paralela à primeira."
-#: crates/ui-egui/src/lib.rs:3066
-#~ msgid "Radial Dimension: pick a round column, then click where the radius goes"
-#~ msgstr "Cota radial: selecione um pilar redondo e clique onde vai o raio"
-#: crates/ui-egui/src/cad.rs:51
-#~ msgid "DXF drawings"
-#~ msgstr "Desenhos DXF"
-#: crates/ui-egui/src/lib.rs:3401
-#~ msgid "Import CAD: a DXF drawing brought into the project, drawn under the model in the plans of a level, its layers, colours and linetypes kept, and snapped to"
-#~ msgstr "Importar CAD: um desenho DXF trazido ao projeto, desenhado sob o modelo nas plantas de um nível, com suas camadas, cores e tipos de linha, e com snap"
-#: crates/ui-egui/src/lib.rs:3393
-#~ msgid "Link CAD: a DXF drawing shown in the plans of a level, read again from its file on Reload and when the project opens"
-#~ msgstr "Vincular CAD: um desenho DXF mostrado nas plantas de um nível, lido de novo do seu arquivo ao Recarregar e quando o projeto abre"
-#: crates/ui-egui/src/fillpatterns.rs:634
-#~ msgid "A pattern of the file replaces the one of its name in this list; else it is left out"
-#~ msgstr "Um padrão do arquivo substitui o de mesmo nome nesta lista; senão, é deixado de fora"
-#: crates/ui-egui/src/fillpatterns.rs:437
-#~ msgid "Add Family"
-#~ msgstr "Adicionar família"
-#: crates/ui-egui/src/fillpatterns.rs:343
-#~ msgid "Background"
-#~ msgstr "Fundo"
 #: crates/ui-egui/src/graphics.rs:554
 #~ msgid "Create from This View"
 #~ msgstr "Criar a partir desta vista"
+#: crates/ui-egui/src/cad.rs:51
+#~ msgid "DXF drawings"
+#~ msgstr "Desenhos DXF"
+#: crates/ui-egui/src/lib.rs:2756
+#~ msgid "Dark Mode: the window and the views light on dark; sheets stay paper. It starts as your system's theme"
+#~ msgstr "Modo escuro: a janela e as vistas claras sobre fundo escuro; as folhas continuam papel. Começa no tema do sistema"
 #: crates/ui-egui/src/fillpatterns.rs:395
 #~ msgid "Dashes"
 #~ msgstr "Traços"
+#: crates/ui-egui/src/linestyles.rs:212
+#~ msgid "Dashes, dots and spaces, mm on paper, so a pattern reads the same at any scale."
+#~ msgstr "Traços, pontos e espaços, em mm no papel, para que um padrão se leia igual em qualquer escala."
 #: crates/ui-egui/src/graphics.rs:524
 #~ msgid "Detail Level:"
 #~ msgstr "Nível de detalhe:"
+#: crates/ui-egui/src/settings.rs:600
+#~ msgid "Faster for large models. Hidden line and wireframe are still drawn on the processor, and so is everything if the card fails"
+#~ msgstr "Mais rápido para modelos grandes. Linhas ocultas e arame ainda são desenhados no processador, e tudo também se a placa falhar"
 #: crates/ui-egui/src/lib.rs:3472
 #~ msgid "Fill Patterns: the patterns filled regions fill with, and the filled region types"
 #~ msgstr "Padrões de preenchimento: os padrões com que as regiões são preenchidas, e os tipos de região preenchida"
@@ -10764,12 +10704,21 @@ msgstr "Superior"
 #: crates/ui-egui/src/fillpatterns.rs:343
 #~ msgid "Foreground"
 #~ msgstr "Primeiro plano"
+#: crates/ui-egui/src/lib.rs:3401
+#~ msgid "Import CAD: a DXF drawing brought into the project, drawn under the model in the plans of a level, its layers, colours and linetypes kept, and snapped to"
+#~ msgstr "Importar CAD: um desenho DXF trazido ao projeto, desenhado sob o modelo nas plantas de um nível, com suas camadas, cores e tipos de linha, e com snap"
 #: crates/ui-egui/src/lib.rs:3454
 #~ msgid "Line Styles: the pen, colour and line pattern detail lines draw in, and the patterns' dashes, dots and spaces"
 #~ msgstr "Estilos de linha: a pena, a cor e o padrão de linha em que as linhas de detalhe são desenhadas, e os traços, pontos e espaços dos padrões"
 #: crates/ui-egui/src/fillpatterns.rs:388
 #~ msgid "Line families of {}"
 #~ msgstr "Famílias de linhas de {}"
+#: crates/ui-egui/src/lib.rs:3116
+#~ msgid "Line: a wall along each step between the points clicked"
+#~ msgstr "Linha: uma parede em cada trecho entre os pontos clicados"
+#: crates/ui-egui/src/lib.rs:3393
+#~ msgid "Link CAD: a DXF drawing shown in the plans of a level, read again from its file on Reload and when the project opens"
+#~ msgstr "Vincular CAD: um desenho DXF mostrado nas plantas de um nível, lido de novo do seu arquivo ao Recarregar e quando o projeto abre"
 #: crates/ui-egui/src/fillpatterns.rs:371
 #~ msgid "New Type"
 #~ msgstr "Novo tipo"
@@ -10779,27 +10728,87 @@ msgstr "Superior"
 #: crates/ui-egui/src/graphics.rs:545
 #~ msgid "No view templates yet: Create from This View makes one."
 #~ msgstr "Ainda não há modelos de vista: Criar a partir desta vista cria um."
+#: crates/ui-egui/src/lib.rs:3076
+#~ msgid "Offset (OF): pick a wall; a copy goes to the cursor's side"
+#~ msgstr "Deslocamento (OF): selecione uma parede; uma cópia vai para o lado do cursor"
+#: crates/ui-egui/src/lib.rs:3957
+#~ msgid "Pick a reference line: a grid, or a wall's face or centre line."
+#~ msgstr "Selecione uma linha de referência: um eixo, ou a face ou a linha de centro de uma parede."
+#: crates/ui-egui/src/lib.rs:4026
+#~ msgid "Pick a round column."
+#~ msgstr "Selecione um pilar redondo."
+#: crates/ui-egui/src/lib.rs:4017
+#~ msgid "Pick a wall face, centre line or end, a door, a window or a grid to measure from."
+#~ msgstr "Selecione a face, a linha de centro ou a extremidade de uma parede, uma porta, uma janela ou um eixo para medir."
+#: crates/ui-egui/src/lib.rs:4020
+#~ msgid "Pick more references, or click away from them where the dimension line goes. Esc cancels."
+#~ msgstr "Selecione mais referências, ou clique longe delas onde vai a linha de cota. Esc cancela."
+#: crates/ui-egui/src/lib.rs:3454
+#~ msgid "Pick the first wall, on the part to keep."
+#~ msgstr "Selecione a primeira parede, na parte a manter."
+#: crates/ui-egui/src/lib.rs:4019
+#~ msgid "Pick the next reference, parallel to the first."
+#~ msgstr "Selecione a próxima referência, paralela à primeira."
+#: crates/ui-egui/src/lib.rs:3455
+#~ msgid "Pick the second wall, on the part to keep."
+#~ msgstr "Selecione a segunda parede, na parte a manter."
+#: crates/ui-egui/src/lib.rs:3958
+#~ msgid "Pick the wall or grid to line up with the reference."
+#~ msgstr "Selecione a parede ou o eixo a alinhar com a referência."
+#: crates/ui-egui/src/lib.rs:3457
+#~ msgid "Point to a wall: the offset goes to the cursor's side. Click to place it."
+#~ msgstr "Aponte para uma parede: o deslocamento vai para o lado do cursor. Clique para inseri-lo."
+#: crates/ui-egui/src/dock.rs:555
+#~ msgid "Project Browser · {}"
+#~ msgstr "Navegador de projeto · {}"
+#: crates/ui-egui/src/lib.rs:3066
+#~ msgid "Radial Dimension: pick a round column, then click where the radius goes"
+#~ msgstr "Cota radial: selecione um pilar redondo e clique onde vai o raio"
 #: crates/ui-egui/src/fillpatterns.rs:220
 #~ msgid "Region Type"
 #~ msgstr "Tipo de região"
 #: crates/ui-egui/src/fillpatterns.rs:32
 #~ msgid "Region Types"
 #~ msgstr "Tipos de região"
+#: crates/ui-egui/src/structure.rs:98
+#~ msgid "Reinforce (RB): bars by rules for the selected beam, column, footing or floor"
+#~ msgstr "Armar (RB): barras por regras para a viga, o pilar, a sapata ou a laje selecionados"
 #: crates/ui-egui/src/fillpatterns.rs:633
 #~ msgid "Replace Same Name"
 #~ msgstr "Substituir de mesmo nome"
+#: crates/ui-egui/src/graphics.rs:1038
+#~ msgid "Room reference points"
+#~ msgstr "Pontos de referência dos ambientes"
+#: crates/ui-egui/src/linestyles.rs:257
+#~ msgid "Segments of {}"
+#~ msgstr "Segmentos de {}"
 #: crates/ui-egui/src/fillpatterns.rs:395
 #~ msgid "Shift"
 #~ msgstr "Deslocamento"
+#: crates/ui-egui/src/linestyles.rs:280
+#~ msgid "Space"
+#~ msgstr "Espaço"
+#: crates/ui-egui/src/lib.rs:3091
+#~ msgid "Split Element (SL): click a wall where to split it"
+#~ msgstr "Dividir elemento (SL): clique numa parede onde dividi-la"
 #: crates/ui-egui/src/graphics.rs:538
 #~ msgid "Stop Following in This View"
 #~ msgstr "Deixar de seguir nesta vista"
+#: crates/ui-egui/src/editor.rs:811
+#~ msgid "Symbols are the lines a door's or a window's plan draws; this family isn't one."
+#~ msgstr "Símbolos são as linhas que a planta de uma porta ou janela desenha; esta família não é uma."
 #: crates/ui-egui/src/graphics.rs:490
 #~ msgid "Template:"
 #~ msgstr "Modelo de vista:"
+#: crates/ui-egui/src/properties.rs:196
+#~ msgid "Text Size (mm)"
+#~ msgstr "Tamanho do texto (mm)"
 #: crates/ui-egui/src/graphics.rs:506
 #~ msgid "The views following it get from it:"
 #~ msgstr "O que as vistas que o seguem recebem dele:"
+#: crates/ui-egui/src/lib.rs:3106
+#~ msgid "Trim/Extend to Corner (TR): pick two walls, on the parts to keep"
+#~ msgstr "Aparar/estender para canto (TR): selecione duas paredes, nas partes a manter"
 #: crates/ui-egui/src/graphics.rs:519
 #~ msgid "View Scale:"
 #~ msgstr "Escala da vista:"
@@ -10809,6 +10818,12 @@ msgstr "Superior"
 #: crates/ui-egui/src/fillpatterns.rs:336
 #~ msgid "What filled regions are filled with: a foreground pattern over a background one, over the paper when it masks."
 #~ msgstr "Com que as regiões preenchidas são preenchidas: um padrão de primeiro plano sobre um de fundo, sobre o papel quando é máscara."
+#: crates/ui-egui/src/canvas.rs:2060
+#~ msgid "align: the lines aren't parallel"
+#~ msgstr "alinhar: as linhas não são paralelas"
+#: crates/ui-egui/src/canvas.rs:2064
+#~ msgid "text: type what the note says in the Options Bar first"
+#~ msgstr "texto: digite primeiro na Barra de opções o que a nota diz"
 #: crates/ui-egui/src/fillpatterns.rs:415
 #~ msgid "whole"
 #~ msgstr "contínua"
@@ -10830,21 +10845,6 @@ msgstr "Superior"
 #: crates/ui-egui/src/fillpatterns.rs:354
 #~ msgid "{}: {} Colour"
 #~ msgstr "{}: Cor de {}"
-#: crates/ui-egui/src/editor.rs:811
-#~ msgid "Symbols are the lines a door's or a window's plan draws; this family isn't one."
-#~ msgstr "Símbolos são as linhas que a planta de uma porta ou janela desenha; esta família não é uma."
-#: crates/ui-egui/src/graphics.rs:1038
-#~ msgid "Room reference points"
-#~ msgstr "Pontos de referência dos ambientes"
-#: crates/ui-egui/src/dock.rs:555
-#~ msgid "Project Browser · {}"
-#~ msgstr "Navegador de projeto · {}"
-#: crates/ui-egui/src/lib.rs:4503
-#~ msgid "Click to select. Drag to orbit (or Shift and the middle button), the middle button pans, the wheel zooms."
-#~ msgstr "Clique para selecionar. Arraste para orbitar (ou Shift e o botão do meio); o botão do meio move a vista, a roda aproxima."
-#: crates/ui-egui/src/settings.rs:600
-#~ msgid "Faster for large models. Hidden line and wireframe are still drawn on the processor, and so is everything if the card fails"
-#~ msgstr "Mais rápido para modelos grandes. Linhas ocultas e arame ainda são desenhados no processador, e tudo também se a placa falhar"
-#: crates/ui-egui/src/footer.rs:468
-#~ msgid "High Contrast Point Clouds: draw this view's scans in one strong colour, so what they show reads; again for their own colours. A scan given a colour of its own in View Visibility keeps it."
-#~ msgstr "Nuvens de pontos em alto contraste: desenha as nuvens desta vista em uma só cor forte, para que se leia o que mostram; de novo para as suas próprias cores. Uma nuvem com cor própria em Visibilidade/Gráficos a mantém."
+#: crates/ui-egui/src/footer.rs:466
+#~ msgid "High Contrast Point Clouds: draw this view's scans in one strong colour, so what they show reads; again for their own colours. A scan given a colour of its own in Visibility/Graphics keeps it."
+#~ msgstr ""

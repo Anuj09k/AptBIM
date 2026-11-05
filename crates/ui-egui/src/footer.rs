@@ -464,7 +464,7 @@ impl BimApp {
                         let set_by = self.controlled_by(Group::Categories);
                         let tip = msg!(
                             "High Contrast Point Clouds: draw this view's scans in one strong colour, so what they show reads; \
-                             again for their own colours. A scan given a colour of its own in Visibility/Graphics keeps it."
+                             again for their own colours. A scan given a colour of its own in View Visibility keeps it."
                         );
                         let r = ui
                             .add_enabled_ui(set_by.is_none(), |ui| {

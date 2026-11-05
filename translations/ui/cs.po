@@ -3791,8 +3791,8 @@ msgid "High Contrast Point Clouds"
 msgstr "Vysoký kontrast mračen bodů"
 
 #: crates/ui-egui/src/footer.rs:466
-msgid "High Contrast Point Clouds: draw this view's scans in one strong colour, so what they show reads; again for their own colours. A scan given a colour of its own in Visibility/Graphics keeps it."
-msgstr ""
+msgid "High Contrast Point Clouds: draw this view's scans in one strong colour, so what they show reads; again for their own colours. A scan given a colour of its own in View Visibility keeps it."
+msgstr "Vysoký kontrast mračen bodů: vykreslí skeny v tomto pohledu jednou výraznou barvou pro lepší čitelnost; dalším kliknutím vrátí původní barvy. Sken s vlastní barvou nastavenou ve Viditelnosti/Zobrazení si ji zachová."
 
 #: crates/ui-egui/src/settings.rs:650
 msgid "High contrast colour"
@@ -6728,14 +6728,14 @@ msgstr "Výpočet plochy místností"
 msgid "Room Area Computation: where room areas are measured; now {}"
 msgstr "Výpočet plochy místností: kde se plochy místností měří; nyní {}"
 
-#: crates/ui-egui/src/lib.rs:3693
-msgid "Room Boundary Line: lines that bound rooms as walls do, to split an open space; click from point to point"
-msgstr "Oddělovač místností: čáry, které místnosti ohraničují stejně jako stěny a rozdělují otevřený prostor; klikejte od bodu k bodu"
-
 #: crates/ui-egui/src/properties.rs:137
 #: crates/ui-egui/src/properties.rs:294
 msgid "Room Bounding"
 msgstr "Ohraničení místnosti"
+
+#: crates/ui-egui/src/lib.rs:3693
+msgid "Room Divider: lines that bound rooms as walls do, to split an open space; click from point to point"
+msgstr "Oddělovač místností: čáry, které místnosti ohraničují stejně jako stěny a rozdělují otevřený prostor; klikejte od bodu k bodu"
 
 #: crates/core/src/schedule.rs:118
 msgid "Room Schedule"
@@ -10213,7 +10213,7 @@ msgstr "Místnost"
 
 #: crates/ui-egui/src/lang.rs:296
 msgctxt "category"
-msgid "Room Boundary Line"
+msgid "Room Divider"
 msgstr "Oddělovač místností"
 
 #: crates/ui-egui/src/lang.rs:312
@@ -10528,7 +10528,7 @@ msgstr "Střechy"
 
 #: crates/ui-egui/src/lang.rs:296
 msgctxt "category-plural"
-msgid "Room Boundary Lines"
+msgid "Room Dividers"
 msgstr "Oddělovače místností"
 
 #: crates/ui-egui/src/lang.rs:258
@@ -10646,9 +10646,66 @@ msgctxt "side"
 msgid "Top"
 msgstr "Horní"
 
+#: crates/ui-egui/src/fillpatterns.rs:634
+#~ msgid "A pattern of the file replaces the one of its name in this list; else it is left out"
+#~ msgstr "Vzor ze souboru nahradí vzor se stejným názvem v tomto seznamu; jinak bude vynechán"
+#: crates/ui-egui/src/fillpatterns.rs:437
+#~ msgid "Add Family"
+#~ msgstr "Přidat rodinu"
 #: crates/ui-egui/src/lib.rs:3039
 #~ msgid "Aligned Dimension (DI): pick parallel wall faces, wall ends, doors, windows or grids, then click where the dimension line goes"
 #~ msgstr "Zarovnaná kóta (DI): vyberte rovnoběžné plochy stěn, konce stěn, dveře, okna nebo osnovy a potom klikněte do místa vynášecí čáry"
+#: crates/ui-egui/src/fillpatterns.rs:343
+#~ msgid "Background"
+#~ msgstr "Pozadí"
+#: crates/ui-egui/src/lib.rs:4503
+#~ msgid "Click to select. Drag to orbit (or Shift and the middle button), the middle button pans, the wheel zooms."
+#~ msgstr "Kliknutím vyberete prvek. Tažením myší (nebo Shift + prostřední tlačítko) otáčíte pohled, prostřední tlačítko posouvá, kolečko přibližuje."
+#: crates/ui-egui/src/graphics.rs:554
+#~ msgid "Create from This View"
+#~ msgstr "Vytvořit z tohoto pohledu"
+#: crates/ui-egui/src/cad.rs:51
+#~ msgid "DXF drawings"
+#~ msgstr "Výkresy DXF"
+#: crates/ui-egui/src/fillpatterns.rs:395
+#~ msgid "Dashes"
+#~ msgstr "Čárky"
+#: crates/ui-egui/src/graphics.rs:524
+#~ msgid "Detail Level:"
+#~ msgstr "Úroveň detailu:"
+#: crates/ui-egui/src/settings.rs:600
+#~ msgid "Faster for large models. Hidden line and wireframe are still drawn on the processor, and so is everything if the card fails"
+#~ msgstr "Rychlejší pro velké modely. Skryté čáry a drátový model se stále vykreslují procesorem, stejně jako vše ostatní při selhání grafické karty"
+#: crates/ui-egui/src/lib.rs:3472
+#~ msgid "Fill Patterns: the patterns filled regions fill with, and the filled region types"
+#~ msgstr "Vzory výplně: vzory používané pro vyplněné oblasti a typy vyplněných oblastí"
+#: crates/ui-egui/src/graphics.rs:538
+#~ msgid "Follow in This View"
+#~ msgstr "Sledovat v tomto pohledu"
+#: crates/ui-egui/src/fillpatterns.rs:343
+#~ msgid "Foreground"
+#~ msgstr "Popředí"
+#: crates/ui-egui/src/lib.rs:3401
+#~ msgid "Import CAD: a DXF drawing brought into the project, drawn under the model in the plans of a level, its layers, colours and linetypes kept, and snapped to"
+#~ msgstr "Importovat CAD: výkres DXF vložený do projektu, vykreslený pod modelem v půdorysech podlaží, se zachováním vrstev, barev a typů čar a možností uchopování"
+#: crates/ui-egui/src/lib.rs:3454
+#~ msgid "Line Styles: the pen, colour and line pattern detail lines draw in, and the patterns' dashes, dots and spaces"
+#~ msgstr "Styly čar: pero, barva a vzor čáry pro kreslení čar detailu a čárky, tečky a mezery vzorů"
+#: crates/ui-egui/src/fillpatterns.rs:388
+#~ msgid "Line families of {}"
+#~ msgstr "Skupiny čar {}"
+#: crates/ui-egui/src/lib.rs:3393
+#~ msgid "Link CAD: a DXF drawing shown in the plans of a level, read again from its file on Reload and when the project opens"
+#~ msgstr "Připojit CAD: výkres DXF zobrazený v půdorysech podlaží, znovu načítaný ze souboru při opětovném načtení a při otevření projektu"
+#: crates/ui-egui/src/fillpatterns.rs:371
+#~ msgid "New Type"
+#~ msgstr "Nový typ"
+#: crates/ui-egui/src/graphics.rs:551
+#~ msgid "New template:"
+#~ msgstr "Nová šablona:"
+#: crates/ui-egui/src/graphics.rs:545
+#~ msgid "No view templates yet: Create from This View makes one."
+#~ msgstr "Dosud žádné šablony pohledů: tlačítkem Vytvořit z tohoto pohledu ji vytvoříte."
 #: crates/ui-egui/src/lib.rs:4013
 #~ msgid "Pick a round column."
 #~ msgstr "Vyberte kruhový sloup."
@@ -10661,60 +10718,12 @@ msgstr "Horní"
 #: crates/ui-egui/src/lib.rs:4006
 #~ msgid "Pick the next reference, parallel to the first."
 #~ msgstr "Vyberte další referenci rovnoběžnou s první."
+#: crates/ui-egui/src/dock.rs:555
+#~ msgid "Project Browser · {}"
+#~ msgstr "Prohlížeč projektu · {}"
 #: crates/ui-egui/src/lib.rs:3053
 #~ msgid "Radial Dimension: pick a round column, then click where the radius goes"
 #~ msgstr "Poloměrová kóta: vyberte kruhový sloup a poté klikněte na umístění kótovací čáry"
-#: crates/ui-egui/src/cad.rs:51
-#~ msgid "DXF drawings"
-#~ msgstr "Výkresy DXF"
-#: crates/ui-egui/src/lib.rs:3401
-#~ msgid "Import CAD: a DXF drawing brought into the project, drawn under the model in the plans of a level, its layers, colours and linetypes kept, and snapped to"
-#~ msgstr "Importovat CAD: výkres DXF vložený do projektu, vykreslený pod modelem v půdorysech podlaží, se zachováním vrstev, barev a typů čar a možností uchopování"
-#: crates/ui-egui/src/lib.rs:3393
-#~ msgid "Link CAD: a DXF drawing shown in the plans of a level, read again from its file on Reload and when the project opens"
-#~ msgstr "Připojit CAD: výkres DXF zobrazený v půdorysech podlaží, znovu načítaný ze souboru při opětovném načtení a při otevření projektu"
-#: crates/ui-egui/src/fillpatterns.rs:634
-#~ msgid "A pattern of the file replaces the one of its name in this list; else it is left out"
-#~ msgstr "Vzor ze souboru nahradí vzor se stejným názvem v tomto seznamu; jinak bude vynechán"
-#: crates/ui-egui/src/fillpatterns.rs:437
-#~ msgid "Add Family"
-#~ msgstr "Přidat rodinu"
-#: crates/ui-egui/src/fillpatterns.rs:343
-#~ msgid "Background"
-#~ msgstr "Pozadí"
-#: crates/ui-egui/src/graphics.rs:554
-#~ msgid "Create from This View"
-#~ msgstr "Vytvořit z tohoto pohledu"
-#: crates/ui-egui/src/fillpatterns.rs:395
-#~ msgid "Dashes"
-#~ msgstr "Čárky"
-#: crates/ui-egui/src/graphics.rs:524
-#~ msgid "Detail Level:"
-#~ msgstr "Úroveň detailu:"
-#: crates/ui-egui/src/lib.rs:3472
-#~ msgid "Fill Patterns: the patterns filled regions fill with, and the filled region types"
-#~ msgstr "Vzory výplně: vzory používané pro vyplněné oblasti a typy vyplněných oblastí"
-#: crates/ui-egui/src/graphics.rs:538
-#~ msgid "Follow in This View"
-#~ msgstr "Sledovat v tomto pohledu"
-#: crates/ui-egui/src/fillpatterns.rs:343
-#~ msgid "Foreground"
-#~ msgstr "Popředí"
-#: crates/ui-egui/src/lib.rs:3454
-#~ msgid "Line Styles: the pen, colour and line pattern detail lines draw in, and the patterns' dashes, dots and spaces"
-#~ msgstr "Styly čar: pero, barva a vzor čáry pro kreslení čar detailu a čárky, tečky a mezery vzorů"
-#: crates/ui-egui/src/fillpatterns.rs:388
-#~ msgid "Line families of {}"
-#~ msgstr "Skupiny čar {}"
-#: crates/ui-egui/src/fillpatterns.rs:371
-#~ msgid "New Type"
-#~ msgstr "Nový typ"
-#: crates/ui-egui/src/graphics.rs:551
-#~ msgid "New template:"
-#~ msgstr "Nová šablona:"
-#: crates/ui-egui/src/graphics.rs:545
-#~ msgid "No view templates yet: Create from This View makes one."
-#~ msgstr "Dosud žádné šablony pohledů: tlačítkem Vytvořit z tohoto pohledu ji vytvoříte."
 #: crates/ui-egui/src/fillpatterns.rs:220
 #~ msgid "Region Type"
 #~ msgstr "Typ oblasti"
@@ -10730,6 +10739,9 @@ msgstr "Horní"
 #: crates/ui-egui/src/graphics.rs:538
 #~ msgid "Stop Following in This View"
 #~ msgstr "Zastavit sledování v tomto pohledu"
+#: crates/ui-egui/src/editor.rs:811
+#~ msgid "Symbols are the lines a door's or a window's plan draws; this family isn't one."
+#~ msgstr "Symboly jsou čáry, které se vykreslují v půdorysu dveří nebo oken; tato rodina jimi není."
 #: crates/ui-egui/src/graphics.rs:490
 #~ msgid "Template:"
 #~ msgstr "Šablona:"
@@ -10766,18 +10778,6 @@ msgstr "Horní"
 #: crates/ui-egui/src/fillpatterns.rs:354
 #~ msgid "{}: {} Colour"
 #~ msgstr "{}: Barva: {}"
-#: crates/ui-egui/src/editor.rs:811
-#~ msgid "Symbols are the lines a door's or a window's plan draws; this family isn't one."
-#~ msgstr "Symboly jsou čáry, které se vykreslují v půdorysu dveří nebo oken; tato rodina jimi není."
-#: crates/ui-egui/src/dock.rs:555
-#~ msgid "Project Browser · {}"
-#~ msgstr "Prohlížeč projektu · {}"
-#: crates/ui-egui/src/lib.rs:4503
-#~ msgid "Click to select. Drag to orbit (or Shift and the middle button), the middle button pans, the wheel zooms."
-#~ msgstr "Kliknutím vyberete prvek. Tažením myší (nebo Shift + prostřední tlačítko) otáčíte pohled, prostřední tlačítko posouvá, kolečko přibližuje."
-#: crates/ui-egui/src/settings.rs:600
-#~ msgid "Faster for large models. Hidden line and wireframe are still drawn on the processor, and so is everything if the card fails"
-#~ msgstr "Rychlejší pro velké modely. Skryté čáry a drátový model se stále vykreslují procesorem, stejně jako vše ostatní při selhání grafické karty"
-#: crates/ui-egui/src/footer.rs:468
-#~ msgid "High Contrast Point Clouds: draw this view's scans in one strong colour, so what they show reads; again for their own colours. A scan given a colour of its own in View Visibility keeps it."
-#~ msgstr "Vysoký kontrast mračen bodů: vykreslí skeny v tomto pohledu jednou výraznou barvou pro lepší čitelnost; dalším kliknutím vrátí původní barvy. Sken s vlastní barvou nastavenou ve Viditelnosti/Zobrazení si ji zachová."
+#: crates/ui-egui/src/footer.rs:466
+#~ msgid "High Contrast Point Clouds: draw this view's scans in one strong colour, so what they show reads; again for their own colours. A scan given a colour of its own in Visibility/Graphics keeps it."
+#~ msgstr ""

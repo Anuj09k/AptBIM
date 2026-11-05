@@ -3689,8 +3689,8 @@ impl BimApp {
                 (Icon::Room, "Room", msg!("Room (RM): click inside walls"), Tool::Room),
                 (
                     Icon::RoomSeparator,
-                    "Room Boundary Line",
-                    msg!("Room Boundary Line: lines that bound rooms as walls do, to split an open space; click from point to point"),
+                    "Room Divider",
+                    msg!("Room Divider: lines that bound rooms as walls do, to split an open space; click from point to point"),
                     Tool::RoomSeparator(None),
                 ),
             ],

@@ -3792,8 +3792,8 @@ msgid "High Contrast Point Clouds"
 msgstr "Nuvole di punti ad alto contrasto"
 
 #: crates/ui-egui/src/footer.rs:466
-msgid "High Contrast Point Clouds: draw this view's scans in one strong colour, so what they show reads; again for their own colours. A scan given a colour of its own in Visibility/Graphics keeps it."
-msgstr ""
+msgid "High Contrast Point Clouds: draw this view's scans in one strong colour, so what they show reads; again for their own colours. A scan given a colour of its own in View Visibility keeps it."
+msgstr "Nuvole di punti ad alto contrasto: disegna le scansioni di questa vista in un unico colore forte, perché si leggano; ripetendo, tornano ai loro colori. Una scansione con un colore proprio in Visibilità/Grafica lo mantiene."
 
 #: crates/ui-egui/src/settings.rs:650
 msgid "High contrast colour"
@@ -6729,13 +6729,13 @@ msgstr "Calcolo superfici delle zone"
 msgid "Room Area Computation: where room areas are measured; now {}"
 msgstr "Calcolo superfici delle zone: dove si misurano le superfici; ora {}"
 
-#: crates/ui-egui/src/lib.rs:3693
-msgid "Room Boundary Line: lines that bound rooms as walls do, to split an open space; click from point to point"
-msgstr ""
-
 #: crates/ui-egui/src/properties.rs:137
 #: crates/ui-egui/src/properties.rs:294
 msgid "Room Bounding"
+msgstr ""
+
+#: crates/ui-egui/src/lib.rs:3693
+msgid "Room Divider: lines that bound rooms as walls do, to split an open space; click from point to point"
 msgstr ""
 
 #: crates/core/src/schedule.rs:118
@@ -10214,7 +10214,7 @@ msgstr "Zona"
 
 #: crates/ui-egui/src/lang.rs:296
 msgctxt "category"
-msgid "Room Boundary Line"
+msgid "Room Divider"
 msgstr "Separatore di zona"
 
 #: crates/ui-egui/src/lang.rs:312
@@ -10529,7 +10529,7 @@ msgstr "Coperture"
 
 #: crates/ui-egui/src/lang.rs:296
 msgctxt "category-plural"
-msgid "Room Boundary Lines"
+msgid "Room Dividers"
 msgstr "Separatori di zona"
 
 #: crates/ui-egui/src/lang.rs:258
@@ -10656,6 +10656,9 @@ msgstr ""
 #: crates/ui-egui/src/fillpatterns.rs:343
 #~ msgid "Background"
 #~ msgstr "Sfondo"
+#: crates/ui-egui/src/lib.rs:4475
+#~ msgid "Click to select. Drag to orbit (or Shift and the middle button), the middle button pans, the wheel zooms."
+#~ msgstr "Clic per selezionare. Trascina per orbitare (o Maiusc e tasto centrale), il tasto centrale sposta la vista, la rotellina fa lo zoom."
 #: crates/ui-egui/src/graphics.rs:554
 #~ msgid "Create from This View"
 #~ msgstr "Crea da questa vista"
@@ -10665,6 +10668,9 @@ msgstr ""
 #: crates/ui-egui/src/graphics.rs:524
 #~ msgid "Detail Level:"
 #~ msgstr "Livello di dettaglio:"
+#: crates/ui-egui/src/settings.rs:600
+#~ msgid "Faster for large models. Hidden line and wireframe are still drawn on the processor, and so is everything if the card fails"
+#~ msgstr "Più veloce con modelli grandi. Linee nascoste e fil di ferro sono comunque disegnati dal processore, e così tutto se la scheda non funziona"
 #: crates/ui-egui/src/lib.rs:3565
 #~ msgid "Fill Patterns: the patterns filled regions fill with, and the filled region types"
 #~ msgstr "Motivi di retino: i motivi con cui si riempiono i retini, e i tipi di retino"
@@ -10756,12 +10762,6 @@ msgstr ""
 #: crates/ui-egui/src/fillpatterns.rs:354
 #~ msgid "{}: {} Colour"
 #~ msgstr "{}: colore {}"
-#: crates/ui-egui/src/lib.rs:4475
-#~ msgid "Click to select. Drag to orbit (or Shift and the middle button), the middle button pans, the wheel zooms."
-#~ msgstr "Clic per selezionare. Trascina per orbitare (o Maiusc e tasto centrale), il tasto centrale sposta la vista, la rotellina fa lo zoom."
-#: crates/ui-egui/src/settings.rs:600
-#~ msgid "Faster for large models. Hidden line and wireframe are still drawn on the processor, and so is everything if the card fails"
-#~ msgstr "Più veloce con modelli grandi. Linee nascoste e fil di ferro sono comunque disegnati dal processore, e così tutto se la scheda non funziona"
-#: crates/ui-egui/src/footer.rs:468
-#~ msgid "High Contrast Point Clouds: draw this view's scans in one strong colour, so what they show reads; again for their own colours. A scan given a colour of its own in View Visibility keeps it."
-#~ msgstr "Nuvole di punti ad alto contrasto: disegna le scansioni di questa vista in un unico colore forte, perché si leggano; ripetendo, tornano ai loro colori. Una scansione con un colore proprio in Visibilità/Grafica lo mantiene."
+#: crates/ui-egui/src/footer.rs:466
+#~ msgid "High Contrast Point Clouds: draw this view's scans in one strong colour, so what they show reads; again for their own colours. A scan given a colour of its own in Visibility/Graphics keeps it."
+#~ msgstr ""

@@ -3792,8 +3792,8 @@ msgid "High Contrast Point Clouds"
 msgstr "Nuages de points à contraste élevé"
 
 #: crates/ui-egui/src/footer.rs:466
-msgid "High Contrast Point Clouds: draw this view's scans in one strong colour, so what they show reads; again for their own colours. A scan given a colour of its own in Visibility/Graphics keeps it."
-msgstr ""
+msgid "High Contrast Point Clouds: draw this view's scans in one strong colour, so what they show reads; again for their own colours. A scan given a colour of its own in View Visibility keeps it."
+msgstr "Nuages de points à contraste élevé: dessiner les scans de cette vue dans une seule couleur forte pour que ce qu'ils montrent soit lisible; de nouveau pour revenir à leurs propres couleurs. Un scan doté d'une couleur propre dans Visibilité/Graphismes la garde."
 
 #: crates/ui-egui/src/settings.rs:650
 msgid "High contrast colour"
@@ -6729,14 +6729,14 @@ msgstr "Calcul de la surface des pièces"
 msgid "Room Area Computation: where room areas are measured; now {}"
 msgstr "Calcul de la surface des pièces: où la surface des pièces est mesurée; actuellement {}"
 
-#: crates/ui-egui/src/lib.rs:3693
-msgid "Room Boundary Line: lines that bound rooms as walls do, to split an open space; click from point to point"
-msgstr "Séparateur de pièces: lignes qui délimitent les pièces comme le font les murs, pour diviser un espace ouvert; cliquer de point en point"
-
 #: crates/ui-egui/src/properties.rs:137
 #: crates/ui-egui/src/properties.rs:294
 msgid "Room Bounding"
 msgstr "Délimitation de pièce"
+
+#: crates/ui-egui/src/lib.rs:3693
+msgid "Room Divider: lines that bound rooms as walls do, to split an open space; click from point to point"
+msgstr "Séparateur de pièces: lignes qui délimitent les pièces comme le font les murs, pour diviser un espace ouvert; cliquer de point en point"
 
 #: crates/core/src/schedule.rs:118
 msgid "Room Schedule"
@@ -10214,7 +10214,7 @@ msgstr "Pièce"
 
 #: crates/ui-egui/src/lang.rs:296
 msgctxt "category"
-msgid "Room Boundary Line"
+msgid "Room Divider"
 msgstr "Séparateur de pièces"
 
 #: crates/ui-egui/src/lang.rs:312
@@ -10529,7 +10529,7 @@ msgstr "Toits"
 
 #: crates/ui-egui/src/lang.rs:296
 msgctxt "category-plural"
-msgid "Room Boundary Lines"
+msgid "Room Dividers"
 msgstr "Séparateurs de pièces"
 
 #: crates/ui-egui/src/lang.rs:258
@@ -10656,6 +10656,9 @@ msgstr "Dessus"
 #: crates/ui-egui/src/fillpatterns.rs:343
 #~ msgid "Background"
 #~ msgstr "Arrière-plan"
+#: crates/ui-egui/src/lib.rs:4503
+#~ msgid "Click to select. Drag to orbit (or Shift and the middle button), the middle button pans, the wheel zooms."
+#~ msgstr "Cliquer pour sélectionner. Faire glisser pour orbiter (ou Maj et le bouton du milieu), le bouton du milieu fait un panoramique, la molette zoome."
 #: crates/ui-egui/src/graphics.rs:554
 #~ msgid "Create from This View"
 #~ msgstr "Créer à partir de cette vue"
@@ -10665,6 +10668,9 @@ msgstr "Dessus"
 #: crates/ui-egui/src/graphics.rs:524
 #~ msgid "Detail Level:"
 #~ msgstr "Niveau de détail:"
+#: crates/ui-egui/src/settings.rs:600
+#~ msgid "Faster for large models. Hidden line and wireframe are still drawn on the processor, and so is everything if the card fails"
+#~ msgstr "Plus rapide pour les grands modèles. Les lignes cachées et le filaire sont toujours dessinés par le processeur, comme tout le reste si la carte échoue"
 #: crates/ui-egui/src/lib.rs:3472
 #~ msgid "Fill Patterns: the patterns filled regions fill with, and the filled region types"
 #~ msgstr "Motifs de remplissage: les motifs dont les régions remplies sont garnies, et les types de région remplie"
@@ -10689,6 +10695,9 @@ msgstr "Dessus"
 #: crates/ui-egui/src/graphics.rs:545
 #~ msgid "No view templates yet: Create from This View makes one."
 #~ msgstr "Aucun gabarit de vue pour l'instant: Créer à partir de cette vue en crée un."
+#: crates/ui-egui/src/dock.rs:555
+#~ msgid "Project Browser · {}"
+#~ msgstr "Navigateur de projet · {}"
 #: crates/ui-egui/src/fillpatterns.rs:220
 #~ msgid "Region Type"
 #~ msgstr "Type de région"
@@ -10704,6 +10713,9 @@ msgstr "Dessus"
 #: crates/ui-egui/src/graphics.rs:538
 #~ msgid "Stop Following in This View"
 #~ msgstr "Cesser de suivre dans cette vue"
+#: crates/ui-egui/src/editor.rs:811
+#~ msgid "Symbols are the lines a door's or a window's plan draws; this family isn't one."
+#~ msgstr "Les symboles sont les lignes que dessine le plan d'une porte ou d'une fenêtre; cette famille n'en est pas une."
 #: crates/ui-egui/src/graphics.rs:490
 #~ msgid "Template:"
 #~ msgstr "Modèle:"
@@ -10740,18 +10752,6 @@ msgstr "Dessus"
 #: crates/ui-egui/src/fillpatterns.rs:354
 #~ msgid "{}: {} Colour"
 #~ msgstr "{}: {} (couleur)"
-#: crates/ui-egui/src/editor.rs:811
-#~ msgid "Symbols are the lines a door's or a window's plan draws; this family isn't one."
-#~ msgstr "Les symboles sont les lignes que dessine le plan d'une porte ou d'une fenêtre; cette famille n'en est pas une."
-#: crates/ui-egui/src/dock.rs:555
-#~ msgid "Project Browser · {}"
-#~ msgstr "Navigateur de projet · {}"
-#: crates/ui-egui/src/lib.rs:4503
-#~ msgid "Click to select. Drag to orbit (or Shift and the middle button), the middle button pans, the wheel zooms."
-#~ msgstr "Cliquer pour sélectionner. Faire glisser pour orbiter (ou Maj et le bouton du milieu), le bouton du milieu fait un panoramique, la molette zoome."
-#: crates/ui-egui/src/settings.rs:600
-#~ msgid "Faster for large models. Hidden line and wireframe are still drawn on the processor, and so is everything if the card fails"
-#~ msgstr "Plus rapide pour les grands modèles. Les lignes cachées et le filaire sont toujours dessinés par le processeur, comme tout le reste si la carte échoue"
-#: crates/ui-egui/src/footer.rs:468
-#~ msgid "High Contrast Point Clouds: draw this view's scans in one strong colour, so what they show reads; again for their own colours. A scan given a colour of its own in View Visibility keeps it."
-#~ msgstr "Nuages de points à contraste élevé: dessiner les scans de cette vue dans une seule couleur forte pour que ce qu'ils montrent soit lisible; de nouveau pour revenir à leurs propres couleurs. Un scan doté d'une couleur propre dans Visibilité/Graphismes la garde."
+#: crates/ui-egui/src/footer.rs:466
+#~ msgid "High Contrast Point Clouds: draw this view's scans in one strong colour, so what they show reads; again for their own colours. A scan given a colour of its own in Visibility/Graphics keeps it."
+#~ msgstr ""

@@ -3792,8 +3792,8 @@ msgid "High Contrast Point Clouds"
 msgstr "Puntenwolken met hoog contrast"
 
 #: crates/ui-egui/src/footer.rs:466
-msgid "High Contrast Point Clouds: draw this view's scans in one strong colour, so what they show reads; again for their own colours. A scan given a colour of its own in Visibility/Graphics keeps it."
-msgstr ""
+msgid "High Contrast Point Clouds: draw this view's scans in one strong colour, so what they show reads; again for their own colours. A scan given a colour of its own in View Visibility keeps it."
+msgstr "Puntenwolken met hoog contrast: teken de scans van deze weergave in één sterke kleur, zodat te lezen valt wat ze tonen; nog eens voor hun eigen kleuren. Een scan met een eigen kleur in Zichtbaarheid/Grafische weergave behoudt die."
 
 #: crates/ui-egui/src/settings.rs:650
 msgid "High contrast colour"
@@ -6729,14 +6729,14 @@ msgstr "Berekening van de ruimteoppervlakte"
 msgid "Room Area Computation: where room areas are measured; now {}"
 msgstr "Berekening van de ruimteoppervlakte: waar ruimteoppervlaktes gemeten worden; nu {}"
 
-#: crates/ui-egui/src/lib.rs:3693
-msgid "Room Boundary Line: lines that bound rooms as walls do, to split an open space; click from point to point"
-msgstr "Ruimtescheiding: lijnen die ruimtes begrenzen zoals muren, om een open ruimte te splitsen; klik van punt tot punt"
-
 #: crates/ui-egui/src/properties.rs:137
 #: crates/ui-egui/src/properties.rs:294
 msgid "Room Bounding"
 msgstr "Ruimtebegrenzing"
+
+#: crates/ui-egui/src/lib.rs:3693
+msgid "Room Divider: lines that bound rooms as walls do, to split an open space; click from point to point"
+msgstr "Ruimtescheiding: lijnen die ruimtes begrenzen zoals muren, om een open ruimte te splitsen; klik van punt tot punt"
 
 #: crates/core/src/schedule.rs:118
 msgid "Room Schedule"
@@ -10214,7 +10214,7 @@ msgstr "Ruimte"
 
 #: crates/ui-egui/src/lang.rs:296
 msgctxt "category"
-msgid "Room Boundary Line"
+msgid "Room Divider"
 msgstr "Ruimtescheiding"
 
 #: crates/ui-egui/src/lang.rs:312
@@ -10529,7 +10529,7 @@ msgstr "Daken"
 
 #: crates/ui-egui/src/lang.rs:296
 msgctxt "category-plural"
-msgid "Room Boundary Lines"
+msgid "Room Dividers"
 msgstr "Ruimtescheidingen"
 
 #: crates/ui-egui/src/lang.rs:258
@@ -10656,6 +10656,9 @@ msgstr "Boven"
 #: crates/ui-egui/src/fillpatterns.rs:343
 #~ msgid "Background"
 #~ msgstr "Achtergrond"
+#: crates/ui-egui/src/lib.rs:4503
+#~ msgid "Click to select. Drag to orbit (or Shift and the middle button), the middle button pans, the wheel zooms."
+#~ msgstr "Klik om te selecteren. Sleep om te draaien (of Shift en de middelste knop), de middelste knop verschuift, het wiel zoomt."
 #: crates/ui-egui/src/graphics.rs:554
 #~ msgid "Create from This View"
 #~ msgstr "Maken vanuit deze weergave"
@@ -10665,6 +10668,9 @@ msgstr "Boven"
 #: crates/ui-egui/src/graphics.rs:524
 #~ msgid "Detail Level:"
 #~ msgstr "Detailniveau:"
+#: crates/ui-egui/src/settings.rs:600
+#~ msgid "Faster for large models. Hidden line and wireframe are still drawn on the processor, and so is everything if the card fails"
+#~ msgstr "Sneller voor grote modellen. Verborgen lijnen en draadmodel worden nog op de processor getekend, en alles ook als de kaart faalt"
 #: crates/ui-egui/src/lib.rs:3472
 #~ msgid "Fill Patterns: the patterns filled regions fill with, and the filled region types"
 #~ msgstr "Vulpatronen: de patronen waarmee gevulde gebieden gevuld worden, en de types gevulde gebieden"
@@ -10689,6 +10695,9 @@ msgstr "Boven"
 #: crates/ui-egui/src/graphics.rs:545
 #~ msgid "No view templates yet: Create from This View makes one."
 #~ msgstr "Nog geen weergavesjablonen: met Maken vanuit deze weergave maak je er een."
+#: crates/ui-egui/src/dock.rs:555
+#~ msgid "Project Browser · {}"
+#~ msgstr "Projectbrowser · {}"
 #: crates/ui-egui/src/fillpatterns.rs:220
 #~ msgid "Region Type"
 #~ msgstr "Gebiedstype"
@@ -10704,6 +10713,9 @@ msgstr "Boven"
 #: crates/ui-egui/src/graphics.rs:538
 #~ msgid "Stop Following in This View"
 #~ msgstr "Niet meer volgen in deze weergave"
+#: crates/ui-egui/src/editor.rs:811
+#~ msgid "Symbols are the lines a door's or a window's plan draws; this family isn't one."
+#~ msgstr "Symbolen zijn de lijnen die de plattegrond van een deur of een raam tekent; deze familie is er geen."
 #: crates/ui-egui/src/graphics.rs:490
 #~ msgid "Template:"
 #~ msgstr "Sjabloon:"
@@ -10719,6 +10731,9 @@ msgstr "Boven"
 #: crates/ui-egui/src/fillpatterns.rs:336
 #~ msgid "What filled regions are filled with: a foreground pattern over a background one, over the paper when it masks."
 #~ msgstr "Waarmee gevulde gebieden gevuld worden: een voorgrondpatroon over een achtergrondpatroon, over het papier als ze maskeren."
+#: crates/ui-egui/src/orbit.rs:835
+#~ msgid "in the 3D view this tool draws on a level face: the top of a floor, a flat roof or a level"
+#~ msgstr ""
 #: crates/ui-egui/src/fillpatterns.rs:415
 #~ msgid "whole"
 #~ msgstr "geheel"
@@ -10740,21 +10755,6 @@ msgstr "Boven"
 #: crates/ui-egui/src/fillpatterns.rs:354
 #~ msgid "{}: {} Colour"
 #~ msgstr "{}: {} kleur"
-#: crates/ui-egui/src/editor.rs:811
-#~ msgid "Symbols are the lines a door's or a window's plan draws; this family isn't one."
-#~ msgstr "Symbolen zijn de lijnen die de plattegrond van een deur of een raam tekent; deze familie is er geen."
-#: crates/ui-egui/src/dock.rs:555
-#~ msgid "Project Browser · {}"
-#~ msgstr "Projectbrowser · {}"
-#: crates/ui-egui/src/lib.rs:4503
-#~ msgid "Click to select. Drag to orbit (or Shift and the middle button), the middle button pans, the wheel zooms."
-#~ msgstr "Klik om te selecteren. Sleep om te draaien (of Shift en de middelste knop), de middelste knop verschuift, het wiel zoomt."
-#: crates/ui-egui/src/orbit.rs:835
-#~ msgid "in the 3D view this tool draws on a level face: the top of a floor, a flat roof or a level"
+#: crates/ui-egui/src/footer.rs:466
+#~ msgid "High Contrast Point Clouds: draw this view's scans in one strong colour, so what they show reads; again for their own colours. A scan given a colour of its own in Visibility/Graphics keeps it."
 #~ msgstr ""
-#: crates/ui-egui/src/settings.rs:600
-#~ msgid "Faster for large models. Hidden line and wireframe are still drawn on the processor, and so is everything if the card fails"
-#~ msgstr "Sneller voor grote modellen. Verborgen lijnen en draadmodel worden nog op de processor getekend, en alles ook als de kaart faalt"
-#: crates/ui-egui/src/footer.rs:468
-#~ msgid "High Contrast Point Clouds: draw this view's scans in one strong colour, so what they show reads; again for their own colours. A scan given a colour of its own in View Visibility keeps it."
-#~ msgstr "Puntenwolken met hoog contrast: teken de scans van deze weergave in één sterke kleur, zodat te lezen valt wat ze tonen; nog eens voor hun eigen kleuren. Een scan met een eigen kleur in Zichtbaarheid/Grafische weergave behoudt die."

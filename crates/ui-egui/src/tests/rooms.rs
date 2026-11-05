@@ -26,7 +26,7 @@ fn unfold(h: &mut Harness<BimApp>, label: &str) {
 #[test]
 fn the_room_separator_tool_beside_room_lays_a_line_each_click_until_escape() {
     let mut h = app(BOX);
-    tool(&mut h, "Room Boundary Line");
+    tool(&mut h, "Room Divider");
     assert_eq!(h.state().tool, Tool::RoomSeparator(None));
     click(&mut h, P2(4000.0, 0.0));
     assert!(separators(&h).is_empty(), "the first click is the line's start");

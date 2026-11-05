@@ -3792,8 +3792,8 @@ msgid "High Contrast Point Clouds"
 msgstr "高對比度點雲"
 
 #: crates/ui-egui/src/footer.rs:466
-msgid "High Contrast Point Clouds: draw this view's scans in one strong colour, so what they show reads; again for their own colours. A scan given a colour of its own in Visibility/Graphics keeps it."
-msgstr ""
+msgid "High Contrast Point Clouds: draw this view's scans in one strong colour, so what they show reads; again for their own colours. A scan given a colour of its own in View Visibility keeps it."
+msgstr "高對比度點云：以一種醒目的顏色繪製此視圖中的掃瞄，使其內容清晰可讀；再次點擊恢復其原有顏色。在“可見性/圖形”中被賦予專屬顏色的掃瞄會保留該顏色。"
 
 #: crates/ui-egui/src/settings.rs:650
 msgid "High contrast colour"
@@ -6729,14 +6729,14 @@ msgstr "房間面積計算"
 msgid "Room Area Computation: where room areas are measured; now {}"
 msgstr "房間面積計算：測量房間面積的位置；目前為{}"
 
-#: crates/ui-egui/src/lib.rs:3693
-msgid "Room Boundary Line: lines that bound rooms as walls do, to split an open space; click from point to point"
-msgstr "房間分隔線：像牆一樣圍合房間的線，用於分隔開放空間；依次單擊各點"
-
 #: crates/ui-egui/src/properties.rs:137
 #: crates/ui-egui/src/properties.rs:294
 msgid "Room Bounding"
 msgstr "房間邊界"
+
+#: crates/ui-egui/src/lib.rs:3693
+msgid "Room Divider: lines that bound rooms as walls do, to split an open space; click from point to point"
+msgstr "房間分隔線：像牆一樣圍合房間的線，用於分隔開放空間；依次單擊各點"
 
 #: crates/core/src/schedule.rs:118
 msgid "Room Schedule"
@@ -10214,7 +10214,7 @@ msgstr "房間"
 
 #: crates/ui-egui/src/lang.rs:296
 msgctxt "category"
-msgid "Room Boundary Line"
+msgid "Room Divider"
 msgstr "房間分隔線"
 
 #: crates/ui-egui/src/lang.rs:312
@@ -10529,7 +10529,7 @@ msgstr "屋頂"
 
 #: crates/ui-egui/src/lang.rs:296
 msgctxt "category-plural"
-msgid "Room Boundary Lines"
+msgid "Room Dividers"
 msgstr "房間分隔線"
 
 #: crates/ui-egui/src/lang.rs:258
@@ -10647,6 +10647,18 @@ msgctxt "side"
 msgid "Top"
 msgstr "上"
 
+#: crates/ui-egui/src/fillpatterns.rs:634
+#~ msgid "A pattern of the file replaces the one of its name in this list; else it is left out"
+#~ msgstr "檔案中的圖案會替換此列表中的同名圖案；否則不導入"
+#: crates/ui-egui/src/fillpatterns.rs:437
+#~ msgid "Add Family"
+#~ msgstr "添加線族"
+#: crates/ui-egui/src/lib.rs:3052
+#~ msgid "Aligned Dimension (DI): pick parallel wall faces, wall ends, doors, windows or grids, then click where the dimension line goes"
+#~ msgstr "對齊尺寸標注 (DI)：選取平行的牆面、牆端、門、窗或軸網，然後單擊尺寸線的位置"
+#: crates/ui-egui/src/fillpatterns.rs:343
+#~ msgid "Background"
+#~ msgstr "背景"
 #: crates/ui-egui/src/lib.rs:3433
 #~ msgid "Click a point the arc passes through: it sets the radius. Esc cancels."
 #~ msgstr "單擊圓弧經過的一點：由此確定半徑。按 Esc 取消。"
@@ -10656,108 +10668,36 @@ msgstr "上"
 #: crates/ui-egui/src/lib.rs:3432
 #~ msgid "Click to enter the arc's end point."
 #~ msgstr "單擊以輸入圓弧的終點。"
-#: crates/ui-egui/src/lib.rs:2756
-#~ msgid "Dark Mode: the window and the views light on dark; sheets stay paper. It starts as your system's theme"
-#~ msgstr "深色模式：視窗和視圖為深底淺色；圖紙仍保持紙張樣式。啟動時跟隨系統主題"
-#: crates/ui-egui/src/lib.rs:3116
-#~ msgid "Line: a wall along each step between the points clicked"
-#~ msgstr "線：沿所單擊各點之間的每一段創建牆"
-#: crates/ui-egui/src/lib.rs:3076
-#~ msgid "Offset (OF): pick a wall; a copy goes to the cursor's side"
-#~ msgstr "偏移 (OF)：選取一面牆；副本放在游標所在的一側"
-#: crates/ui-egui/src/lib.rs:3454
-#~ msgid "Pick the first wall, on the part to keep."
-#~ msgstr "選取第一面牆，在要保留的部分上單擊。"
-#: crates/ui-egui/src/lib.rs:3455
-#~ msgid "Pick the second wall, on the part to keep."
-#~ msgstr "選取第二面牆，在要保留的部分上單擊。"
-#: crates/ui-egui/src/lib.rs:3457
-#~ msgid "Point to a wall: the offset goes to the cursor's side. Click to place it."
-#~ msgstr "指向一面牆：偏移後的副本位於游標所在一側。單擊以放置。"
-#: crates/ui-egui/src/lib.rs:3091
-#~ msgid "Split Element (SL): click a wall where to split it"
-#~ msgstr "拆分圖元 (SL)：在牆上要拆分的位置單擊"
-#: crates/ui-egui/src/lib.rs:3106
-#~ msgid "Trim/Extend to Corner (TR): pick two walls, on the parts to keep"
-#~ msgstr "修剪/延伸為角 (TR)：選取兩面牆，在要保留的部分上單擊"
-#: crates/ui-egui/src/lib.rs:3957
-#~ msgid "Pick a reference line: a grid, or a wall's face or centre line."
-#~ msgstr "選取參照線：軸網，或牆的面或中心線。"
-#: crates/ui-egui/src/lib.rs:3958
-#~ msgid "Pick the wall or grid to line up with the reference."
-#~ msgstr "選取要與參照線對齊的牆或軸網。"
-#: crates/ui-egui/src/canvas.rs:2060
-#~ msgid "align: the lines aren't parallel"
-#~ msgstr "對齊：這些線不平行"
-#: crates/ui-egui/src/properties.rs:196
-#~ msgid "Text Size (mm)"
-#~ msgstr "文字大小（毫米）"
-#: crates/ui-egui/src/canvas.rs:2064
-#~ msgid "text: type what the note says in the Options Bar first"
-#~ msgstr "文字：請先在選項欄中輸入註釋內容"
-#: crates/ui-egui/src/linestyles.rs:212
-#~ msgid "Dashes, dots and spaces, mm on paper, so a pattern reads the same at any scale."
-#~ msgstr "劃線、點和間隔以圖紙上的毫米計，因此圖案在任何比例下看起來都相同。"
-#: crates/ui-egui/src/linestyles.rs:257
-#~ msgid "Segments of {}"
-#~ msgstr "{} 的線段"
-#: crates/ui-egui/src/linestyles.rs:280
-#~ msgid "Space"
-#~ msgstr "間隔"
-#: crates/ui-egui/src/structure.rs:98
-#~ msgid "Reinforce (RB): bars by rules for the selected beam, column, footing or floor"
-#~ msgstr "配筋 (RB)：按規則為所選梁、柱、基礎或樓板配置鋼筋"
+#: crates/ui-egui/src/lib.rs:4503
+#~ msgid "Click to select. Drag to orbit (or Shift and the middle button), the middle button pans, the wheel zooms."
+#~ msgstr "單擊選擇。拖動可環繞觀察（或按住 Shift 和游標中鍵），中鍵平移，滾輪縮放。"
 #: crates/ui-egui/src/lib.rs:4069
 #~ msgid "Click where the dimension's arc goes. Esc cancels."
 #~ msgstr "單擊尺寸標注弧線所在位置。Esc 取消。"
-#: crates/ui-egui/src/lib.rs:3052
-#~ msgid "Aligned Dimension (DI): pick parallel wall faces, wall ends, doors, windows or grids, then click where the dimension line goes"
-#~ msgstr "對齊尺寸標注 (DI)：選取平行的牆面、牆端、門、窗或軸網，然後單擊尺寸線的位置"
-#: crates/ui-egui/src/lib.rs:4026
-#~ msgid "Pick a round column."
-#~ msgstr "選取圓形柱。"
-#: crates/ui-egui/src/lib.rs:4017
-#~ msgid "Pick a wall face, centre line or end, a door, a window or a grid to measure from."
-#~ msgstr "選取牆面、中心線或端點、門、窗或軸網作為測量起點。"
-#: crates/ui-egui/src/lib.rs:4020
-#~ msgid "Pick more references, or click away from them where the dimension line goes. Esc cancels."
-#~ msgstr "繼續選取參照，或在遠離它們的位置單擊以放置尺寸線。按 Esc 取消。"
-#: crates/ui-egui/src/lib.rs:4019
-#~ msgid "Pick the next reference, parallel to the first."
-#~ msgstr "選取下一個參照，與第一個平行。"
-#: crates/ui-egui/src/lib.rs:3066
-#~ msgid "Radial Dimension: pick a round column, then click where the radius goes"
-#~ msgstr "半徑尺寸標註：選取圓形柱，然後單擊半徑標注的位置"
-#: crates/ui-egui/src/cad.rs:51
-#~ msgid "DXF drawings"
-#~ msgstr "DXF 圖紙"
-#: crates/ui-egui/src/lib.rs:3401
-#~ msgid "Import CAD: a DXF drawing brought into the project, drawn under the model in the plans of a level, its layers, colours and linetypes kept, and snapped to"
-#~ msgstr "導入 CAD：導入項目的 DXF 圖紙，繪製在某標高平面圖的模型之下，保留其圖層、顏色和線型，並可捕捉"
-#: crates/ui-egui/src/lib.rs:3393
-#~ msgid "Link CAD: a DXF drawing shown in the plans of a level, read again from its file on Reload and when the project opens"
-#~ msgstr "鏈接 CAD：在某標高的平面圖中顯示的 DXF 圖紙，重新載入時及開啟項目時從其檔案再次讀取"
-#: crates/ui-egui/src/fillpatterns.rs:634
-#~ msgid "A pattern of the file replaces the one of its name in this list; else it is left out"
-#~ msgstr "檔案中的圖案會替換此列表中的同名圖案；否則不導入"
-#: crates/ui-egui/src/fillpatterns.rs:437
-#~ msgid "Add Family"
-#~ msgstr "添加線族"
-#: crates/ui-egui/src/fillpatterns.rs:343
-#~ msgid "Background"
-#~ msgstr "背景"
 #: crates/ui-egui/src/graphics.rs:554
 #~ msgid "Create from This View"
 #~ msgstr "從此視圖創建"
+#: crates/ui-egui/src/cad.rs:51
+#~ msgid "DXF drawings"
+#~ msgstr "DXF 圖紙"
+#: crates/ui-egui/src/lib.rs:2756
+#~ msgid "Dark Mode: the window and the views light on dark; sheets stay paper. It starts as your system's theme"
+#~ msgstr "深色模式：視窗和視圖為深底淺色；圖紙仍保持紙張樣式。啟動時跟隨系統主題"
 #: crates/ui-egui/src/fillpatterns.rs:395
 #~ msgid "Dashes"
 #~ msgstr "虛線"
+#: crates/ui-egui/src/linestyles.rs:212
+#~ msgid "Dashes, dots and spaces, mm on paper, so a pattern reads the same at any scale."
+#~ msgstr "劃線、點和間隔以圖紙上的毫米計，因此圖案在任何比例下看起來都相同。"
 #: crates/ui-egui/src/graphics.rs:524
 #~ msgid "Detail Level:"
 #~ msgstr "詳細程度："
 #: crates/ui-egui/src/footer.rs:303
 #~ msgid "Detail Level: Coarse draws what is cut in one poche, Medium adds the layers and the symbols of openings, Fine the patterns"
 #~ msgstr "詳細程度：“粗略”將剖切部分繪製為單一填充，“中等”增加構造層和洞口符號，“精細”再增加圖案"
+#: crates/ui-egui/src/settings.rs:600
+#~ msgid "Faster for large models. Hidden line and wireframe are still drawn on the processor, and so is everything if the card fails"
+#~ msgstr "大型模型更快。隱藏線和線框仍由處理器繪製，顯卡失敗時一切也由處理器繪製"
 #: crates/ui-egui/src/lib.rs:3472
 #~ msgid "Fill Patterns: the patterns filled regions fill with, and the filled region types"
 #~ msgstr "填充樣式：填充區域所用的圖案，以及填充區域類型"
@@ -10767,12 +10707,21 @@ msgstr "上"
 #: crates/ui-egui/src/fillpatterns.rs:343
 #~ msgid "Foreground"
 #~ msgstr "前景"
+#: crates/ui-egui/src/lib.rs:3401
+#~ msgid "Import CAD: a DXF drawing brought into the project, drawn under the model in the plans of a level, its layers, colours and linetypes kept, and snapped to"
+#~ msgstr "導入 CAD：導入項目的 DXF 圖紙，繪製在某標高平面圖的模型之下，保留其圖層、顏色和線型，並可捕捉"
 #: crates/ui-egui/src/lib.rs:3454
 #~ msgid "Line Styles: the pen, colour and line pattern detail lines draw in, and the patterns' dashes, dots and spaces"
 #~ msgstr "線樣式：詳圖線所用的筆、顏色和線型圖案，以及圖案的劃線、點和間隔"
 #: crates/ui-egui/src/fillpatterns.rs:388
 #~ msgid "Line families of {}"
 #~ msgstr "{} 的線族"
+#: crates/ui-egui/src/lib.rs:3116
+#~ msgid "Line: a wall along each step between the points clicked"
+#~ msgstr "線：沿所單擊各點之間的每一段創建牆"
+#: crates/ui-egui/src/lib.rs:3393
+#~ msgid "Link CAD: a DXF drawing shown in the plans of a level, read again from its file on Reload and when the project opens"
+#~ msgstr "鏈接 CAD：在某標高的平面圖中顯示的 DXF 圖紙，重新載入時及開啟項目時從其檔案再次讀取"
 #: crates/ui-egui/src/fillpatterns.rs:371
 #~ msgid "New Type"
 #~ msgstr "新建類型"
@@ -10782,18 +10731,66 @@ msgstr "上"
 #: crates/ui-egui/src/graphics.rs:545
 #~ msgid "No view templates yet: Create from This View makes one."
 #~ msgstr "尚無視圖樣板：點擊“從此視圖創建”創建一個。"
+#: crates/ui-egui/src/lib.rs:3076
+#~ msgid "Offset (OF): pick a wall; a copy goes to the cursor's side"
+#~ msgstr "偏移 (OF)：選取一面牆；副本放在游標所在的一側"
+#: crates/ui-egui/src/lib.rs:3957
+#~ msgid "Pick a reference line: a grid, or a wall's face or centre line."
+#~ msgstr "選取參照線：軸網，或牆的面或中心線。"
+#: crates/ui-egui/src/lib.rs:4026
+#~ msgid "Pick a round column."
+#~ msgstr "選取圓形柱。"
+#: crates/ui-egui/src/lib.rs:4017
+#~ msgid "Pick a wall face, centre line or end, a door, a window or a grid to measure from."
+#~ msgstr "選取牆面、中心線或端點、門、窗或軸網作為測量起點。"
+#: crates/ui-egui/src/lib.rs:4020
+#~ msgid "Pick more references, or click away from them where the dimension line goes. Esc cancels."
+#~ msgstr "繼續選取參照，或在遠離它們的位置單擊以放置尺寸線。按 Esc 取消。"
+#: crates/ui-egui/src/lib.rs:3454
+#~ msgid "Pick the first wall, on the part to keep."
+#~ msgstr "選取第一面牆，在要保留的部分上單擊。"
+#: crates/ui-egui/src/lib.rs:4019
+#~ msgid "Pick the next reference, parallel to the first."
+#~ msgstr "選取下一個參照，與第一個平行。"
+#: crates/ui-egui/src/lib.rs:3455
+#~ msgid "Pick the second wall, on the part to keep."
+#~ msgstr "選取第二面牆，在要保留的部分上單擊。"
+#: crates/ui-egui/src/lib.rs:3958
+#~ msgid "Pick the wall or grid to line up with the reference."
+#~ msgstr "選取要與參照線對齊的牆或軸網。"
+#: crates/ui-egui/src/lib.rs:3457
+#~ msgid "Point to a wall: the offset goes to the cursor's side. Click to place it."
+#~ msgstr "指向一面牆：偏移後的副本位於游標所在一側。單擊以放置。"
+#: crates/ui-egui/src/dock.rs:555
+#~ msgid "Project Browser · {}"
+#~ msgstr "項目瀏覽器 · {}"
+#: crates/ui-egui/src/lib.rs:3066
+#~ msgid "Radial Dimension: pick a round column, then click where the radius goes"
+#~ msgstr "半徑尺寸標註：選取圓形柱，然後單擊半徑標注的位置"
 #: crates/ui-egui/src/fillpatterns.rs:220
 #~ msgid "Region Type"
 #~ msgstr "區域類型"
 #: crates/ui-egui/src/fillpatterns.rs:32
 #~ msgid "Region Types"
 #~ msgstr "區域類型"
+#: crates/ui-egui/src/structure.rs:98
+#~ msgid "Reinforce (RB): bars by rules for the selected beam, column, footing or floor"
+#~ msgstr "配筋 (RB)：按規則為所選梁、柱、基礎或樓板配置鋼筋"
 #: crates/ui-egui/src/fillpatterns.rs:633
 #~ msgid "Replace Same Name"
 #~ msgstr "替換同名圖案"
+#: crates/ui-egui/src/linestyles.rs:257
+#~ msgid "Segments of {}"
+#~ msgstr "{} 的線段"
 #: crates/ui-egui/src/fillpatterns.rs:395
 #~ msgid "Shift"
 #~ msgstr "偏移"
+#: crates/ui-egui/src/linestyles.rs:280
+#~ msgid "Space"
+#~ msgstr "間隔"
+#: crates/ui-egui/src/lib.rs:3091
+#~ msgid "Split Element (SL): click a wall where to split it"
+#~ msgstr "拆分圖元 (SL)：在牆上要拆分的位置單擊"
 #: crates/ui-egui/src/graphics.rs:538
 #~ msgid "Stop Following in This View"
 #~ msgstr "在此視圖中停止應用"
@@ -10803,9 +10800,15 @@ msgstr "上"
 #: crates/ui-egui/src/graphics.rs:490
 #~ msgid "Template:"
 #~ msgstr "樣板："
+#: crates/ui-egui/src/properties.rs:196
+#~ msgid "Text Size (mm)"
+#~ msgstr "文字大小（毫米）"
 #: crates/ui-egui/src/graphics.rs:506
 #~ msgid "The views following it get from it:"
 #~ msgstr "跟隨它的視圖從中獲得："
+#: crates/ui-egui/src/lib.rs:3106
+#~ msgid "Trim/Extend to Corner (TR): pick two walls, on the parts to keep"
+#~ msgstr "修剪/延伸為角 (TR)：選取兩面牆，在要保留的部分上單擊"
 #: crates/ui-egui/src/graphics.rs:519
 #~ msgid "View Scale:"
 #~ msgstr "視圖比例："
@@ -10818,6 +10821,15 @@ msgstr "上"
 #: crates/ui-egui/src/fillpatterns.rs:336
 #~ msgid "What filled regions are filled with: a foreground pattern over a background one, over the paper when it masks."
 #~ msgstr "填充區域的填充內容：前景圖案疊在背景圖案上，遮罩時疊在圖紙上。"
+#: crates/ui-egui/src/canvas.rs:2060
+#~ msgid "align: the lines aren't parallel"
+#~ msgstr "對齊：這些線不平行"
+#: crates/ui-egui/src/orbit.rs:835
+#~ msgid "in the 3D view this tool draws on a level face: the top of a floor, a flat roof or a level"
+#~ msgstr ""
+#: crates/ui-egui/src/canvas.rs:2064
+#~ msgid "text: type what the note says in the Options Bar first"
+#~ msgstr "文字：請先在選項欄中輸入註釋內容"
 #: crates/ui-egui/src/fillpatterns.rs:415
 #~ msgid "whole"
 #~ msgstr "實線"
@@ -10890,18 +10902,6 @@ msgstr "上"
 #: crates/ui-egui/src/standards.rs:94
 #~ msgid "‧ Wide / Heavy (0.50 mm — 0.70 mm): Cut walls and structural sections."
 #~ msgstr "‧ 粗線 (0.50 mm — 0.70 mm)：剖切牆體與結構剖面。"
-#: crates/ui-egui/src/dock.rs:555
-#~ msgid "Project Browser · {}"
-#~ msgstr "項目瀏覽器 · {}"
-#: crates/ui-egui/src/lib.rs:4503
-#~ msgid "Click to select. Drag to orbit (or Shift and the middle button), the middle button pans, the wheel zooms."
-#~ msgstr "單擊選擇。拖動可環繞觀察（或按住 Shift 和游標中鍵），中鍵平移，滾輪縮放。"
-#: crates/ui-egui/src/orbit.rs:835
-#~ msgid "in the 3D view this tool draws on a level face: the top of a floor, a flat roof or a level"
+#: crates/ui-egui/src/footer.rs:466
+#~ msgid "High Contrast Point Clouds: draw this view's scans in one strong colour, so what they show reads; again for their own colours. A scan given a colour of its own in Visibility/Graphics keeps it."
 #~ msgstr ""
-#: crates/ui-egui/src/settings.rs:600
-#~ msgid "Faster for large models. Hidden line and wireframe are still drawn on the processor, and so is everything if the card fails"
-#~ msgstr "大型模型更快。隱藏線和線框仍由處理器繪製，顯卡失敗時一切也由處理器繪製"
-#: crates/ui-egui/src/footer.rs:468
-#~ msgid "High Contrast Point Clouds: draw this view's scans in one strong colour, so what they show reads; again for their own colours. A scan given a colour of its own in View Visibility keeps it."
-#~ msgstr "高對比度點云：以一種醒目的顏色繪製此視圖中的掃瞄，使其內容清晰可讀；再次點擊恢復其原有顏色。在“可見性/圖形”中被賦予專屬顏色的掃瞄會保留該顏色。"

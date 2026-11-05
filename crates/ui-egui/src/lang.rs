@@ -293,7 +293,7 @@ pub fn category(category: &str, several: bool) -> String {
         "massfloor" => (msg!("category", "Mass Floor"), msg!("category-plural", "Mass Floors")),
         "ramp" => (msg!("category", "Ramp"), msg!("category-plural", "Ramps")),
         "railing" => (msg!("category", "Railing"), msg!("category-plural", "Railings")),
-        "roomseparator" => (msg!("category", "Room Boundary Line"), msg!("category-plural", "Room Boundary Lines")),
+        "roomseparator" => (msg!("category", "Room Divider"), msg!("category-plural", "Room Dividers")),
         "beam" => (msg!("category", "Beam"), msg!("category-plural", "Beams")),
         "structuralcolumn" => (msg!("category", "Structural Column"), msg!("category-plural", "Structural Columns")),
         "footing" => (msg!("category", "Footing"), msg!("category-plural", "Footings")),

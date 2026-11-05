@@ -3792,8 +3792,8 @@ msgid "High Contrast Point Clouds"
 msgstr "Đám mây điểm độ tương phản cao"
 
 #: crates/ui-egui/src/footer.rs:466
-msgid "High Contrast Point Clouds: draw this view's scans in one strong colour, so what they show reads; again for their own colours. A scan given a colour of its own in Visibility/Graphics keeps it."
-msgstr ""
+msgid "High Contrast Point Clouds: draw this view's scans in one strong colour, so what they show reads; again for their own colours. A scan given a colour of its own in View Visibility keeps it."
+msgstr "Đám mây điểm độ tương phản cao: vẽ các bản quét của khung nhìn này bằng một màu đậm để dễ đọc những gì chúng thể hiện; nhấn lần nữa để trở về màu riêng của chúng. Bản quét đã được đặt màu riêng trong Hiển thị/Đồ họa sẽ giữ màu đó."
 
 #: crates/ui-egui/src/settings.rs:650
 msgid "High contrast colour"
@@ -6729,14 +6729,14 @@ msgstr "Cách tính diện tích phòng"
 msgid "Room Area Computation: where room areas are measured; now {}"
 msgstr "Cách tính diện tích phòng: nơi đo diện tích phòng; hiện là {}"
 
-#: crates/ui-egui/src/lib.rs:3693
-msgid "Room Boundary Line: lines that bound rooms as walls do, to split an open space; click from point to point"
-msgstr "Đường phân chia phòng: các đường bao phòng giống như tường, để chia một không gian mở; nhấp từ điểm này sang điểm khác"
-
 #: crates/ui-egui/src/properties.rs:137
 #: crates/ui-egui/src/properties.rs:294
 msgid "Room Bounding"
 msgstr "Tạo biên phòng"
+
+#: crates/ui-egui/src/lib.rs:3693
+msgid "Room Divider: lines that bound rooms as walls do, to split an open space; click from point to point"
+msgstr "Đường phân chia phòng: các đường bao phòng giống như tường, để chia một không gian mở; nhấp từ điểm này sang điểm khác"
 
 #: crates/core/src/schedule.rs:118
 msgid "Room Schedule"
@@ -10214,7 +10214,7 @@ msgstr "Phòng"
 
 #: crates/ui-egui/src/lang.rs:296
 msgctxt "category"
-msgid "Room Boundary Line"
+msgid "Room Divider"
 msgstr "Đường phân chia phòng"
 
 #: crates/ui-egui/src/lang.rs:312
@@ -10529,7 +10529,7 @@ msgstr "Mái"
 
 #: crates/ui-egui/src/lang.rs:296
 msgctxt "category-plural"
-msgid "Room Boundary Lines"
+msgid "Room Dividers"
 msgstr "Đường phân chia phòng"
 
 #: crates/ui-egui/src/lang.rs:258
@@ -10650,12 +10650,12 @@ msgstr ""
 #: crates/ui-egui/src/lib.rs:4503
 #~ msgid "Click to select. Drag to orbit (or Shift and the middle button), the middle button pans, the wheel zooms."
 #~ msgstr "Nhấp để chọn. Kéo để xoay quanh (hoặc Shift và nút giữa), nút giữa để kéo, con lăn để thu phóng."
-#: crates/ui-egui/src/orbit.rs:835
-#~ msgid "in the 3D view this tool draws on a level face: the top of a floor, a flat roof or a level"
-#~ msgstr "trong khung nhìn 3D, công cụ này vẽ trên một mặt nằm ngang: mặt trên của sàn, mái bằng hoặc một tầng"
 #: crates/ui-egui/src/settings.rs:600
 #~ msgid "Faster for large models. Hidden line and wireframe are still drawn on the processor, and so is everything if the card fails"
 #~ msgstr "Nhanh hơn với mô hình lớn. Chế độ ẩn nét và khung dây vẫn được vẽ bằng bộ xử lý, và mọi thứ cũng vậy nếu card đồ họa gặp lỗi"
-#: crates/ui-egui/src/footer.rs:468
-#~ msgid "High Contrast Point Clouds: draw this view's scans in one strong colour, so what they show reads; again for their own colours. A scan given a colour of its own in View Visibility keeps it."
-#~ msgstr "Đám mây điểm độ tương phản cao: vẽ các bản quét của khung nhìn này bằng một màu đậm để dễ đọc những gì chúng thể hiện; nhấn lần nữa để trở về màu riêng của chúng. Bản quét đã được đặt màu riêng trong Hiển thị/Đồ họa sẽ giữ màu đó."
+#: crates/ui-egui/src/orbit.rs:835
+#~ msgid "in the 3D view this tool draws on a level face: the top of a floor, a flat roof or a level"
+#~ msgstr "trong khung nhìn 3D, công cụ này vẽ trên một mặt nằm ngang: mặt trên của sàn, mái bằng hoặc một tầng"
+#: crates/ui-egui/src/footer.rs:466
+#~ msgid "High Contrast Point Clouds: draw this view's scans in one strong colour, so what they show reads; again for their own colours. A scan given a colour of its own in Visibility/Graphics keeps it."
+#~ msgstr ""
