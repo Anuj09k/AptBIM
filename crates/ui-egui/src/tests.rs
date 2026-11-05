@@ -6697,3 +6697,16 @@ fn restyle_puts_aptbims_look_back_after_another_app_changed_the_context() {
     assert_eq!(h.ctx.style_of(egui::Theme::Light).visuals.panel_fill, ours);
     assert_eq!(h.ctx.fonts(|f| f.definitions().font_data.len()), fonts);
 }
+
+/// The title AptBIM gives the window, for a host that owns the window to build its own from: the project, `*` while it has
+/// unsaved changes, the view, and the app.
+#[test]
+fn the_window_title_names_the_project_its_unsaved_changes_and_the_view() {
+    let mut h = app(BOX);
+    let title = h.state().window_title().to_string();
+    assert!(title.ends_with(" · AptBIM") && title.contains("Floor Plan"), "{title}");
+    assert!(!title.contains('*'), "nothing unsaved yet: {title}");
+    h.state_mut().session.execute("wall", &json!({"points": [[0, 8000], [4000, 8000]]})).unwrap();
+    h.run();
+    assert!(h.state().window_title().contains("* · "), "{}", h.state().window_title());
+}

@@ -1359,6 +1359,12 @@ impl BimApp {
         }
     }
 
+    /// The window's title as AptBIM last set it: the project, a `*` while it has unsaved changes, the view and the app's name
+    /// (`Sample House* · Floor Plan: Level 1 · AptBIM`). A host that owns the window (Aptimizer Studio) builds its own from it.
+    pub fn window_title(&self) -> &str {
+        &self.title
+    }
+
     /// Whether the model changed since it was last opened or saved.
     pub fn dirty(&self) -> bool {
         !Arc::ptr_eq(&self.saved, &self.session.model)
