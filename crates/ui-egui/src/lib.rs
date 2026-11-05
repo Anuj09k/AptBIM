@@ -1387,6 +1387,19 @@ impl BimApp {
         }
     }
 
+    /// Runs a command as the window's own buttons do (one undo step, the window following what it
+    /// changed): what a host that owns the window, Aptimizer Studio's assistant, runs. Its result, or why
+    /// it failed, which the window's status line says too.
+    pub fn run_command(&mut self, id: &str, params: Value) -> Result<Value, String> {
+        match self.run(id, params) {
+            Some(v) => {
+                self.tidy();
+                Ok(v)
+            }
+            None => Err(self.status.text.clone()),
+        }
+    }
+
     /// Whether the model changed since it was last opened or saved.
     pub fn dirty(&self) -> bool {
         !Arc::ptr_eq(&self.saved, &self.session.model)
